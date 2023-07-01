@@ -13,6 +13,7 @@ using namespace std;
 
 class makeCubie
 {
+   // vlskjdfsadklfgk;lsadj...
 private:
    vector<vector<vector<char>>> cubeMain{};
    vector<char> sideBar, sideBarBackup, cornerColors;
