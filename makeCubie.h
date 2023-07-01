@@ -8,12 +8,12 @@
 #include <algorithm>
 #include <random>
 #include <utility>
+#include <string_view>
 
 using namespace std;
 
 class makeCubie
 {
-   // vlskjdfsadklfgk;lsadj...
 private:
    vector<vector<vector<char>>> cubeMain{};
    vector<char> sideBar, sideBarBackup, cornerColors;
@@ -22,6 +22,7 @@ private:
    vector<string> CrossSolution, F2LSolution, OLLSolution, PLLSolution, tempSolution;
 
    // DECLARATION FOR SPEED OPOTIMIZATION....
+   short i, j;
    vector<vector<char>> tempVec{
        {'0', '0', '0'},
        {'0', '0', '0'},
@@ -40,6 +41,7 @@ private:
    };
 
 public:
+   void speedtester();
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       CONSTRUCTORS FOR MAKECUBIE CLASS
       ----------------------------------------------------------------------------------------------------------------------------------------*/
@@ -60,7 +62,7 @@ public:
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       SIDE ROTATION METHOD...
       ----------------------------------------------------------------------------------------------------------------------------------------*/
-   void sideRotate(int side, string direction);
+   void sideRotate(const int &side, string_view direction);
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       CUBE SOLVING METHODS...
       ----------------------------------------------------------------------------------------------------------------------------------------*/
@@ -71,24 +73,24 @@ public:
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       THE THREE BELLOW FUNCITON ARE FOR SIDE ROTATION LOGICS OF THE CUBE.
       ----------------------------------------------------------------------------------------------------------------------------------------*/
-   void faceTranspose(int side, string direction);
-   void sideBarSender(int side, string sideBarDirection, string vectorStoringDirection);
-   void sideBarReceiver(int side, string sideBarDirection);
+   void faceTranspose(const int &side, string_view direction);
+   void sideBarSender(const int &side, string_view sideBarDirection, string_view vectorStoringDirection);
+   void sideBarReceiver(const int &side, string_view sideBarDirection);
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       HELPER METHODS FOR CUBE SOLVING METHODS.
       ----------------------------------------------------------------------------------------------------------------------------------------*/
-   bool cornerColorsFinder(int side, int row, int col);
-   int sideEdgeFinder(makeCubie &temp_cube, char color_1, char color_2, string edgeSetter);
-   bool edgeSetterOnTop(makeCubie &temp_cube, char color_1, char color_2, string edgeSetter);
-   void f2LHelper(makeCubie &temp_cube, int side, int colorBlock);
-   void cornerSetterOnTop(makeCubie &temp_cube, char color_2, char color_3, string F2LHelper);
+   bool cornerColorsFinder(const int &side, const int &row, const int &col);
+   int sideEdgeFinder(makeCubie &temp_cube, const char &color_1, const char &color_2, string_view edgeSetter);
+   bool edgeSetterOnTop(makeCubie &temp_cube, const char &color_1, const char &color_2, string_view edgeSetter);
+   void f2LHelper(makeCubie &temp_cube, const int &side, const int &colorBlock);
+   void cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, const char &color_3, string_view F2LHelper);
    string OLLCoder();
-   bool OLLLogic(int side, string OLLcode);
+   bool OLLLogic(const int &side, string_view OLLcode);
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       ALGORITHEM IMPLEMENTATION METHODS.
       ----------------------------------------------------------------------------------------------------------------------------------------*/
-   void setalgo(int side, string str_algo, string applySolutionOn);
-   void applySolution(string applySolutionOn);
+   void setalgo(const int &side, string str_algo, string_view applySolutionOn);
+   void applySolution(string_view applySolutionOn);
 };
 
 #endif //_MAKECUBIE_H_

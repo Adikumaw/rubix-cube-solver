@@ -18,9 +18,82 @@
 #define MP sideRotate(side::mid, "antclk")
 #define EP sideRotate(side::equator, "antclk")
 #define SP sideRotate(side::stand, "antclk")
-;
+
 void solutionOptimizer(vector<std::string> &solution);
 string sideColor(const int &colorAsci);
+
+void makeCubie::speedtester()
+{
+    std::mt19937 rng(std::random_device{}());
+    std::uniform_int_distribution<int> rang1to12(1, 12);
+    long int trials{0};
+    int moves{0};
+    bool solve{false};
+    makeCubie temp_cube(*this);
+    while (!solve)
+    {
+        moves = rang1to12(rng);
+
+        switch (moves)
+        {
+        case 1:
+            CrossSolution.push_back("F");
+            temp_cube.F;
+            break;
+        case 2:
+            CrossSolution.push_back("L");
+            temp_cube.L;
+            break;
+        case 3:
+            CrossSolution.push_back("R");
+            temp_cube.R;
+            break;
+        case 4:
+            CrossSolution.push_back("U");
+            temp_cube.U;
+            break;
+        case 5:
+            CrossSolution.push_back("D");
+            temp_cube.D;
+            break;
+        case 6:
+            CrossSolution.push_back("B");
+            temp_cube.B;
+            break;
+        case 7:
+            CrossSolution.push_back("FP");
+            temp_cube.FP;
+            break;
+        case 8:
+            CrossSolution.push_back("LP");
+            temp_cube.LP;
+            break;
+        case 9:
+            CrossSolution.push_back("RP");
+            temp_cube.RP;
+            break;
+        case 10:
+            CrossSolution.push_back("UP");
+            temp_cube.UP;
+            break;
+        case 11:
+            CrossSolution.push_back("DP");
+            temp_cube.DP;
+            break;
+        case 12:
+            CrossSolution.push_back("BP");
+            temp_cube.BP;
+            break;
+        default:
+            break;
+        }
+
+        trials++;
+        std::cout << "\r" << trials << " combinations tried!";
+        if (trials > 10000000)
+            break;
+    }
+}
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    CONSTRUCTORS FOR MAKECUBIE CLASS
    ----------------------------------------------------------------------------------------------------------------------------------------*/
@@ -133,7 +206,7 @@ void makeCubie::getOLLSolution()
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CALLS THE SIDE ROTATION LOGIC FUNCTION ON THE BASIS OF SIDE AND DIRECTION PROVIDED
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-void makeCubie::sideRotate(int side, string direction)
+void makeCubie::sideRotate(const int &side, string_view direction)
 {
     sideBarBackup.clear();
     if (side >= face && side <= bottom)
@@ -392,7 +465,7 @@ void makeCubie::sideRotate(int side, string direction)
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THE THREE BELLOW FUNCITON ARE FOR SIDE ROTATION LOGICS OF THE CUBE...
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-void makeCubie::faceTranspose(int side, string direction)
+void makeCubie::faceTranspose(const int &side, string_view direction)
 {
     int i{0}, j{0};
     if (direction == "antclk")
@@ -426,9 +499,8 @@ void makeCubie::faceTranspose(int side, string direction)
     }
     (cubeMain)[side] = tempVec;
 }
-void makeCubie::sideBarSender(int side, string sideBarDirection, string vectorStoringDirection)
+void makeCubie::sideBarSender(const int &side, string_view sideBarDirection, string_view vectorStoringDirection)
 {
-    sideBar.clear();
     if (vectorStoringDirection == "forward")
     {
         if (sideBarDirection == "left")
@@ -496,7 +568,7 @@ void makeCubie::sideBarSender(int side, string sideBarDirection, string vectorSt
         }
     }
 }
-void makeCubie::sideBarReceiver(int side, string sideBarDirection)
+void makeCubie::sideBarReceiver(const int &side, string_view sideBarDirection)
 {
     if (sideBarDirection == "bottom")
     {
@@ -2282,7 +2354,7 @@ void makeCubie::OLLSolver()
         * FACE BACK
         * LEFT AND RIGHT
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-bool makeCubie::cornerColorsFinder(int side, int row, int col)
+bool makeCubie::cornerColorsFinder(const int &side, const int &row, const int &col)
 {
     cornerColors.clear();
     vector<int> sideloc;
@@ -2441,7 +2513,7 @@ bool makeCubie::cornerColorsFinder(int side, int row, int col)
    AND MAKES TOPSIDECOLOR === "THE COLOR IN THE TOP OF SIDE ELEMENT"
    AND EDGESIDE === "TO THE SIDE OF TEH EDGE ELEMENT ON THE CUBE"
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-bool makeCubie::edgeSetterOnTop(makeCubie &temp_cube, char color_1, char color_2, string edgeSetter)
+bool makeCubie::edgeSetterOnTop(makeCubie &temp_cube, const char &color_1, const char &color_2, string_view edgeSetter)
 {
     if (edgeSetter == "CALL_EDGE_SETTER")
         temp_cube = *this;
@@ -2607,7 +2679,7 @@ bool makeCubie::edgeSetterOnTop(makeCubie &temp_cube, char color_1, char color_2
 THIS FUNCTION SIMPLY MOVES THE CORNER ELEMENT TO THE CORRECT LOCATION, IF IT IS ON THE TOP SIDE OF THE CUBE
    AND IF F2LHELPER === "CALL_F2LHELPER" THAN IT WILL CALL THE REQUIRED SIDE OF F2LHELPER FUNCTION
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, char color_2, char color_3, string F2LHelper)
+void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, const char &color_3, string_view F2LHelper)
 {
     temp_cube = *this;
     vector<char> colors{color_2, color_3};
@@ -3179,7 +3251,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, char color_2, char color
    ELSE IF EDGE IS IN NEAR LOCATION THAN IT WILL RETURN "-1" AND WILL MOVE THE EDGE OUT OF THE MID LAYER.
    AND IF EDGESETTER IS === "CALL_EDGE_SETTER" THAN IT WILL CALL THE EDGESETTER_ON_TOP FUNCTION.
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-int makeCubie::sideEdgeFinder(makeCubie &temp_cube, char color_1, char color_2, string edgeSetter)
+int makeCubie::sideEdgeFinder(makeCubie &temp_cube, const char &color_1, const char &color_2, string_view edgeSetter)
 {
     // temp_cube = *this;
     // FRONT SIDE-EDGES
@@ -3213,7 +3285,7 @@ int makeCubie::sideEdgeFinder(makeCubie &temp_cube, char color_1, char color_2, 
         }
         applySolution("f2l");
         if (edgeSetter == "CALL_EDGE_SETTER")
-            edgeSetterOnTop(temp_cube, color_1, color_2, move(edgeSetter));
+            edgeSetterOnTop(temp_cube, color_1, color_2, edgeSetter);
         return -1;
     }
     else if (cubeMain[face].at(1).at(2) == color_2 && cubeMain[right].at(1).at(0) == color_1)
@@ -3246,7 +3318,7 @@ int makeCubie::sideEdgeFinder(makeCubie &temp_cube, char color_1, char color_2, 
         }
         applySolution("f2l");
         if (edgeSetter == "CALL_EDGE_SETTER")
-            edgeSetterOnTop(temp_cube, color_1, color_2, move(edgeSetter));
+            edgeSetterOnTop(temp_cube, color_1, color_2, edgeSetter);
         return -1;
     }
     else if (cubeMain[face].at(1).at(0) == color_1 && cubeMain[left].at(1).at(2) == color_2)
@@ -3279,7 +3351,7 @@ int makeCubie::sideEdgeFinder(makeCubie &temp_cube, char color_1, char color_2, 
         }
         applySolution("f2l");
         if (edgeSetter == "CALL_EDGE_SETTER")
-            edgeSetterOnTop(temp_cube, color_1, color_2, move(edgeSetter));
+            edgeSetterOnTop(temp_cube, color_1, color_2, edgeSetter);
         return -1;
     }
     else if (cubeMain[face].at(1).at(0) == color_2 && cubeMain[left].at(1).at(2) == color_1)
@@ -3312,7 +3384,7 @@ int makeCubie::sideEdgeFinder(makeCubie &temp_cube, char color_1, char color_2, 
         }
         applySolution("f2l");
         if (edgeSetter == "CALL_EDGE_SETTER")
-            edgeSetterOnTop(temp_cube, color_1, color_2, move(edgeSetter));
+            edgeSetterOnTop(temp_cube, color_1, color_2, edgeSetter);
         return -1;
     }
     // BACK SIDE-EDGES
@@ -3346,7 +3418,7 @@ int makeCubie::sideEdgeFinder(makeCubie &temp_cube, char color_1, char color_2, 
         }
         applySolution("f2l");
         if (edgeSetter == "CALL_EDGE_SETTER")
-            edgeSetterOnTop(temp_cube, color_1, color_2, move(edgeSetter));
+            edgeSetterOnTop(temp_cube, color_1, color_2, edgeSetter);
         return -1;
     }
     else if (cubeMain[right].at(1).at(2) == color_2 && cubeMain[back].at(1).at(0) == color_1)
@@ -3379,7 +3451,7 @@ int makeCubie::sideEdgeFinder(makeCubie &temp_cube, char color_1, char color_2, 
         }
         applySolution("f2l");
         if (edgeSetter == "CALL_EDGE_SETTER")
-            edgeSetterOnTop(temp_cube, color_1, color_2, move(edgeSetter));
+            edgeSetterOnTop(temp_cube, color_1, color_2, edgeSetter);
         return -1;
     }
     else if (cubeMain[left].at(1).at(0) == color_1 && cubeMain[back].at(1).at(2) == color_2)
@@ -3412,7 +3484,7 @@ int makeCubie::sideEdgeFinder(makeCubie &temp_cube, char color_1, char color_2, 
         }
         applySolution("f2l");
         if (edgeSetter == "CALL_EDGE_SETTER")
-            edgeSetterOnTop(temp_cube, color_1, color_2, move(edgeSetter));
+            edgeSetterOnTop(temp_cube, color_1, color_2, edgeSetter);
         return -1;
     }
     else if (cubeMain[left].at(1).at(0) == color_2 && cubeMain[back].at(1).at(2) == color_1)
@@ -3445,7 +3517,7 @@ int makeCubie::sideEdgeFinder(makeCubie &temp_cube, char color_1, char color_2, 
         }
         applySolution("f2l");
         if (edgeSetter == "CALL_EDGE_SETTER")
-            edgeSetterOnTop(temp_cube, color_1, color_2, move(edgeSetter));
+            edgeSetterOnTop(temp_cube, color_1, color_2, edgeSetter);
         return -1;
     }
     return -1;
@@ -3453,7 +3525,7 @@ int makeCubie::sideEdgeFinder(makeCubie &temp_cube, char color_1, char color_2, 
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCITON EXECUTES THE ELGORITHEMS OF F2L_LAYER ON THE BASIS OF THE SIDE AND COLORBLOCK VALUE PROVIDED
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-void makeCubie::f2LHelper(makeCubie &temp_cube, int side, int colorBlock)
+void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colorBlock)
 {
     temp_cube = *this;
     int sentinal;
@@ -4380,7 +4452,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, int side, int colorBlock)
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCITON CHANGES THE CUBE_SOLVING_ALGORITHEMS TO THE REQUIRED IMPLEMENTAION SIDE ON THE BASIS OF SIDE PROVIDED.
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-void makeCubie::setalgo(int side, string str_algo, string applySolutionOn)
+void makeCubie::setalgo(const int &side, string str_algo, string_view applySolutionOn)
 {
     string move{};
     if (side == right)
@@ -4680,7 +4752,7 @@ string makeCubie::OLLCoder()
    LAYER AND IT DIRECTLY CALLS THE SETALGO TO APPLY THE CONDITION.
    IT RETURNS TRUE IF THE CONDITION MATCHES THE CODE AND FALSE WHEN OLLCODE DOSEN'T MATCHES ANY CONDITION
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-bool makeCubie::OLLLogic(int side, string OLLcode)
+bool makeCubie::OLLLogic(const int &side, string_view OLLcode)
 {
     // DOT CONDITIONS...
     if (OLLcode == "000010000010111010111")
@@ -4932,7 +5004,7 @@ bool makeCubie::OLLLogic(int side, string OLLcode)
    THIS FUNCTION APPLIES TEMPSOLUTION TO THE CUBE AND SAVES THE ALGORITHM TO THE F2LSOLUTION
    AND THEN CLEARS THE TEMPSOLUTION.
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-void makeCubie::applySolution(string applySolutionOn)
+void makeCubie::applySolution(string_view applySolutionOn)
 {
     for (size_t i{0}; i < tempSolution.size(); i++)
     {
