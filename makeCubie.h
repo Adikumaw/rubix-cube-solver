@@ -25,6 +25,7 @@ private:
        {'0', '0', '0'},
        {'0', '0', '0'},
        {'0', '0', '0'}};
+   //  enumerator for cube sides ......
    enum side
    {
       face,
