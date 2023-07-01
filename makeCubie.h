@@ -18,7 +18,7 @@ private:
    vector<vector<vector<char>>> cubeMain{};
    vector<char> sideBar, sideBarBackup, cornerColors;
    char topSideColor;
-   unsigned short edgeSide;
+   short edgeSide;
    vector<string> CrossSolution, F2LSolution, OLLSolution, PLLSolution, tempSolution;
 
    // DECLARATION FOR SPEED OPOTIMIZATION....

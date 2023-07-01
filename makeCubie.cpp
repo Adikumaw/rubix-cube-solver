@@ -1,23 +1,23 @@
 #include "makeCubie.h"
 
-#define F sideRotate(side::face, "clk")
-#define L sideRotate(side::left, "clk")
-#define R sideRotate(side::right, "clk")
-#define U sideRotate(side::top, "clk")
-#define D sideRotate(side::bottom, "clk")
-#define B sideRotate(side::back, "clk")
-#define FP sideRotate(side::face, "antclk")
-#define LP sideRotate(side::left, "antclk")
-#define RP sideRotate(side::right, "antclk")
-#define UP sideRotate(side::top, "antclk")
-#define DP sideRotate(side::bottom, "antclk")
-#define BP sideRotate(side::back, "antclk")
-#define M sideRotate(side::mid, "clk")
-#define E sideRotate(side::equator, "clk")
-#define S sideRotate(side::stand, "clk")
-#define MP sideRotate(side::mid, "antclk")
-#define EP sideRotate(side::equator, "antclk")
-#define SP sideRotate(side::stand, "antclk")
+#define F sideRotate(side::face, "CW")
+#define L sideRotate(side::left, "CW")
+#define R sideRotate(side::right, "CW")
+#define U sideRotate(side::top, "CW")
+#define D sideRotate(side::bottom, "CW")
+#define B sideRotate(side::back, "CW")
+#define FP sideRotate(side::face, "ACW")
+#define LP sideRotate(side::left, "ACW")
+#define RP sideRotate(side::right, "ACW")
+#define UP sideRotate(side::top, "ACW")
+#define DP sideRotate(side::bottom, "ACW")
+#define BP sideRotate(side::back, "ACW")
+#define M sideRotate(side::mid, "CW")
+#define E sideRotate(side::equator, "CW")
+#define S sideRotate(side::stand, "CW")
+#define MP sideRotate(side::mid, "ACW")
+#define EP sideRotate(side::equator, "ACW")
+#define SP sideRotate(side::stand, "ACW")
 
 void solutionOptimizer(vector<std::string> &solution);
 string sideColor(const int &colorAsci);
@@ -99,13 +99,13 @@ void makeCubie::speedtester()
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 makeCubie::makeCubie()
 {
-    for (int l{0}; l < 6; l++)
+    for (short l{0}; l < 6; l++)
     {
         cubeMain.push_back(vector<vector<char>>());
-        for (int m{0}; m < 3; m++)
+        for (short m{0}; m < 3; m++)
         {
             cubeMain.at(l).push_back(vector<char>());
-            for (int n{0}; n < 3; n++)
+            for (short n{0}; n < 3; n++)
             {
                 cubeMain.at(l).at(m).push_back('x');
             }
@@ -115,11 +115,11 @@ makeCubie::makeCubie()
 makeCubie::makeCubie(const makeCubie &source)
     : makeCubie{}
 {
-    for (int l{0}; l < 6; l++)
+    for (short l{0}; l < 6; l++)
     {
-        for (int m{0}; m < 3; m++)
+        for (short m{0}; m < 3; m++)
         {
-            for (int n{0}; n < 3; n++)
+            for (short n{0}; n < 3; n++)
             {
                 cubeMain.at(l).at(m).at(n) = source.cubeMain.at(l).at(m).at(n);
             }
@@ -135,11 +135,11 @@ makeCubie &makeCubie::operator=(const makeCubie &source)
     if (this == &source)
         return *this;
 
-    for (int l{0}; l < 6; l++)
+    for (short l{0}; l < 6; l++)
     {
-        for (int m{0}; m < 3; m++)
+        for (short m{0}; m < 3; m++)
         {
-            for (int n{0}; n < 3; n++)
+            for (short n{0}; n < 3; n++)
             {
                 this->cubeMain.at(l).at(m).at(n) = source.cubeMain.at(l).at(m).at(n);
             }
@@ -214,251 +214,251 @@ void makeCubie::sideRotate(const int &side, string_view direction)
         faceTranspose(side, direction);
         if (side == face)
         {
-            for (int i{0}; i < 3; i++)
+            for (i = 0; i < 3; i++)
                 sideBarBackup.push_back(cubeMain[top].at(2).at(i));
-            if (direction == "clk")
+            if (direction == "CW")
             {
-                sideBarSender(left, "right", "rev.");
-                sideBarReceiver(top, "bottom");
-                sideBarSender(bottom, "top", "forward");
-                sideBarReceiver(left, "right");
-                sideBarSender(right, "left", "rev.");
-                sideBarReceiver(bottom, "top");
-                for (int i{0}; i < 3; i++)
+                sideBarSender(left, "R", "REV");
+                sideBarReceiver(top, "BTM");
+                sideBarSender(bottom, "T", "FWD");
+                sideBarReceiver(left, "R");
+                sideBarSender(right, "L", "REV");
+                sideBarReceiver(bottom, "T");
+                for (i = 0; i < 3; i++)
                     cubeMain[right].at(i).at(0) = sideBarBackup.at(i);
             }
             else
             {
-                sideBarSender(right, "left", "forward");
-                sideBarReceiver(top, "bottom");
-                sideBarSender(bottom, "top", "rev.");
-                sideBarReceiver(right, "left");
-                sideBarSender(left, "right", "forward");
-                sideBarReceiver(bottom, "top");
-                for (int j{2}, i{0}; j >= 0, i < 3; j--, i++)
+                sideBarSender(right, "L", "FWD");
+                sideBarReceiver(top, "BTM");
+                sideBarSender(bottom, "T", "REV");
+                sideBarReceiver(right, "L");
+                sideBarSender(left, "R", "FWD");
+                sideBarReceiver(bottom, "T");
+                for (j = 2, i = 0; j >= 0, i < 3; j--, i++)
                     cubeMain[left].at(i).at(2) = sideBarBackup.at(j);
-                // sideBarReceiver(left, "right");
+                // sideBarReceiver(left, "R");
             }
         }
         else if (side == back)
         {
-            for (int i{0}; i < 3; i++)
+            for (i = 0; i < 3; i++)
                 sideBarBackup.push_back(cubeMain[top].at(0).at(i));
-            if (direction == "clk")
+            if (direction == "CW")
             {
-                sideBarSender(right, "right", "forward");
-                sideBarReceiver(top, "top");
-                sideBarSender(bottom, "bottom", "rev.");
-                sideBarReceiver(right, "right");
-                sideBarSender(left, "left", "forward");
-                sideBarReceiver(bottom, "bottom");
-                for (int j{2}, i{0}; j >= 0, i < 3; j--, i++)
+                sideBarSender(right, "R", "FWD");
+                sideBarReceiver(top, "T");
+                sideBarSender(bottom, "BTM", "REV");
+                sideBarReceiver(right, "R");
+                sideBarSender(left, "L", "FWD");
+                sideBarReceiver(bottom, "BTM");
+                for (j = 2, i = 0; j >= 0, i < 3; j--, i++)
                     cubeMain[left].at(i).at(0) = sideBarBackup.at(j);
-                // sideBarReceiver(left, "left");
+                // sideBarReceiver(left, "L");
             }
             else
             {
-                sideBarSender(left, "left", "rev.");
-                sideBarReceiver(top, "top");
-                sideBarSender(bottom, "bottom", "forward");
-                sideBarReceiver(left, "left");
-                sideBarSender(right, "right", "rev.");
-                sideBarReceiver(bottom, "bottom");
-                for (int i{0}; i < 3; i++)
+                sideBarSender(left, "L", "REV");
+                sideBarReceiver(top, "T");
+                sideBarSender(bottom, "BTM", "FWD");
+                sideBarReceiver(left, "L");
+                sideBarSender(right, "R", "REV");
+                sideBarReceiver(bottom, "BTM");
+                for (i = 0; i < 3; i++)
                     cubeMain[right].at(i).at(2) = sideBarBackup.at(i);
             }
         }
         else if (side == left)
         {
-            for (int i{0}; i < 3; i++)
+            for (i = 0; i < 3; i++)
                 sideBarBackup.push_back(cubeMain[top].at(i).at(0));
-            if (direction == "clk")
+            if (direction == "CW")
             {
-                sideBarSender(back, "right", "rev.");
-                sideBarReceiver(top, "left");
-                sideBarSender(bottom, "left", "rev.");
-                sideBarReceiver(back, "right");
-                sideBarSender(face, "left", "forward");
-                sideBarReceiver(bottom, "left");
-                for (int i{0}; i < 3; i++)
+                sideBarSender(back, "R", "REV");
+                sideBarReceiver(top, "L");
+                sideBarSender(bottom, "L", "REV");
+                sideBarReceiver(back, "R");
+                sideBarSender(face, "L", "FWD");
+                sideBarReceiver(bottom, "L");
+                for (i = 0; i < 3; i++)
                     cubeMain[face].at(i).at(0) = sideBarBackup.at(i);
             }
             else
             {
-                sideBarSender(face, "left", "forward");
-                sideBarReceiver(top, "left");
-                sideBarSender(bottom, "left", "forward");
-                sideBarReceiver(face, "left");
-                sideBarSender(back, "right", "rev.");
-                sideBarReceiver(bottom, "left");
-                for (int j{2}, i{0}; j >= 0, i < 3; j--, i++)
+                sideBarSender(face, "L", "FWD");
+                sideBarReceiver(top, "L");
+                sideBarSender(bottom, "L", "FWD");
+                sideBarReceiver(face, "L");
+                sideBarSender(back, "R", "REV");
+                sideBarReceiver(bottom, "L");
+                for (j = 2, i = 0; j >= 0, i < 3; j--, i++)
                     cubeMain[back].at(i).at(2) = sideBarBackup.at(j);
-                // sideBarReceiver(back, "right");
+                // sideBarReceiver(back, "R");
             }
         }
         else if (side == right)
         {
-            for (int i{0}; i < 3; i++)
+            for (i = 0; i < 3; i++)
                 sideBarBackup.push_back(cubeMain[top].at(i).at(2));
-            if (direction == "clk")
+            if (direction == "CW")
             {
-                sideBarSender(face, "right", "forward");
-                sideBarReceiver(top, "right");
-                sideBarSender(bottom, "right", "forward");
-                sideBarReceiver(face, "right");
-                sideBarSender(back, "left", "rev.");
-                sideBarReceiver(bottom, "right");
-                for (int j{2}, i{0}; j >= 0, i < 3; j--, i++)
+                sideBarSender(face, "R", "FWD");
+                sideBarReceiver(top, "R");
+                sideBarSender(bottom, "R", "FWD");
+                sideBarReceiver(face, "R");
+                sideBarSender(back, "L", "REV");
+                sideBarReceiver(bottom, "R");
+                for (j = 2, i = 0; j >= 0, i < 3; j--, i++)
                     cubeMain[back].at(i).at(0) = sideBarBackup.at(j);
-                // sideBarReceiver(back, "left");
+                // sideBarReceiver(back, "L");
             }
             else
             {
-                sideBarSender(back, "left", "rev.");
-                sideBarReceiver(top, "right");
-                sideBarSender(bottom, "right", "rev.");
-                sideBarReceiver(back, "left");
-                sideBarSender(face, "right", "forward");
-                sideBarReceiver(bottom, "right");
-                for (int i{0}; i < 3; i++)
+                sideBarSender(back, "L", "REV");
+                sideBarReceiver(top, "R");
+                sideBarSender(bottom, "R", "REV");
+                sideBarReceiver(back, "L");
+                sideBarSender(face, "R", "FWD");
+                sideBarReceiver(bottom, "R");
+                for (i = 0; i < 3; i++)
                     cubeMain[face].at(i).at(2) = sideBarBackup.at(i);
             }
         }
         else if (side == top)
         {
-            for (int i{0}; i < 3; i++)
+            for (i = 0; i < 3; i++)
                 sideBarBackup.push_back(cubeMain[face].at(0).at(i));
-            if (direction == "clk")
+            if (direction == "CW")
             {
-                sideBarSender(right, "top", "forward");
-                sideBarReceiver(face, "top");
-                sideBarSender(back, "top", "forward");
-                sideBarReceiver(right, "top");
-                sideBarSender(left, "top", "forward");
-                sideBarReceiver(back, "top");
-                for (int i{0}; i < 3; i++)
+                sideBarSender(right, "T", "FWD");
+                sideBarReceiver(face, "T");
+                sideBarSender(back, "T", "FWD");
+                sideBarReceiver(right, "T");
+                sideBarSender(left, "T", "FWD");
+                sideBarReceiver(back, "T");
+                for (i = 0; i < 3; i++)
                     cubeMain[left].at(0).at(i) = sideBarBackup.at(i);
             }
             else
             {
-                sideBarSender(left, "top", "forward");
-                sideBarReceiver(face, "top");
-                sideBarSender(back, "top", "forward");
-                sideBarReceiver(left, "top");
-                sideBarSender(right, "top", "forward");
-                sideBarReceiver(back, "top");
-                for (int i{0}; i < 3; i++)
+                sideBarSender(left, "T", "FWD");
+                sideBarReceiver(face, "T");
+                sideBarSender(back, "T", "FWD");
+                sideBarReceiver(left, "T");
+                sideBarSender(right, "T", "FWD");
+                sideBarReceiver(back, "T");
+                for (i = 0; i < 3; i++)
                     cubeMain[right].at(0).at(i) = sideBarBackup.at(i);
             }
         }
         else if (side == bottom)
         {
-            for (int i{0}; i < 3; i++)
+            for (i = 0; i < 3; i++)
                 sideBarBackup.push_back(cubeMain[face].at(2).at(i));
-            if (direction == "clk")
+            if (direction == "CW")
             {
-                sideBarSender(left, "bottom", "forward");
-                sideBarReceiver(face, "bottom");
-                sideBarSender(back, "bottom", "forward");
-                sideBarReceiver(left, "bottom");
-                sideBarSender(right, "bottom", "forward");
-                sideBarReceiver(back, "bottom");
-                for (int i{0}; i < 3; i++)
+                sideBarSender(left, "BTM", "FWD");
+                sideBarReceiver(face, "BTM");
+                sideBarSender(back, "BTM", "FWD");
+                sideBarReceiver(left, "BTM");
+                sideBarSender(right, "BTM", "FWD");
+                sideBarReceiver(back, "BTM");
+                for (i = 0; i < 3; i++)
                     cubeMain[right].at(2).at(i) = sideBarBackup.at(i);
             }
             else
             {
-                sideBarSender(right, "bottom", "forward");
-                sideBarReceiver(face, "bottom");
-                sideBarSender(back, "bottom", "forward");
-                sideBarReceiver(right, "bottom");
-                sideBarSender(left, "bottom", "forward");
-                sideBarReceiver(back, "bottom");
-                for (int i{0}; i < 3; i++)
+                sideBarSender(right, "BTM", "FWD");
+                sideBarReceiver(face, "BTM");
+                sideBarSender(back, "BTM", "FWD");
+                sideBarReceiver(right, "BTM");
+                sideBarSender(left, "BTM", "FWD");
+                sideBarReceiver(back, "BTM");
+                for (i = 0; i < 3; i++)
                     cubeMain[left].at(2).at(i) = sideBarBackup.at(i);
             }
         }
     }
     else if (side == mid)
     {
-        for (int i{0}; i < 3; i++)
+        for (i = 0; i < 3; i++)
             sideBarBackup.push_back(cubeMain[face].at(i).at(1));
-        if (direction == "clk")
+        if (direction == "CW")
         {
-            sideBarSender(top, "mid", "forward");
-            sideBarReceiver(face, "mid");
-            sideBarSender(back, "mid", "rev.");
-            sideBarReceiver(top, "mid");
-            sideBarSender(bottom, "mid", "rev.");
-            sideBarReceiver(back, "mid");
-            for (int i{0}; i < 3; i++)
+            sideBarSender(top, "M", "FWD");
+            sideBarReceiver(face, "M");
+            sideBarSender(back, "M", "REV");
+            sideBarReceiver(top, "M");
+            sideBarSender(bottom, "M", "REV");
+            sideBarReceiver(back, "M");
+            for (i = 0; i < 3; i++)
                 cubeMain[bottom].at(i).at(1) = sideBarBackup.at(i);
         }
         else
         {
-            sideBarSender(bottom, "mid", "forward");
-            sideBarReceiver(face, "mid");
-            sideBarSender(back, "mid", "rev.");
-            sideBarReceiver(bottom, "mid");
-            sideBarSender(top, "mid", "rev.");
-            sideBarReceiver(back, "mid");
-            for (int i{0}; i < 3; i++)
+            sideBarSender(bottom, "M", "FWD");
+            sideBarReceiver(face, "M");
+            sideBarSender(back, "M", "REV");
+            sideBarReceiver(bottom, "M");
+            sideBarSender(top, "M", "REV");
+            sideBarReceiver(back, "M");
+            for (i = 0; i < 3; i++)
                 cubeMain[top].at(i).at(1) = sideBarBackup.at(i);
         }
     }
     else if (side == equator)
     {
-        for (int i{0}; i < 3; i++)
+        for (i = 0; i < 3; i++)
             sideBarBackup.push_back(cubeMain[face].at(1).at(i));
-        if (direction == "clk")
+        if (direction == "CW")
         {
-            sideBarSender(left, "equator", "forward");
-            sideBarReceiver(face, "equator");
-            sideBarSender(back, "equator", "forward");
-            sideBarReceiver(left, "equator");
-            sideBarSender(right, "equator", "forward");
-            sideBarReceiver(back, "equator");
-            for (int i{0}; i < 3; i++)
+            sideBarSender(left, "EQT", "FWD");
+            sideBarReceiver(face, "EQT");
+            sideBarSender(back, "EQT", "FWD");
+            sideBarReceiver(left, "EQT");
+            sideBarSender(right, "EQT", "FWD");
+            sideBarReceiver(back, "EQT");
+            for (i = 0; i < 3; i++)
                 cubeMain[right].at(1).at(i) = sideBarBackup.at(i);
         }
         else
         {
-            sideBarSender(right, "equator", "forward");
-            sideBarReceiver(face, "equator");
-            sideBarSender(back, "equator", "forward");
-            sideBarReceiver(right, "equator");
-            sideBarSender(left, "equator", "forward");
-            sideBarReceiver(back, "equator");
-            for (int i{0}; i < 3; i++)
+            sideBarSender(right, "EQT", "FWD");
+            sideBarReceiver(face, "EQT");
+            sideBarSender(back, "EQT", "FWD");
+            sideBarReceiver(right, "EQT");
+            sideBarSender(left, "EQT", "FWD");
+            sideBarReceiver(back, "EQT");
+            for (i = 0; i < 3; i++)
                 cubeMain[left].at(1).at(i) = sideBarBackup.at(i);
         }
     }
     else if (side == stand)
     {
-        for (int i{0}; i < 3; i++)
+        for (i = 0; i < 3; i++)
             sideBarBackup.push_back(cubeMain[top].at(1).at(i));
-        if (direction == "clk")
+        if (direction == "CW")
         {
-            sideBarSender(left, "mid", "rev.");
-            sideBarReceiver(top, "equator");
-            sideBarSender(bottom, "equator", "forward");
-            sideBarReceiver(left, "mid");
-            sideBarSender(right, "mid", "rev.");
-            sideBarReceiver(bottom, "equator");
-            for (int i{0}; i < 3; i++)
+            sideBarSender(left, "M", "REV");
+            sideBarReceiver(top, "EQT");
+            sideBarSender(bottom, "EQT", "FWD");
+            sideBarReceiver(left, "M");
+            sideBarSender(right, "M", "REV");
+            sideBarReceiver(bottom, "EQT");
+            for (i = 0; i < 3; i++)
                 cubeMain[right].at(i).at(1) = sideBarBackup.at(i);
         }
         else
         {
-            sideBarSender(right, "mid", "forward");
-            sideBarReceiver(top, "equator");
-            sideBarSender(bottom, "equator", "rev.");
-            sideBarReceiver(right, "mid");
-            sideBarSender(left, "mid", "forward");
-            sideBarReceiver(bottom, "equator");
-            for (int j{2}, i{0}; j >= 0, i < 3; j--, i++)
+            sideBarSender(right, "M", "FWD");
+            sideBarReceiver(top, "EQT");
+            sideBarSender(bottom, "EQT", "REV");
+            sideBarReceiver(right, "M");
+            sideBarSender(left, "M", "FWD");
+            sideBarReceiver(bottom, "EQT");
+            for (j = 2, i = 0; j >= 0, i < 3; j--, i++)
                 cubeMain[left].at(i).at(1) = sideBarBackup.at(j);
-            // sideBarReceiver(left, "mid");
+            // sideBarReceiver(left, "M");
         }
     }
 }
@@ -467,8 +467,7 @@ void makeCubie::sideRotate(const int &side, string_view direction)
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 void makeCubie::faceTranspose(const int &side, string_view direction)
 {
-    int i{0}, j{0};
-    if (direction == "antclk")
+    if (direction == "ACW")
     {
         j = 0;
         for (size_t l{0}; l < cubeMain[side].size(); l++)
@@ -482,7 +481,7 @@ void makeCubie::faceTranspose(const int &side, string_view direction)
             j++;
         }
     }
-    else if (direction == "clk")
+    else if (direction == "CW")
     {
         j = 2;
         for (size_t l{0}; l < cubeMain[side].size(); l++)
@@ -501,67 +500,67 @@ void makeCubie::faceTranspose(const int &side, string_view direction)
 }
 void makeCubie::sideBarSender(const int &side, string_view sideBarDirection, string_view vectorStoringDirection)
 {
-    if (vectorStoringDirection == "forward")
+    if (vectorStoringDirection == "FWD")
     {
-        if (sideBarDirection == "left")
+        if (sideBarDirection == "L")
         {
-            for (int i{0}; i < 3; i++)
+            for (i = 0; i < 3; i++)
                 sideBar.push_back(cubeMain[side].at(i).at(0));
         }
-        else if (sideBarDirection == "right")
+        else if (sideBarDirection == "R")
         {
-            for (int i{0}; i < 3; i++)
+            for (i = 0; i < 3; i++)
                 sideBar.push_back(cubeMain[side].at(i).at(2));
         }
-        else if (sideBarDirection == "top")
+        else if (sideBarDirection == "T")
         {
-            for (int i{0}; i < 3; i++)
+            for (i = 0; i < 3; i++)
                 sideBar.push_back(cubeMain[side].at(0).at(i));
         }
-        else if (sideBarDirection == "bottom")
+        else if (sideBarDirection == "BTM")
         {
-            for (int i{0}; i < 3; i++)
+            for (i = 0; i < 3; i++)
                 sideBar.push_back(cubeMain[side].at(2).at(i));
         }
-        else if (sideBarDirection == "mid")
+        else if (sideBarDirection == "M")
         {
-            for (int i{0}; i < 3; i++)
+            for (i = 0; i < 3; i++)
                 sideBar.push_back(cubeMain[side].at(i).at(1));
         }
-        else if (sideBarDirection == "equator")
+        else if (sideBarDirection == "EQT")
         {
-            for (int i{0}; i < 3; i++)
+            for (i = 0; i < 3; i++)
                 sideBar.push_back(cubeMain[side].at(1).at(i));
         }
     }
     else
     {
-        if (sideBarDirection == "left")
+        if (sideBarDirection == "L")
         {
             for (int i{2}; i >= 0; i--)
                 sideBar.push_back(cubeMain[side].at(i).at(0));
         }
-        else if (sideBarDirection == "right")
+        else if (sideBarDirection == "R")
         {
             for (int i{2}; i >= 0; i--)
                 sideBar.push_back(cubeMain[side].at(i).at(2));
         }
-        else if (sideBarDirection == "top")
+        else if (sideBarDirection == "T")
         {
             for (int i{2}; i >= 0; i--)
                 sideBar.push_back(cubeMain[side].at(0).at(i));
         }
-        else if (sideBarDirection == "bottom")
+        else if (sideBarDirection == "BTM")
         {
             for (int i{2}; i >= 0; i--)
                 sideBar.push_back(cubeMain[side].at(2).at(i));
         }
-        else if (sideBarDirection == "mid")
+        else if (sideBarDirection == "M")
         {
             for (int i{2}; i >= 0; i--)
                 sideBar.push_back(cubeMain[side].at(i).at(1));
         }
-        else if (sideBarDirection == "equator")
+        else if (sideBarDirection == "EQT")
         {
             for (int i{2}; i >= 0; i--)
                 sideBar.push_back(cubeMain[side].at(1).at(i));
@@ -570,34 +569,34 @@ void makeCubie::sideBarSender(const int &side, string_view sideBarDirection, str
 }
 void makeCubie::sideBarReceiver(const int &side, string_view sideBarDirection)
 {
-    if (sideBarDirection == "bottom")
+    if (sideBarDirection == "BTM")
     {
-        for (int i{0}; i < 3; i++)
+        for (i = 0; i < 3; i++)
             cubeMain[side].at(2).at(i) = sideBar.at(i);
     }
-    else if (sideBarDirection == "left")
+    else if (sideBarDirection == "L")
     {
-        for (int i{0}; i < 3; i++)
+        for (i = 0; i < 3; i++)
             cubeMain[side].at(i).at(0) = sideBar.at(i);
     }
-    else if (sideBarDirection == "top")
+    else if (sideBarDirection == "T")
     {
-        for (int i{0}; i < 3; i++)
+        for (i = 0; i < 3; i++)
             cubeMain[side].at(0).at(i) = sideBar.at(i);
     }
-    else if (sideBarDirection == "right")
+    else if (sideBarDirection == "R")
     {
-        for (int i{0}; i < 3; i++)
+        for (i = 0; i < 3; i++)
             cubeMain[side].at(i).at(2) = sideBar.at(i);
     }
-    else if (sideBarDirection == "mid")
+    else if (sideBarDirection == "M")
     {
-        for (int i{0}; i < 3; i++)
+        for (i = 0; i < 3; i++)
             cubeMain[side].at(i).at(1) = sideBar.at(i);
     }
-    else if (sideBarDirection == "equator")
+    else if (sideBarDirection == "EQT")
     {
-        for (int i{0}; i < 3; i++)
+        for (i = 0; i < 3; i++)
             cubeMain[side].at(1).at(i) = sideBar.at(i);
     }
     sideBar.clear();
