@@ -38,7 +38,6 @@ makeCubie::makeCubie()
             }
         }
     }
-    cout << "cube created" << endl;
 }
 makeCubie::makeCubie(const makeCubie &source)
     : makeCubie{}
@@ -2444,7 +2443,8 @@ bool makeCubie::cornerColorsFinder(int side, int row, int col)
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 bool makeCubie::edgeSetterOnTop(makeCubie &temp_cube, char color_1, char color_2, string edgeSetter)
 {
-    temp_cube = *this;
+    if (edgeSetter == "CALL_EDGE_SETTER")
+        temp_cube = *this;
     bool pos{false};
     int moveCount{0};
     // the bellow two assignment is for the precaution of removing past assignments....
@@ -3181,6 +3181,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, char color_2, char color
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 int makeCubie::sideEdgeFinder(makeCubie &temp_cube, char color_1, char color_2, string edgeSetter)
 {
+    // temp_cube = *this;
     // FRONT SIDE-EDGES
     if (cubeMain[face].at(1).at(2) == color_1 && cubeMain[right].at(1).at(0) == color_2)
     {
@@ -3454,6 +3455,7 @@ int makeCubie::sideEdgeFinder(makeCubie &temp_cube, char color_1, char color_2, 
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 void makeCubie::f2LHelper(makeCubie &temp_cube, int side, int colorBlock)
 {
+    temp_cube = *this;
     int sentinal;
     bool cornerLocMatch{false}, boolEdgeSetter{false};
 
@@ -4581,16 +4583,16 @@ void makeCubie::setalgo(int side, string str_algo, string applySolutionOn)
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 void makeCubie::shortestF2LSolver()
 {
-    int trials{0};
+    unsigned int trials{0};
     bool solve{false};
     makeCubie solveF2L(*this);
     makeCubie temp_cube(*this);
     while (!solve)
     {
-        solveF2L = *this;
+        ++trials;
+        cout << "\r " << trials << " tried....";
+        solveF2L = temp_cube = *this;
         solveF2L.f2lSolver(temp_cube);
-        trials++;
-        std::cout << "\r" << trials << " combinations tried!";
         if (trials < 1500)
         {
             if (solveF2L.F2LSolution.size() > 26)
