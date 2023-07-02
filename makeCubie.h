@@ -37,7 +37,10 @@ private:
       bottom,
       mid,
       equator,
-      stand
+      stand,
+      axisX,
+      axisY,
+      axisZ
    };
 
 public:
@@ -66,9 +69,9 @@ public:
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       CUBE SOLVING METHODS...
       ----------------------------------------------------------------------------------------------------------------------------------------*/
-   void crossSolver();
+   int crossSolver();
    void f2lSolver(makeCubie &temp_cube);
-   void shortestF2LSolver();
+   void shortestF2LSolver(const int &crossSide);
    void OLLSolver();
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       THE THREE BELLOW FUNCITON ARE FOR SIDE ROTATION LOGICS OF THE CUBE.
@@ -79,18 +82,21 @@ public:
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       HELPER METHODS FOR CUBE SOLVING METHODS.
       ----------------------------------------------------------------------------------------------------------------------------------------*/
-   bool cornerColorsFinder(const int &side, const int &row, const int &col);
+   bool crossChecker(const makeCubie &temp_cube, const int &side);
+   bool cornerColorsFinder(const char &bottom_color, const int &side, const int &row, const int &col);
    int sideEdgeFinder(makeCubie &temp_cube, const char &color_1, const char &color_2, string_view edgeSetter);
    bool edgeSetterOnTop(makeCubie &temp_cube, const char &color_1, const char &color_2, string_view edgeSetter);
    void f2LHelper(makeCubie &temp_cube, const int &side, const int &colorBlock);
-   void cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, const char &color_3, string_view F2LHelper);
+   void cornerSetterOnTop(makeCubie &temp_cube, const char &color_1, const char &color_2, const char &color_3, string_view F2LHelper);
    string OLLCoder();
    bool OLLLogic(const int &side, string_view OLLcode);
+   bool PLLChecker(const makeCubie &source);
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       ALGORITHEM IMPLEMENTATION METHODS.
       ----------------------------------------------------------------------------------------------------------------------------------------*/
    void setalgo(const int &side, string str_algo, string_view applySolutionOn);
    void applySolution(string_view applySolutionOn);
+   void algorithmCorrector(const int &side, vector<string> &algorithm);
 };
 
 #endif //_MAKECUBIE_H_
