@@ -18,6 +18,13 @@
 #define MP sideRotate(side::mid, "ACW")
 #define EP sideRotate(side::equator, "ACW")
 #define SP sideRotate(side::stand, "ACW")
+// WHOLE CUBE REORIENTATION......
+#define X sideRotate(side::axisX, "CW")
+#define Y sideRotate(side::axisY, "CW")
+#define Z sideRotate(side::axisZ, "CW")
+#define XP sideRotate(side::axisX, "ACW")
+#define YP sideRotate(side::axisY, "ACW")
+#define ZP sideRotate(side::axisZ, "ACW")
 
 void solutionOptimizer(vector<std::string> &solution);
 string sideColor(const int &colorAsci);
@@ -461,6 +468,52 @@ void makeCubie::sideRotate(const int &side, string_view direction)
             // sideBarReceiver(left, "M");
         }
     }
+    // RECURSION WILL OCCUR FOR THE BELLOW THREE CONDITIONS......
+    else if (side == axisX)
+    {
+        if (direction == "CW")
+        {
+            R;
+            MP;
+            LP;
+        }
+        else
+        {
+            RP;
+            M;
+            L;
+        }
+    }
+    else if (side == axisY)
+    {
+        if (direction == "CW")
+        {
+            U;
+            EP;
+            DP;
+        }
+        else
+        {
+            UP;
+            E;
+            D;
+        }
+    }
+    else if (side == axisZ)
+    {
+        if (direction == "CW")
+        {
+            F;
+            S;
+            BP;
+        }
+        else
+        {
+            FP;
+            SP;
+            B;
+        }
+    }
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THE THREE BELLOW FUNCITON ARE FOR SIDE ROTATION LOGICS OF THE CUBE...
@@ -604,21 +657,35 @@ void makeCubie::sideBarReceiver(const int &side, string_view sideBarDirection)
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION SOLVES THE BOTTOM CROSS OF TEH RUBIX CUBE...
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-void makeCubie::crossSolver()
+int makeCubie::crossSolver()
 {
     // srand(time(NULL));
     std::mt19937 rng(std::random_device{}());
     std::uniform_int_distribution<int> rang1to12(1, 12);
     long int trials{0};
-    int moves{0};
-    bool solve{false};
+    int moves{0}, side{0};
+    bool solve{false}, tenTimeLoop{false}, crossCheck{false};
     makeCubie temp_cube(*this);
     std::cout << endl;
     while (!solve)
     {
         temp_cube = *this;
-        while (temp_cube.cubeMain[bottom].at(0).at(1) != 'w' || temp_cube.cubeMain[bottom].at(1).at(0) != 'w' || temp_cube.cubeMain[bottom].at(1).at(2) != 'w' || temp_cube.cubeMain[bottom].at(2).at(1) != 'w' || temp_cube.cubeMain[face].at(2).at(1) != 'b' || temp_cube.cubeMain[right].at(2).at(1) != 'r' || temp_cube.cubeMain[back].at(2).at(1) != 'g' || temp_cube.cubeMain[left].at(2).at(1) != 'o')
+        while (!tenTimeLoop)
         {
+            for (side = 0; side <= bottom; side++)
+            {
+                if (temp_cube.cubeMain[side].at(0).at(1) == temp_cube.cubeMain[side].at(1).at(1) && temp_cube.cubeMain[side].at(1).at(0) == temp_cube.cubeMain[side].at(1).at(1) && temp_cube.cubeMain[side].at(1).at(2) == temp_cube.cubeMain[side].at(1).at(1) && temp_cube.cubeMain[side].at(2).at(1) == temp_cube.cubeMain[side].at(1).at(1))
+                {
+                    crossCheck = crossChecker(temp_cube, side);
+                    if (crossCheck == true)
+                    {
+                        solve = true;
+                        break;
+                    }
+                }
+            }
+            if (crossCheck == true)
+                break;
             moves = rang1to12(rng);
 
             switch (moves)
@@ -690,13 +757,13 @@ void makeCubie::crossSolver()
             solve = true;
         }
         if (moves == 0)
-            return;
+            return side;
     }
-
     solutionOptimizer(CrossSolution);
     // copy the temp cube to the source cube....
     *this = temp_cube;
-    std::cout << "\nCross Solved...." << endl;
+    std::cout << "\nCross Solved.... On" << side << "side..." << endl;
+    return side;
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION SOLVES THE F2L_LAYER OF THE RUBIX CUBE....
@@ -710,6 +777,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
     std::uniform_int_distribution<int> rang0to1(0, 1);
     std::uniform_int_distribution<int> rang1to4(1, 4);
     int temp{}, side{}, sentinal{}, block{};
+    const char bottom_color{cubeMain.at(bottom).at(1).at(1)};
     bool cornerLocMatch{false}, boolEdgeSetter{false};
     // bool cornerFound{false};
     // while (!cornerFound)
@@ -725,9 +793,9 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
             switch (block)
             {
             case 1:
-                if (cubeMain[side].at(0).at(0) == 'w')
+                if (cubeMain[side].at(0).at(0) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 0, 0);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
                     if (cornerLocMatch)
                     {
                         // for optimization purposes....
@@ -758,11 +826,11 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                         case 0:
                             setalgo(left, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         case 1:
                             setalgo(left, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         default:
                             break;
@@ -771,9 +839,9 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                 };
                 break;
             case 2:
-                if (cubeMain[side].at(0).at(2) == 'w')
+                if (cubeMain[side].at(0).at(2) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 0, 2);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
                     if (cornerLocMatch)
                     {
                         boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
@@ -805,11 +873,11 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                         case 0:
                             setalgo(face, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         case 1:
                             setalgo(face, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         default:
                             break;
@@ -818,9 +886,9 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                 }
                 break;
             case 3:
-                if (cubeMain[side].at(2).at(0) == 'w')
+                if (cubeMain[side].at(2).at(0) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 2, 0);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 0);
                     if (cornerLocMatch)
                     {
                         boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
@@ -852,11 +920,11 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                         case 0:
                             setalgo(back, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         case 1:
                             setalgo(back, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         default:
                             break;
@@ -865,9 +933,9 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                 }
                 break;
             case 4:
-                if (cubeMain[side].at(2).at(2) == 'w')
+                if (cubeMain[side].at(2).at(2) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 2, 2);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 2);
                     if (cornerLocMatch)
                     {
                         boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
@@ -899,11 +967,11 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                         case 0:
                             setalgo(right, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         case 1:
                             setalgo(right, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         default:
                             break;
@@ -921,9 +989,9 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
             switch (block)
             {
             case 1:
-                if (cubeMain.at(side).at(0).at(0) == 'w')
+                if (cubeMain.at(side).at(0).at(0) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 0, 0);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
                     boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                     if (cornerLocMatch)
                     {
@@ -942,7 +1010,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             else if (sentinal == -1)
                             {
                                 // the corner setter will set the corner and will pass the control back to this function.....
-                                cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             }
                         }
@@ -993,14 +1061,14 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                     } // this else is for the condition when the corner or edge is not on the right location....
                     else
                     {
-                        cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                     }
                 }
                 break;
             case 2:
-                if (cubeMain.at(side).at(0).at(2) == 'w')
+                if (cubeMain.at(side).at(0).at(2) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 0, 2);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
                     boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                     if (cornerLocMatch)
                     {
@@ -1019,7 +1087,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             else if (sentinal == -1)
                             {
                                 // the corner setter will set the corner and will pass the control back to this function.....
-                                cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             }
                         }
@@ -1070,14 +1138,14 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                     }
                     else
                     {
-                        cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                     }
                 }
                 break;
             case 3:
-                if (cubeMain.at(side).at(2).at(0) == 'w')
+                if (cubeMain.at(side).at(2).at(0) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 2, 0);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 0);
                     boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                     if (cornerLocMatch)
                     {
@@ -1113,11 +1181,11 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                         case 0:
                             setalgo(left, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         case 1:
                             setalgo(left, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         default:
                             break;
@@ -1126,9 +1194,9 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                 }
                 break;
             case 4:
-                if (cubeMain.at(side).at(2).at(2) == 'w')
+                if (cubeMain.at(side).at(2).at(2) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 2, 2);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 2);
                     boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                     if (cornerLocMatch)
                     {
@@ -1164,11 +1232,11 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                         case 0:
                             setalgo(face, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         case 1:
                             setalgo(face, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         default:
                             break;
@@ -1186,9 +1254,9 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
             switch (block)
             {
             case 1:
-                if (cubeMain.at(side).at(0).at(0) == 'w')
+                if (cubeMain.at(side).at(0).at(0) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 0, 0);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
                     boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                     if (cornerLocMatch)
                     {
@@ -1207,7 +1275,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             else if (sentinal == -1)
                             {
                                 // the corner setter will set the corner and will pass the control back to this function.....
-                                cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             }
                         }
@@ -1258,14 +1326,14 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                     } // this else is for the condition when the corner or edge is not on the right location....
                     else
                     {
-                        cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                     }
                 }
                 break;
             case 2:
-                if (cubeMain.at(side).at(0).at(2) == 'w')
+                if (cubeMain.at(side).at(0).at(2) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 0, 2);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
                     boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                     if (cornerLocMatch)
                     {
@@ -1284,7 +1352,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             else if (sentinal == -1)
                             {
                                 // the corner setter will set the corner and will pass the control back to this function.....
-                                cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             }
                         }
@@ -1335,14 +1403,14 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                     }
                     else
                     {
-                        cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                     }
                 }
                 break;
             case 3:
-                if (cubeMain.at(side).at(2).at(0) == 'w')
+                if (cubeMain.at(side).at(2).at(0) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 2, 0);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 0);
                     boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                     if (cornerLocMatch)
                     {
@@ -1378,11 +1446,11 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                         case 0:
                             setalgo(face, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         case 1:
                             setalgo(face, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         default:
                             break;
@@ -1391,9 +1459,9 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                 }
                 break;
             case 4:
-                if (cubeMain.at(side).at(2).at(2) == 'w')
+                if (cubeMain.at(side).at(2).at(2) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 2, 2);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 2);
                     boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                     if (cornerLocMatch)
                     {
@@ -1429,11 +1497,11 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                         case 0:
                             setalgo(right, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         case 1:
                             setalgo(right, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         default:
                             break;
@@ -1451,9 +1519,9 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
             switch (block)
             {
             case 1:
-                if (cubeMain.at(side).at(0).at(0) == 'w')
+                if (cubeMain.at(side).at(0).at(0) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 0, 0);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
                     boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                     if (cornerLocMatch)
                     {
@@ -1472,7 +1540,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             else if (sentinal == -1)
                             {
                                 // the corner setter will set the corner and will pass the control back to this function.....
-                                cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             }
                         }
@@ -1523,14 +1591,14 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                     } // this else is for the condition when the corner or edge is not on the right location....
                     else
                     {
-                        cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                     }
                 }
                 break;
             case 2:
-                if (cubeMain.at(side).at(0).at(2) == 'w')
+                if (cubeMain.at(side).at(0).at(2) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 0, 2);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
                     boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                     if (cornerLocMatch)
                     {
@@ -1549,7 +1617,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             else if (sentinal == -1)
                             {
                                 // the corner setter will set the corner and will pass the control back to this function.....
-                                cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             }
                         }
@@ -1600,14 +1668,14 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                     }
                     else
                     {
-                        cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                     }
                 }
                 break;
             case 3:
-                if (cubeMain.at(side).at(2).at(0) == 'w')
+                if (cubeMain.at(side).at(2).at(0) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 2, 0);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 0);
                     boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                     if (cornerLocMatch)
                     {
@@ -1643,11 +1711,11 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                         case 0:
                             setalgo(right, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         case 1:
                             setalgo(right, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         default:
                             break;
@@ -1656,9 +1724,9 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                 }
                 break;
             case 4:
-                if (cubeMain.at(side).at(2).at(2) == 'w')
+                if (cubeMain.at(side).at(2).at(2) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 2, 2);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 2);
                     boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                     if (cornerLocMatch)
                     {
@@ -1694,11 +1762,11 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                         case 0:
                             setalgo(back, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         case 1:
                             setalgo(back, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         default:
                             break;
@@ -1716,9 +1784,9 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
             switch (block)
             {
             case 1:
-                if (cubeMain.at(side).at(0).at(0) == 'w')
+                if (cubeMain.at(side).at(0).at(0) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 0, 0);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
                     boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                     if (cornerLocMatch)
                     {
@@ -1737,7 +1805,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             else if (sentinal == -1)
                             {
                                 // the corner setter will set the corner and will pass the control back to this function.....
-                                cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             }
                         }
@@ -1788,14 +1856,14 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                     } // this else is for the condition when the corner or edge is not on the right location....
                     else
                     {
-                        cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                     }
                 }
                 break;
             case 2:
-                if (cubeMain.at(side).at(0).at(2) == 'w')
+                if (cubeMain.at(side).at(0).at(2) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 0, 2);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
                     boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                     if (cornerLocMatch)
                     {
@@ -1814,7 +1882,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             else if (sentinal == -1)
                             {
                                 // the corner setter will set the corner and will pass the control back to this function.....
-                                cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             }
                         }
@@ -1865,14 +1933,14 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                     }
                     else
                     {
-                        cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                     }
                 }
                 break;
             case 3:
-                if (cubeMain.at(side).at(2).at(0) == 'w')
+                if (cubeMain.at(side).at(2).at(0) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 2, 0);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 0);
                     boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                     if (cornerLocMatch)
                     {
@@ -1908,11 +1976,11 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                         case 0:
                             setalgo(back, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         case 1:
                             setalgo(back, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         default:
                             break;
@@ -1921,9 +1989,9 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                 }
                 break;
             case 4:
-                if (cubeMain.at(side).at(2).at(2) == 'w')
+                if (cubeMain.at(side).at(2).at(2) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 2, 2);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 2);
                     boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                     if (cornerLocMatch)
                     {
@@ -1959,11 +2027,11 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                         case 0:
                             setalgo(left, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         case 1:
                             setalgo(left, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                             break;
                         default:
                             break;
@@ -1981,9 +2049,9 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
             switch (block)
             {
             case 1:
-                if (cubeMain.at(side).at(0).at(0) == 'w')
+                if (cubeMain.at(side).at(0).at(0) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 0, 0);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
                     boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                     if (cornerLocMatch)
                     {
@@ -2001,7 +2069,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             else if (sentinal == -1)
                             {
                                 // this is for the condition when the side elements are not in the correct location....
-                                cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             }
                         }
@@ -2052,14 +2120,14 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                     }
                     else
                     {
-                        cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                     }
                 }
                 break;
             case 2:
-                if (cubeMain.at(side).at(0).at(2) == 'w')
+                if (cubeMain.at(side).at(0).at(2) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 0, 2);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
                     boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                     if (cornerLocMatch)
                     {
@@ -2077,7 +2145,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             else if (sentinal == -1)
                             {
                                 // this is for the condition when the side elements are not in the correct location....
-                                cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             }
                         }
@@ -2128,14 +2196,14 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                     }
                     else
                     {
-                        cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                     }
                 }
                 break;
             case 3:
-                if (cubeMain.at(side).at(2).at(0) == 'w')
+                if (cubeMain.at(side).at(2).at(0) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 2, 0);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 0);
                     boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                     if (cornerLocMatch)
                     {
@@ -2153,7 +2221,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             else if (sentinal == -1)
                             {
                                 // this is for the condition when the side elements are not in the correct location....
-                                cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             }
                         }
@@ -2204,14 +2272,14 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                     }
                     else
                     {
-                        cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                     }
                 }
                 break;
             case 4:
-                if (cubeMain.at(side).at(2).at(2) == 'w')
+                if (cubeMain.at(side).at(2).at(2) == bottom_color)
                 {
-                    cornerLocMatch = cornerColorsFinder(side, 2, 2);
+                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 2);
                     boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                     if (cornerLocMatch)
                     {
@@ -2229,7 +2297,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             else if (sentinal == -1)
                             {
                                 // this is for the condition when the side elements are not in the correct location....
-                                cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             }
                         }
@@ -2280,7 +2348,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                     }
                     else
                     {
-                        cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                     }
                 }
                 break;
@@ -2353,7 +2421,7 @@ void makeCubie::OLLSolver()
         * FACE BACK
         * LEFT AND RIGHT
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-bool makeCubie::cornerColorsFinder(const int &side, const int &row, const int &col)
+bool makeCubie::cornerColorsFinder(const char &bottom_color, const int &side, const int &row, const int &col)
 {
     cornerColors.clear();
     vector<int> sideloc;
@@ -2364,13 +2432,13 @@ bool makeCubie::cornerColorsFinder(const int &side, const int &row, const int &c
         sideloc.push_back(face);
         sideloc.push_back(top);
         sideloc.push_back(right);
-        if (cubeMain[top].at(2).at(2) != 'w')
+        if (cubeMain[top].at(2).at(2) != bottom_color)
             cornerColors.push_back(cubeMain[top].at(2).at(2));
         ;
-        if (cubeMain[face].at(0).at(2) != 'w')
+        if (cubeMain[face].at(0).at(2) != bottom_color)
             cornerColors.push_back(cubeMain[face].at(0).at(2));
         ;
-        if (cubeMain[right].at(0).at(0) != 'w')
+        if (cubeMain[right].at(0).at(0) != bottom_color)
             cornerColors.push_back(cubeMain[right].at(0).at(0));
         ;
     }
@@ -2381,13 +2449,13 @@ bool makeCubie::cornerColorsFinder(const int &side, const int &row, const int &c
         sideloc.push_back(face);
         sideloc.push_back(top);
         sideloc.push_back(left);
-        if (cubeMain[top].at(2).at(0) != 'w')
+        if (cubeMain[top].at(2).at(0) != bottom_color)
             cornerColors.push_back(cubeMain[top].at(2).at(0));
         ;
-        if (cubeMain[face].at(0).at(0) != 'w')
+        if (cubeMain[face].at(0).at(0) != bottom_color)
             cornerColors.push_back(cubeMain[face].at(0).at(0));
         ;
-        if (cubeMain[left].at(0).at(2) != 'w')
+        if (cubeMain[left].at(0).at(2) != bottom_color)
             cornerColors.push_back(cubeMain[left].at(0).at(2));
         ;
     }
@@ -2398,13 +2466,13 @@ bool makeCubie::cornerColorsFinder(const int &side, const int &row, const int &c
         sideloc.push_back(back);
         sideloc.push_back(top);
         sideloc.push_back(left);
-        if (cubeMain[top].at(0).at(0) != 'w')
+        if (cubeMain[top].at(0).at(0) != bottom_color)
             cornerColors.push_back(cubeMain[top].at(0).at(0));
         ;
-        if (cubeMain[back].at(0).at(2) != 'w')
+        if (cubeMain[back].at(0).at(2) != bottom_color)
             cornerColors.push_back(cubeMain[back].at(0).at(2));
         ;
-        if (cubeMain[left].at(0).at(0) != 'w')
+        if (cubeMain[left].at(0).at(0) != bottom_color)
             cornerColors.push_back(cubeMain[left].at(0).at(0));
         ;
     }
@@ -2415,13 +2483,13 @@ bool makeCubie::cornerColorsFinder(const int &side, const int &row, const int &c
         sideloc.push_back(back);
         sideloc.push_back(top);
         sideloc.push_back(right);
-        if (cubeMain[top].at(0).at(2) != 'w')
+        if (cubeMain[top].at(0).at(2) != bottom_color)
             cornerColors.push_back(cubeMain[top].at(0).at(2));
         ;
-        if (cubeMain[back].at(0).at(0) != 'w')
+        if (cubeMain[back].at(0).at(0) != bottom_color)
             cornerColors.push_back(cubeMain[back].at(0).at(0));
         ;
-        if (cubeMain[right].at(0).at(2) != 'w')
+        if (cubeMain[right].at(0).at(2) != bottom_color)
             cornerColors.push_back(cubeMain[right].at(0).at(2));
         ;
     }
@@ -2433,13 +2501,13 @@ bool makeCubie::cornerColorsFinder(const int &side, const int &row, const int &c
         sideloc.push_back(face);
         sideloc.push_back(bottom);
         sideloc.push_back(right);
-        if (cubeMain[bottom].at(0).at(2) != 'w')
+        if (cubeMain[bottom].at(0).at(2) != bottom_color)
             cornerColors.push_back(cubeMain[bottom].at(0).at(2));
         ;
-        if (cubeMain[face].at(2).at(2) != 'w')
+        if (cubeMain[face].at(2).at(2) != bottom_color)
             cornerColors.push_back(cubeMain[face].at(2).at(2));
         ;
-        if (cubeMain[right].at(2).at(0) != 'w')
+        if (cubeMain[right].at(2).at(0) != bottom_color)
             cornerColors.push_back(cubeMain[right].at(2).at(0));
         ;
     }
@@ -2450,13 +2518,13 @@ bool makeCubie::cornerColorsFinder(const int &side, const int &row, const int &c
         sideloc.push_back(face);
         sideloc.push_back(bottom);
         sideloc.push_back(left);
-        if (cubeMain[bottom].at(0).at(0) != 'w')
+        if (cubeMain[bottom].at(0).at(0) != bottom_color)
             cornerColors.push_back(cubeMain[bottom].at(0).at(0));
         ;
-        if (cubeMain[face].at(2).at(0) != 'w')
+        if (cubeMain[face].at(2).at(0) != bottom_color)
             cornerColors.push_back(cubeMain[face].at(2).at(0));
         ;
-        if (cubeMain[left].at(2).at(2) != 'w')
+        if (cubeMain[left].at(2).at(2) != bottom_color)
             cornerColors.push_back(cubeMain[left].at(2).at(2));
         ;
     }
@@ -2467,13 +2535,13 @@ bool makeCubie::cornerColorsFinder(const int &side, const int &row, const int &c
         sideloc.push_back(left);
         sideloc.push_back(bottom);
         sideloc.push_back(back);
-        if (cubeMain[bottom].at(2).at(0) != 'w')
+        if (cubeMain[bottom].at(2).at(0) != bottom_color)
             cornerColors.push_back(cubeMain[bottom].at(2).at(0));
         ;
-        if (cubeMain[back].at(2).at(2) != 'w')
+        if (cubeMain[back].at(2).at(2) != bottom_color)
             cornerColors.push_back(cubeMain[back].at(2).at(2));
         ;
-        if (cubeMain[left].at(2).at(0) != 'w')
+        if (cubeMain[left].at(2).at(0) != bottom_color)
             cornerColors.push_back(cubeMain[left].at(2).at(0));
         ;
     }
@@ -2484,13 +2552,13 @@ bool makeCubie::cornerColorsFinder(const int &side, const int &row, const int &c
         sideloc.push_back(back);
         sideloc.push_back(bottom);
         sideloc.push_back(right);
-        if (cubeMain[bottom].at(2).at(2) != 'w')
+        if (cubeMain[bottom].at(2).at(2) != bottom_color)
             cornerColors.push_back(cubeMain[bottom].at(2).at(2));
         ;
-        if (cubeMain[back].at(2).at(0) != 'w')
+        if (cubeMain[back].at(2).at(0) != bottom_color)
             cornerColors.push_back(cubeMain[back].at(2).at(0));
         ;
-        if (cubeMain[right].at(2).at(2) != 'w')
+        if (cubeMain[right].at(2).at(2) != bottom_color)
             cornerColors.push_back(cubeMain[right].at(2).at(2));
         ;
     }
@@ -2678,7 +2746,7 @@ bool makeCubie::edgeSetterOnTop(makeCubie &temp_cube, const char &color_1, const
 THIS FUNCTION SIMPLY MOVES THE CORNER ELEMENT TO THE CORRECT LOCATION, IF IT IS ON THE TOP SIDE OF THE CUBE
    AND IF F2LHELPER === "CALL_F2LHELPER" THAN IT WILL CALL THE REQUIRED SIDE OF F2LHELPER FUNCTION
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, const char &color_3, string_view F2LHelper)
+void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_1, const char &color_2, const char &color_3, string_view F2LHelper)
 {
     temp_cube = *this;
     vector<char> colors{color_2, color_3};
@@ -2688,7 +2756,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
     {
         colorCount = 0;
         //--------------------- ifs for TOP , FACE AND RIGHT ANGLED CORNER ---------------------
-        if (temp_cube.cubeMain[top].at(2).at(2) == 'w' && temp_cube.cubeMain[face].at(0).at(2) == color_2 && temp_cube.cubeMain[right].at(0).at(0) == color_3)
+        if (temp_cube.cubeMain[top].at(2).at(2) == color_1 && temp_cube.cubeMain[face].at(0).at(2) == color_2 && temp_cube.cubeMain[right].at(0).at(0) == color_3)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -2710,7 +2778,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(2).at(2) == color_3 && temp_cube.cubeMain[face].at(0).at(2) == 'w' && temp_cube.cubeMain[right].at(0).at(0) == color_2)
+        else if (temp_cube.cubeMain[top].at(2).at(2) == color_3 && temp_cube.cubeMain[face].at(0).at(2) == color_1 && temp_cube.cubeMain[right].at(0).at(0) == color_2)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -2732,7 +2800,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(2).at(2) == color_2 && temp_cube.cubeMain[face].at(0).at(2) == color_3 && temp_cube.cubeMain[right].at(0).at(0) == 'w')
+        else if (temp_cube.cubeMain[top].at(2).at(2) == color_2 && temp_cube.cubeMain[face].at(0).at(2) == color_3 && temp_cube.cubeMain[right].at(0).at(0) == color_1)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -2754,7 +2822,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(2).at(2) == color_3 && temp_cube.cubeMain[face].at(0).at(2) == color_2 && temp_cube.cubeMain[right].at(0).at(0) == 'w')
+        else if (temp_cube.cubeMain[top].at(2).at(2) == color_3 && temp_cube.cubeMain[face].at(0).at(2) == color_2 && temp_cube.cubeMain[right].at(0).at(0) == color_1)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -2776,7 +2844,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(2).at(2) == 'w' && temp_cube.cubeMain[face].at(0).at(2) == color_3 && temp_cube.cubeMain[right].at(0).at(0) == color_2)
+        else if (temp_cube.cubeMain[top].at(2).at(2) == color_1 && temp_cube.cubeMain[face].at(0).at(2) == color_3 && temp_cube.cubeMain[right].at(0).at(0) == color_2)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -2798,7 +2866,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(2).at(2) == color_2 && temp_cube.cubeMain[face].at(0).at(2) == 'w' && temp_cube.cubeMain[right].at(0).at(0) == color_3)
+        else if (temp_cube.cubeMain[top].at(2).at(2) == color_2 && temp_cube.cubeMain[face].at(0).at(2) == color_1 && temp_cube.cubeMain[right].at(0).at(0) == color_3)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -2821,7 +2889,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
             }
         }
         //--------------------- ifs for TOP , BACK AND RIGHT ANGLED CORNER ----------------------
-        else if (temp_cube.cubeMain[top].at(0).at(2) == 'w' && temp_cube.cubeMain[back].at(0).at(0) == color_2 && temp_cube.cubeMain[right].at(0).at(2) == color_3)
+        else if (temp_cube.cubeMain[top].at(0).at(2) == color_1 && temp_cube.cubeMain[back].at(0).at(0) == color_2 && temp_cube.cubeMain[right].at(0).at(2) == color_3)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -2843,7 +2911,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(0).at(2) == color_3 && temp_cube.cubeMain[back].at(0).at(0) == 'w' && temp_cube.cubeMain[right].at(0).at(2) == color_2)
+        else if (temp_cube.cubeMain[top].at(0).at(2) == color_3 && temp_cube.cubeMain[back].at(0).at(0) == color_1 && temp_cube.cubeMain[right].at(0).at(2) == color_2)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -2865,7 +2933,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(0).at(2) == color_2 && temp_cube.cubeMain[back].at(0).at(0) == color_3 && temp_cube.cubeMain[right].at(0).at(2) == 'w')
+        else if (temp_cube.cubeMain[top].at(0).at(2) == color_2 && temp_cube.cubeMain[back].at(0).at(0) == color_3 && temp_cube.cubeMain[right].at(0).at(2) == color_1)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -2887,7 +2955,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(0).at(2) == color_3 && temp_cube.cubeMain[back].at(0).at(0) == color_2 && temp_cube.cubeMain[right].at(0).at(2) == 'w')
+        else if (temp_cube.cubeMain[top].at(0).at(2) == color_3 && temp_cube.cubeMain[back].at(0).at(0) == color_2 && temp_cube.cubeMain[right].at(0).at(2) == color_1)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -2909,7 +2977,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(0).at(2) == 'w' && temp_cube.cubeMain[back].at(0).at(0) == color_3 && temp_cube.cubeMain[right].at(0).at(2) == color_2)
+        else if (temp_cube.cubeMain[top].at(0).at(2) == color_1 && temp_cube.cubeMain[back].at(0).at(0) == color_3 && temp_cube.cubeMain[right].at(0).at(2) == color_2)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -2931,7 +2999,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(0).at(2) == color_2 && temp_cube.cubeMain[back].at(0).at(0) == 'w' && temp_cube.cubeMain[right].at(0).at(2) == color_3)
+        else if (temp_cube.cubeMain[top].at(0).at(2) == color_2 && temp_cube.cubeMain[back].at(0).at(0) == color_1 && temp_cube.cubeMain[right].at(0).at(2) == color_3)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -2954,7 +3022,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
             }
         }
         //--------------------- ifs for TOP , BACK AND LEFT ANGLED CORNER ----------------------
-        else if (temp_cube.cubeMain[top].at(0).at(0) == 'w' && temp_cube.cubeMain[back].at(0).at(2) == color_2 && temp_cube.cubeMain[left].at(0).at(0) == color_3)
+        else if (temp_cube.cubeMain[top].at(0).at(0) == color_1 && temp_cube.cubeMain[back].at(0).at(2) == color_2 && temp_cube.cubeMain[left].at(0).at(0) == color_3)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -2976,7 +3044,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(0).at(0) == color_3 && temp_cube.cubeMain[back].at(0).at(2) == 'w' && temp_cube.cubeMain[left].at(0).at(0) == color_2)
+        else if (temp_cube.cubeMain[top].at(0).at(0) == color_3 && temp_cube.cubeMain[back].at(0).at(2) == color_1 && temp_cube.cubeMain[left].at(0).at(0) == color_2)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -2998,7 +3066,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(0).at(0) == color_2 && temp_cube.cubeMain[back].at(0).at(2) == color_3 && temp_cube.cubeMain[left].at(0).at(0) == 'w')
+        else if (temp_cube.cubeMain[top].at(0).at(0) == color_2 && temp_cube.cubeMain[back].at(0).at(2) == color_3 && temp_cube.cubeMain[left].at(0).at(0) == color_1)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -3020,7 +3088,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(0).at(0) == color_3 && temp_cube.cubeMain[back].at(0).at(2) == color_2 && temp_cube.cubeMain[left].at(0).at(0) == 'w')
+        else if (temp_cube.cubeMain[top].at(0).at(0) == color_3 && temp_cube.cubeMain[back].at(0).at(2) == color_2 && temp_cube.cubeMain[left].at(0).at(0) == color_1)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -3042,7 +3110,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(0).at(0) == 'w' && temp_cube.cubeMain[back].at(0).at(2) == color_3 && temp_cube.cubeMain[left].at(0).at(0) == color_2)
+        else if (temp_cube.cubeMain[top].at(0).at(0) == color_1 && temp_cube.cubeMain[back].at(0).at(2) == color_3 && temp_cube.cubeMain[left].at(0).at(0) == color_2)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -3064,7 +3132,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(0).at(0) == color_2 && temp_cube.cubeMain[back].at(0).at(2) == 'w' && temp_cube.cubeMain[left].at(0).at(0) == color_3)
+        else if (temp_cube.cubeMain[top].at(0).at(0) == color_2 && temp_cube.cubeMain[back].at(0).at(2) == color_1 && temp_cube.cubeMain[left].at(0).at(0) == color_3)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -3087,7 +3155,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
             }
         }
         //--------------------- ifs for TOP , FACE AND LEFT ANGLED CORNER ----------------------
-        else if (temp_cube.cubeMain[top].at(2).at(0) == 'w' && temp_cube.cubeMain[face].at(0).at(0) == color_2 && temp_cube.cubeMain[left].at(0).at(2) == color_3)
+        else if (temp_cube.cubeMain[top].at(2).at(0) == color_1 && temp_cube.cubeMain[face].at(0).at(0) == color_2 && temp_cube.cubeMain[left].at(0).at(2) == color_3)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -3109,7 +3177,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(2).at(0) == color_3 && temp_cube.cubeMain[face].at(0).at(0) == 'w' && temp_cube.cubeMain[left].at(0).at(2) == color_2)
+        else if (temp_cube.cubeMain[top].at(2).at(0) == color_3 && temp_cube.cubeMain[face].at(0).at(0) == color_1 && temp_cube.cubeMain[left].at(0).at(2) == color_2)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -3131,7 +3199,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(2).at(0) == color_2 && temp_cube.cubeMain[face].at(0).at(0) == color_3 && temp_cube.cubeMain[left].at(0).at(2) == 'w')
+        else if (temp_cube.cubeMain[top].at(2).at(0) == color_2 && temp_cube.cubeMain[face].at(0).at(0) == color_3 && temp_cube.cubeMain[left].at(0).at(2) == color_1)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -3153,7 +3221,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(2).at(0) == color_3 && temp_cube.cubeMain[face].at(0).at(0) == color_2 && temp_cube.cubeMain[left].at(0).at(2) == 'w')
+        else if (temp_cube.cubeMain[top].at(2).at(0) == color_3 && temp_cube.cubeMain[face].at(0).at(0) == color_2 && temp_cube.cubeMain[left].at(0).at(2) == color_1)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -3175,7 +3243,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(2).at(0) == 'w' && temp_cube.cubeMain[face].at(0).at(0) == color_3 && temp_cube.cubeMain[left].at(0).at(2) == color_2)
+        else if (temp_cube.cubeMain[top].at(2).at(0) == color_1 && temp_cube.cubeMain[face].at(0).at(0) == color_3 && temp_cube.cubeMain[left].at(0).at(2) == color_2)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -3197,7 +3265,7 @@ void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_2, con
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(2).at(0) == color_2 && temp_cube.cubeMain[face].at(0).at(0) == 'w' && temp_cube.cubeMain[left].at(0).at(2) == color_3)
+        else if (temp_cube.cubeMain[top].at(2).at(0) == color_2 && temp_cube.cubeMain[face].at(0).at(0) == color_1 && temp_cube.cubeMain[left].at(0).at(2) == color_3)
         {
             for (int i{0}; i < 2; i++)
             {
@@ -3528,6 +3596,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
 {
     temp_cube = *this;
     int sentinal;
+    const char bottom_color{cubeMain.at(bottom).at(1).at(1)};
     bool cornerLocMatch{false}, boolEdgeSetter{false};
 
     // -------------------------------------------------- FACE SIDE ---------------------------------------------------------------
@@ -3538,7 +3607,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
         case 1:
             if (cubeMain.at(side).at(0).at(0) == 'w')
             {
-                cornerLocMatch = cornerColorsFinder(side, 0, 0);
+                cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
@@ -3557,7 +3626,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         else if (sentinal == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -3611,7 +3680,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
         case 2:
             if (cubeMain.at(side).at(0).at(2) == 'w')
             {
-                cornerLocMatch = cornerColorsFinder(side, 0, 2);
+                cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
@@ -3630,7 +3699,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         else if (sentinal == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -3693,7 +3762,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
         case 1:
             if (cubeMain.at(side).at(0).at(0) == 'w')
             {
-                cornerLocMatch = cornerColorsFinder(side, 0, 0);
+                cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
@@ -3712,7 +3781,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         else if (sentinal == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -3766,7 +3835,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
         case 2:
             if (cubeMain.at(side).at(0).at(2) == 'w')
             {
-                cornerLocMatch = cornerColorsFinder(side, 0, 2);
+                cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
@@ -3785,7 +3854,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         else if (sentinal == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -3848,7 +3917,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
         case 1:
             if (cubeMain.at(side).at(0).at(0) == 'w')
             {
-                cornerLocMatch = cornerColorsFinder(side, 0, 0);
+                cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
@@ -3867,7 +3936,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         else if (sentinal == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -3921,7 +3990,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
         case 2:
             if (cubeMain.at(side).at(0).at(2) == 'w')
             {
-                cornerLocMatch = cornerColorsFinder(side, 0, 2);
+                cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
@@ -3940,7 +4009,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         else if (sentinal == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -4003,7 +4072,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
         case 1:
             if (cubeMain.at(side).at(0).at(0) == 'w')
             {
-                cornerLocMatch = cornerColorsFinder(side, 0, 0);
+                cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
@@ -4022,7 +4091,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         else if (sentinal == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -4076,7 +4145,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
         case 2:
             if (cubeMain.at(side).at(0).at(2) == 'w')
             {
-                cornerLocMatch = cornerColorsFinder(side, 0, 2);
+                cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
@@ -4095,7 +4164,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         else if (sentinal == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -4158,7 +4227,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
         case 1:
             if (cubeMain.at(side).at(0).at(0) == 'w')
             {
-                cornerLocMatch = cornerColorsFinder(side, 0, 0);
+                cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
@@ -4176,7 +4245,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         else if (sentinal == -1)
                         {
                             // this is for the condition when the side elements are not in the correct location....
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -4230,7 +4299,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
         case 2:
             if (cubeMain.at(side).at(0).at(2) == 'w')
             {
-                cornerLocMatch = cornerColorsFinder(side, 0, 2);
+                cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
@@ -4248,7 +4317,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         else if (sentinal == -1)
                         {
                             // this is for the condition when the side elements are not in the correct location....
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -4302,7 +4371,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
         case 3:
             if (cubeMain.at(side).at(2).at(0) == 'w')
             {
-                cornerLocMatch = cornerColorsFinder(side, 2, 0);
+                cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 0);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
@@ -4320,7 +4389,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         else if (sentinal == -1)
                         {
                             // this is for the condition when the side elements are not in the correct location....
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -4374,7 +4443,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
         case 4:
             if (cubeMain.at(side).at(2).at(2) == 'w')
             {
-                cornerLocMatch = cornerColorsFinder(side, 2, 2);
+                cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 2);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
@@ -4392,7 +4461,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         else if (sentinal == -1)
                         {
                             // this is for the condition when the side elements are not in the correct location....
-                            cornerSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -4448,6 +4517,48 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
         }
     }
 }
+bool makeCubie::crossChecker(const makeCubie &temp_cube, const int &side)
+{
+    switch (side)
+    {
+    case face:
+        /* code */
+        if (temp_cube.cubeMain[top].at(2).at(1) == temp_cube.cubeMain[top].at(1).at(1) && temp_cube.cubeMain[right].at(1).at(0) == temp_cube.cubeMain[right].at(1).at(1) && temp_cube.cubeMain[bottom].at(0).at(1) == temp_cube.cubeMain[bottom].at(1).at(1) && temp_cube.cubeMain[left].at(1).at(2) == temp_cube.cubeMain[left].at(1).at(1))
+            return true;
+        break;
+    case back:
+        /* code */
+        if (temp_cube.cubeMain[top].at(0).at(1) == temp_cube.cubeMain[top].at(1).at(1) && temp_cube.cubeMain[left].at(1).at(0) == temp_cube.cubeMain[left].at(1).at(1) && temp_cube.cubeMain[bottom].at(2).at(1) == temp_cube.cubeMain[bottom].at(1).at(1) && temp_cube.cubeMain[right].at(1).at(2) == temp_cube.cubeMain[right].at(1).at(1))
+            return true;
+        break;
+    case left:
+        /* code */
+        if (temp_cube.cubeMain[top].at(1).at(0) == temp_cube.cubeMain[top].at(1).at(1) && temp_cube.cubeMain[face].at(1).at(0) == temp_cube.cubeMain[face].at(1).at(1) && temp_cube.cubeMain[bottom].at(1).at(0) == temp_cube.cubeMain[bottom].at(1).at(1) && temp_cube.cubeMain[back].at(1).at(2) == temp_cube.cubeMain[back].at(1).at(1))
+            return true;
+        break;
+    case right:
+        /* code */
+        if (temp_cube.cubeMain[top].at(1).at(2) == temp_cube.cubeMain[top].at(1).at(1) && temp_cube.cubeMain[back].at(1).at(0) == temp_cube.cubeMain[back].at(1).at(1) && temp_cube.cubeMain[bottom].at(1).at(2) == temp_cube.cubeMain[bottom].at(1).at(1) && temp_cube.cubeMain[face].at(1).at(2) == temp_cube.cubeMain[face].at(1).at(1))
+            return true;
+        break;
+    case top:
+        /* code */
+        if (temp_cube.cubeMain[face].at(0).at(1) == temp_cube.cubeMain[face].at(1).at(1) && temp_cube.cubeMain[right].at(0).at(1) == temp_cube.cubeMain[right].at(1).at(1) && temp_cube.cubeMain[back].at(0).at(1) == temp_cube.cubeMain[back].at(1).at(1) && temp_cube.cubeMain[left].at(0).at(1) == temp_cube.cubeMain[left].at(1).at(1))
+            return true;
+        break;
+    case bottom:
+        /* code */
+        if (temp_cube.cubeMain[face].at(2).at(1) == temp_cube.cubeMain[face].at(1).at(1) && temp_cube.cubeMain[right].at(2).at(1) == temp_cube.cubeMain[right].at(1).at(1) && temp_cube.cubeMain[back].at(2).at(1) == temp_cube.cubeMain[back].at(1).at(1) && temp_cube.cubeMain[left].at(2).at(1) == temp_cube.cubeMain[left].at(1).at(1))
+            return true;
+        break;
+
+    default:
+        return false;
+        break;
+    }
+    return false;
+}
+
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCITON CHANGES THE CUBE_SOLVING_ALGORITHEMS TO THE REQUIRED IMPLEMENTAION SIDE ON THE BASIS OF SIDE PROVIDED.
    ----------------------------------------------------------------------------------------------------------------------------------------*/
@@ -4571,90 +4682,42 @@ void makeCubie::setalgo(const int &side, string str_algo, string_view applySolut
         }
     }
     tempSolution.push_back(move);
-    // this loop applies the operations stored in the arr_algo vector and pushback the opereation to the slution vector....
-    // for (size_t i{0}; i < arr_algo.size(); i++)
-    // {
-    //     if (arr_algo.at(i) == "F")
-    //     {
-    //         tempSolution.push_back("F");
-    //     }
-    //     else if (arr_algo.at(i) == "L")
-    //     {
-    //         tempSolution.push_back("L");
-    //     }
-    //     else if (arr_algo.at(i) == "R")
-    //     {
-    //         tempSolution.push_back("R");
-    //     }
-    //     else if (arr_algo.at(i) == "U")
-    //     {
-    //         tempSolution.push_back("U");
-    //     }
-    //     else if (arr_algo.at(i) == "D")
-    //     {
-    //         tempSolution.push_back("D");
-    //     }
-    //     else if (arr_algo.at(i) == "B")
-    //     {
-    //         tempSolution.push_back("B");
-    //     }
-    //     else if (arr_algo.at(i) == "FP")
-    //     {
-    //         tempSolution.push_back("FP");
-    //     }
-    //     else if (arr_algo.at(i) == "LP")
-    //     {
-    //         tempSolution.push_back("LP");
-    //     }
-    //     else if (arr_algo.at(i) == "RP")
-    //     {
-    //         tempSolution.push_back("RP");
-    //     }
-    //     else if (arr_algo.at(i) == "UP")
-    //     {
-    //         tempSolution.push_back("UP");
-    //     }
-    //     else if (arr_algo.at(i) == "DP")
-    //     {
-    //         tempSolution.push_back("DP");
-    //     }
-    //     else if (arr_algo.at(i) == "BP")
-    //     {
-    //         tempSolution.push_back("BP");
-    //     }
-    //     else if (arr_algo.at(i) == "M")
-    //     {
-    //         tempSolution.push_back("M");
-    //     }
-    //     else if (arr_algo.at(i) == "S")
-    //     {
-    //         tempSolution.push_back("S");
-    //     }
-    //     else if (arr_algo.at(i) == "E")
-    //     {
-    //         tempSolution.push_back("E");
-    //     }
-    //     else if (arr_algo.at(i) == "MP")
-    //     {
-    //         tempSolution.push_back("MP");
-    //     }
-    //     else if (arr_algo.at(i) == "SP")
-    //     {
-    //         tempSolution.push_back("SP");
-    //     }
-    //     else if (arr_algo.at(i) == "EP")
-    //     {
-    //         tempSolution.push_back("EP");
-    //     }
-    // }
     applySolution(applySolutionOn);
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CALLS THE F2LSOLVER ON TEMPRORY CUBE UNTIL IT FINDES THE SHORTEST POSSIBLE F2L SOLUTION.
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-void makeCubie::shortestF2LSolver()
+void makeCubie::shortestF2LSolver(const int &crossSide)
 {
+    // CORRECTING THE CUBES ORIENTATIONS FOR SOLVING F2L LAYER
+    switch (crossSide)
+    {
+    case face:
+        /* code */
+        XP;
+        break;
+    case left:
+        /* code */
+        ZP;
+        break;
+    case right:
+        /* code */
+        Z;
+        break;
+    case back:
+        /* code */
+        X;
+        break;
+    case top:
+        /* code */
+        X;
+        X;
+        break;
+    default:
+        break;
+    }
     unsigned int trials{0};
+    int F2LSolutionSize{0}, benchmark{35};
     bool solve{false};
     makeCubie solveF2L(*this);
     makeCubie temp_cube(*this);
@@ -4664,33 +4727,17 @@ void makeCubie::shortestF2LSolver()
         cout << "\r " << trials << " tried....";
         solveF2L = temp_cube = *this;
         solveF2L.f2lSolver(temp_cube);
-        if (trials < 1500)
+        F2LSolutionSize = solveF2L.F2LSolution.size();
+        if (trials < 5000)
         {
-            if (solveF2L.F2LSolution.size() > 26)
+            if (F2LSolutionSize < benchmark)
             {
+                benchmark = F2LSolutionSize;
+                this->tempSolution = solveF2L.F2LSolution;
                 solveF2L.F2LSolution.clear();
                 continue;
             }
-        }
-        else if (trials < 3000)
-        {
-            if (solveF2L.F2LSolution.size() > 29)
-            {
-                solveF2L.F2LSolution.clear();
-                continue;
-            }
-        }
-        else if (trials < 5000)
-        {
-            if (solveF2L.F2LSolution.size() > 32)
-            {
-                solveF2L.F2LSolution.clear();
-                continue;
-            }
-        }
-        else
-        {
-            if (solveF2L.F2LSolution.size() > 35)
+            else
             {
                 solveF2L.F2LSolution.clear();
                 continue;
@@ -4698,8 +4745,8 @@ void makeCubie::shortestF2LSolver()
         }
         solve = true;
     }
-    *this = solveF2L;
-    this->F2LSolution = solveF2L.F2LSolution;
+    this->applySolution("f2l");
+    algorithmCorrector(crossSide, this->F2LSolution);
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CODES THE OLL LAYER IN '1' AND '0' CHARACTER.
@@ -4711,35 +4758,36 @@ void makeCubie::shortestF2LSolver()
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 string makeCubie::OLLCoder()
 {
+    const char top_color{cubeMain.at(top).at(1).at(1)};
     string OLLCode{};
     // CODING TOP SIDE OF THE CUBE.....
     for (auto vecOfvec : cubeMain[top])
         for (auto vecOfchar : vecOfvec)
-            if (vecOfchar == 'y')
+            if (vecOfchar == top_color)
                 OLLCode += '1';
             else
                 OLLCode += '0';
     // CODING FIRST ROW OF FACE SIDE OF THE CUBE.....
     for (auto vecOfchar : cubeMain[face].at(0))
-        if (vecOfchar == 'y')
+        if (vecOfchar == top_color)
             OLLCode += '1';
         else
             OLLCode += '0';
     // CODING FIRST ROW OF RIGHT SIDE OF THE CUBE.....
     for (auto vecOfchar : cubeMain[right].at(0))
-        if (vecOfchar == 'y')
+        if (vecOfchar == top_color)
             OLLCode += '1';
         else
             OLLCode += '0';
     // CODING FIRST ROW OF BACK SIDE OF THE CUBE.....
     for (auto vecOfchar : cubeMain[back].at(0))
-        if (vecOfchar == 'y')
+        if (vecOfchar == top_color)
             OLLCode += '1';
         else
             OLLCode += '0';
     // CODING FIRST ROW OF LEFT SIDE OF THE CUBE.....
     for (auto vecOfchar : cubeMain[left].at(0))
-        if (vecOfchar == 'y')
+        if (vecOfchar == top_color)
             OLLCode += '1';
         else
             OLLCode += '0';
@@ -5031,6 +5079,36 @@ void makeCubie::applySolution(string_view applySolutionOn)
             DP;
         else if (tempSolution.at(i) == "BP")
             BP;
+        else if (tempSolution.at(i) == "2F")
+        {
+            F;
+            F;
+        }
+        else if (tempSolution.at(i) == "2L")
+        {
+            L;
+            L;
+        }
+        else if (tempSolution.at(i) == "2R")
+        {
+            R;
+            R;
+        }
+        else if (tempSolution.at(i) == "2U")
+        {
+            U;
+            U;
+        }
+        else if (tempSolution.at(i) == "2D")
+        {
+            D;
+            D;
+        }
+        else if (tempSolution.at(i) == "2B")
+        {
+            B;
+            B;
+        }
         else if (tempSolution.at(i) == "M")
             M;
         else if (tempSolution.at(i) == "S")
@@ -5043,6 +5121,21 @@ void makeCubie::applySolution(string_view applySolutionOn)
             SP;
         else if (tempSolution.at(i) == "EP")
             EP;
+        else if (tempSolution.at(i) == "2M")
+        {
+            M;
+            M;
+        }
+        else if (tempSolution.at(i) == "2S")
+        {
+            S;
+            S;
+        }
+        else if (tempSolution.at(i) == "2E")
+        {
+            E;
+            E;
+        }
     }
     if (applySolutionOn == "f2l")
         for (size_t i{0}; i < tempSolution.size(); i++)
@@ -5069,22 +5162,22 @@ string sideColor(const int &colorAsci)
     switch (colorAsci)
     {
     case 0:
-        return "BLUE";
+        return "FACE";
         break;
     case 1:
-        return "GREEN";
+        return "BACK";
         break;
     case 2:
-        return "ORANGE";
+        return "LEFT";
         break;
     case 3:
-        return "RED";
+        return "RIGHT";
         break;
     case 4:
-        return "YELLOW";
+        return "TOP";
         break;
     case 5:
-        return "WHITE";
+        return "BOTTOM";
         break;
     default:
         return "ERROR FINDING COLOR NAME...";
@@ -5176,4 +5269,190 @@ void solutionOptimizer(vector<std::string> &solution)
             }
         }
     }
+}
+
+void makeCubie::algorithmCorrector(const int &side, vector<string> &algorithm)
+{
+    if (side == face)
+    {
+        for (size_t i{0}; i < algorithm.size(); i++)
+        {
+            // L will remain same in this case....
+            // R will remain same in this case....
+            // M will remain same in this case....
+            if (algorithm.at(i).at(0) == 'F')
+                algorithm.at(i).at(0) = 'U';
+            else if (algorithm.at(i) == "2F")
+                algorithm.at(i) = "2U";
+            else if (algorithm.at(i).at(0) == 'U')
+                algorithm.at(i).at(0) = 'B';
+            else if (algorithm.at(i) == "2U")
+                algorithm.at(i) = "2B";
+            else if (algorithm.at(i).at(0) == 'D')
+                algorithm.at(i).at(0) = 'F';
+            else if (algorithm.at(i) == "2D")
+                algorithm.at(i) = "2F";
+            else if (algorithm.at(i).at(0) == 'B')
+                algorithm.at(i).at(0) = 'D';
+            else if (algorithm.at(i) == "2B")
+                algorithm.at(i) = "2D";
+            else if (algorithm.at(i).at(0) == 'E')
+                algorithm.at(i).at(0) = 'S';
+            else if (algorithm.at(i) == "2E")
+                algorithm.at(i) = "2S";
+            else if (algorithm.at(i) == "S")
+                algorithm.at(i) = "EP";
+            else if (algorithm.at(i) == "SP")
+                algorithm.at(i) = "E";
+            else if (algorithm.at(i) == "2S")
+                algorithm.at(i) = "2E";
+        }
+    }
+    else if (side == left)
+    {
+        for (size_t i{0}; i < algorithm.size(); i++)
+        {
+            // F will remain same in this case....
+            // B will remain same in this case....
+            // S will remain same in this case....
+            if (algorithm.at(i).at(0) == 'L')
+                algorithm.at(i).at(0) = 'U';
+            else if (algorithm.at(i) == "2L")
+                algorithm.at(i) = "2U";
+            else if (algorithm.at(i).at(0) == 'R')
+                algorithm.at(i).at(0) = 'D';
+            else if (algorithm.at(i) == "2R")
+                algorithm.at(i) = "2D";
+            else if (algorithm.at(i).at(0) == 'U')
+                algorithm.at(i).at(0) = 'R';
+            else if (algorithm.at(i) == "2U")
+                algorithm.at(i) = "2R";
+            else if (algorithm.at(i).at(0) == 'D')
+                algorithm.at(i).at(0) = 'L';
+            else if (algorithm.at(i) == "2D")
+                algorithm.at(i) = "2L";
+            else if (algorithm.at(i) == "M")
+                algorithm.at(i) = "EP";
+            else if (algorithm.at(i) == "MP")
+                algorithm.at(i) = "E";
+            else if (algorithm.at(i) == "2M")
+                algorithm.at(i) = "2E";
+            else if (algorithm.at(i).at(0) == 'E')
+                algorithm.at(i).at(0) = 'M';
+            else if (algorithm.at(i) == "2E")
+                algorithm.at(i) = "2M";
+        }
+    }
+    else if (side == right)
+    {
+        for (size_t i{0}; i < algorithm.size(); i++)
+        {
+            // F will remain same in this case....
+            // B will remain same in this case....
+            // S will remain same in this case....
+            if (algorithm.at(i).at(0) == 'L')
+                algorithm.at(i).at(0) = 'D';
+            else if (algorithm.at(i) == "2L")
+                algorithm.at(i) = "2D";
+            else if (algorithm.at(i).at(0) == 'R')
+                algorithm.at(i).at(0) = 'U';
+            else if (algorithm.at(i) == "2R")
+                algorithm.at(i) = "2U";
+            else if (algorithm.at(i).at(0) == 'U')
+                algorithm.at(i).at(0) = 'L';
+            else if (algorithm.at(i) == "2U")
+                algorithm.at(i) = "2L";
+            else if (algorithm.at(i).at(0) == 'D')
+                algorithm.at(i).at(0) = 'R';
+            else if (algorithm.at(i) == "2D")
+                algorithm.at(i) = "2R";
+            else if (algorithm.at(i).at(0) == 'M')
+                algorithm.at(i).at(0) = 'E';
+            else if (algorithm.at(i) == "2M")
+                algorithm.at(i) = "2E";
+            else if (algorithm.at(i) == "E")
+                algorithm.at(i) = "MP";
+            else if (algorithm.at(i) == "EP")
+                algorithm.at(i) = "M";
+            else if (algorithm.at(i) == "2E")
+                algorithm.at(i) = "2M";
+        }
+    }
+    else if (side == back)
+    {
+        for (size_t i{0}; i < algorithm.size(); i++)
+        {
+            // L will remain same in this case....
+            // R will remain same in this case....
+            // M will remain same in this case....
+            if (algorithm.at(i).at(0) == 'F')
+                algorithm.at(i).at(0) = 'D';
+            else if (algorithm.at(i) == "2F")
+                algorithm.at(i) = "2D";
+            else if (algorithm.at(i).at(0) == 'U')
+                algorithm.at(i).at(0) = 'F';
+            else if (algorithm.at(i) == "2U")
+                algorithm.at(i) = "2F";
+            else if (algorithm.at(i).at(0) == 'D')
+                algorithm.at(i).at(0) = 'B';
+            else if (algorithm.at(i) == "2D")
+                algorithm.at(i) = "2B";
+            else if (algorithm.at(i).at(0) == 'B')
+                algorithm.at(i).at(0) = 'U';
+            else if (algorithm.at(i) == "2B")
+                algorithm.at(i) = "2U";
+            else if (algorithm.at(i) == "E")
+                algorithm.at(i) = "SP";
+            else if (algorithm.at(i) == "EP")
+                algorithm.at(i) = "S";
+            else if (algorithm.at(i) == "2E")
+                algorithm.at(i) = "2S";
+            else if (algorithm.at(i).at(0) == 'S')
+                algorithm.at(i).at(0) = 'E';
+            else if (algorithm.at(i) == "2S")
+                algorithm.at(i) = "2E";
+        }
+    }
+    else if (side == top)
+    {
+        for (size_t i{0}; i < algorithm.size(); i++)
+        {
+            // L will remain same in this case....
+            // R will remain same in this case....
+            // M will remain same in this case....
+            if (algorithm.at(i).at(0) == 'F')
+                algorithm.at(i).at(0) = 'B';
+            else if (algorithm.at(i) == "2F")
+                algorithm.at(i) = "2B";
+            else if (algorithm.at(i).at(0) == 'U')
+                algorithm.at(i).at(0) = 'D';
+            else if (algorithm.at(i) == "2U")
+                algorithm.at(i) = "2D";
+            else if (algorithm.at(i).at(0) == 'D')
+                algorithm.at(i).at(0) = 'U';
+            else if (algorithm.at(i) == "2D")
+                algorithm.at(i) = "2U";
+            else if (algorithm.at(i).at(0) == 'B')
+                algorithm.at(i).at(0) = 'F';
+            else if (algorithm.at(i) == "2B")
+                algorithm.at(i) = "2F";
+            else if (algorithm.at(i) == "E")
+                algorithm.at(i) = "EP";
+            else if (algorithm.at(i) == "EP")
+                algorithm.at(i) = "E";
+            else if (algorithm.at(i) == "S")
+                algorithm.at(i) = "SP";
+            else if (algorithm.at(i) == "SP")
+                algorithm.at(i) = "S";
+        }
+    }
+}
+
+bool makeCubie::PLLChecker(const makeCubie &source)
+{
+    if (source.cubeMain[face].at(0).at(0) == source.cubeMain[face].at(0).at(1) == source.cubeMain[face].at(0).at(2) && source.cubeMain[right].at(0).at(0) == source.cubeMain[right].at(0).at(1) == source.cubeMain[right].at(0).at(2) && source.cubeMain[back].at(0).at(0) == source.cubeMain[back].at(0).at(1) == source.cubeMain[back].at(0).at(2) && source.cubeMain[left].at(0).at(0) == source.cubeMain[left].at(0).at(1) == source.cubeMain[left].at(0).at(2))
+    {
+        return true;
+    }
+    return false;
 }
