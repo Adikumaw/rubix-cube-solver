@@ -762,7 +762,7 @@ int makeCubie::crossSolver()
     solutionOptimizer(CrossSolution);
     // copy the temp cube to the source cube....
     *this = temp_cube;
-    std::cout << "\nCross Solved.... On" << side << "side..." << endl;
+    std::cout << "\nCross Solved.... On " << sideColor(side) << "  side..." << endl;
     return side;
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
@@ -4728,25 +4728,28 @@ void makeCubie::shortestF2LSolver(const int &crossSide)
         solveF2L = temp_cube = *this;
         solveF2L.f2lSolver(temp_cube);
         F2LSolutionSize = solveF2L.F2LSolution.size();
-        if (trials < 5000)
+        if (F2LSolutionSize < 25)
         {
-            if (F2LSolutionSize < benchmark)
+            solveF2L.OLLSolver();
+            if (solveF2L.PLLChecker(solveF2L))
             {
-                benchmark = F2LSolutionSize;
                 this->tempSolution = solveF2L.F2LSolution;
-                solveF2L.F2LSolution.clear();
-                continue;
+                this->applySolution("f2l");
+                this->tempSolution = solveF2L.OLLSolution;
+                this->applySolution("oll");
+                break;
             }
-            else
-            {
-                solveF2L.F2LSolution.clear();
-                continue;
-            }
+            solveF2L.F2LSolution.clear();
+            solveF2L.OLLSolution.clear();
+            continue;
         }
+        solveF2L.F2LSolution.clear();
+        solveF2L.OLLSolution.clear();
+        continue;
         solve = true;
     }
-    this->applySolution("f2l");
     algorithmCorrector(crossSide, this->F2LSolution);
+    algorithmCorrector(crossSide, this->OLLSolution);
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CODES THE OLL LAYER IN '1' AND '0' CHARACTER.
@@ -4794,7 +4797,21 @@ string makeCubie::OLLCoder()
     // RETURNING THE FULLY CODED STRING.....
     return OLLCode;
 }
-/* ----------------------------------------------------------------------------------------------------------------------------------------
+/* ----------------------------------------------------------------------------------        // if (trials < 5000)
+        // {
+        //     if (F2LSolutionSize < benchmark)
+        //     {
+        //         benchmark = F2LSolutionSize;
+        //         this->tempSolution = solveF2L.F2LSolution;
+        //         solveF2L.F2LSolution.clear();
+        //         continue;
+        //     }
+        //     else
+        //     {
+        //         solveF2L.F2LSolution.clear();
+        //         continue;
+        //     }
+        // }------------------------------------------------------
    THIS FUNCTION HAVE SOLUTION FOR ALL THE CONDITIONS POSSIBLE IN OLL
    LAYER AND IT DIRECTLY CALLS THE SETALGO TO APPLY THE CONDITION.
    IT RETURNS TRUE IF THE CONDITION MATCHES THE CODE AND FALSE WHEN OLLCODE DOSEN'T MATCHES ANY CONDITION
@@ -5450,7 +5467,7 @@ void makeCubie::algorithmCorrector(const int &side, vector<string> &algorithm)
 
 bool makeCubie::PLLChecker(const makeCubie &source)
 {
-    if (source.cubeMain[face].at(0).at(0) == source.cubeMain[face].at(0).at(1) == source.cubeMain[face].at(0).at(2) && source.cubeMain[right].at(0).at(0) == source.cubeMain[right].at(0).at(1) == source.cubeMain[right].at(0).at(2) && source.cubeMain[back].at(0).at(0) == source.cubeMain[back].at(0).at(1) == source.cubeMain[back].at(0).at(2) && source.cubeMain[left].at(0).at(0) == source.cubeMain[left].at(0).at(1) == source.cubeMain[left].at(0).at(2))
+    if (source.cubeMain[face].at(0).at(0) == source.cubeMain[face].at(0).at(1) && source.cubeMain[face].at(0).at(1) == source.cubeMain[face].at(0).at(2) && source.cubeMain[right].at(0).at(0) == source.cubeMain[right].at(0).at(1) && source.cubeMain[right].at(0).at(1) == source.cubeMain[right].at(0).at(2) && source.cubeMain[back].at(0).at(0) == source.cubeMain[back].at(0).at(1) && source.cubeMain[back].at(0).at(1) == source.cubeMain[back].at(0).at(2) && source.cubeMain[left].at(0).at(0) == source.cubeMain[left].at(0).at(1) && source.cubeMain[left].at(0).at(1) == source.cubeMain[left].at(0).at(2))
     {
         return true;
     }
