@@ -154,7 +154,6 @@ makeCubie &makeCubie::operator=(const makeCubie &source)
     }
     return *this;
 }
-
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    SETTER AND GETTER FOR THE RUBIX CUBE
    ----------------------------------------------------------------------------------------------------------------------------------------*/
@@ -659,111 +658,1162 @@ void makeCubie::sideBarReceiver(const int &side, string_view sideBarDirection)
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 int makeCubie::crossSolver()
 {
-    // srand(time(NULL));
     std::mt19937 rng(std::random_device{}());
-    std::uniform_int_distribution<int> rang1to12(1, 12);
-    long int trials{0};
-    int moves{0}, side{0};
-    bool solve{false}, tenTimeLoop{false}, crossCheck{false};
+    std::uniform_int_distribution<int> rang0to4(0, 4);
+    std::uniform_int_distribution<int> rang1to4(1, 4);
+    std::uniform_int_distribution<int> rang0to1(0, 1);
+    int trials{0}, block{0}, side{0}, crossColorCount{0}, count{0}, twocorrect{0}, limit{0};
+    bool solve{false}, tenTimeSolve{false};
+    const char bottom_color{cubeMain.at(bottom).at(1).at(1)};
     makeCubie temp_cube(*this);
-    std::cout << endl;
+    vector<char> mainOrientation{}, currentOrientation{};
+    mainOrientation = move(crossColorOrientation(*this));
     while (!solve)
     {
+        trials++;
         temp_cube = *this;
-        while (!tenTimeLoop)
+        tenTimeSolve = false;
+        while (!tenTimeSolve)
         {
-            for (side = 0; side <= bottom; side++)
+            side = rang0to4(rng);
+            block = rang1to4(rng);
+            crossColorCount = crossChecker(temp_cube);
+            if (crossColorCount != 4)
             {
-                if (temp_cube.cubeMain[side].at(0).at(1) == temp_cube.cubeMain[side].at(1).at(1) && temp_cube.cubeMain[side].at(1).at(0) == temp_cube.cubeMain[side].at(1).at(1) && temp_cube.cubeMain[side].at(1).at(2) == temp_cube.cubeMain[side].at(1).at(1) && temp_cube.cubeMain[side].at(2).at(1) == temp_cube.cubeMain[side].at(1).at(1))
+                if (side >= face && side <= right)
                 {
-                    crossCheck = crossChecker(temp_cube, side);
-                    if (crossCheck == true)
+                    switch (block)
                     {
-                        solve = true;
+                    // this case is for checking the top side edge....
+                    case 1:
+                        if (temp_cube.cubeMain[side].at(0).at(1) == bottom_color)
+                        {
+                            switch (crossColorCount)
+                            {
+                                // No edges on the bottom...
+                            case 0:
+                                switch (rang0to1(rng))
+                                {
+                                case 0:
+                                    temp_cube.setalgo(side, "F RP", "crs");
+                                    break;
+                                case 1:
+                                    temp_cube.setalgo(side, "FP L", "crs");
+                                    break;
+                                default:
+                                    break;
+                                }
+                                break;
+                            // one or two edges on the bottom...
+                            case 1:
+                            case 2:
+                                currentOrientation = move(currentorientation(temp_cube));
+                                for (int i{0}; i < 4; i++)
+                                {
+                                    count = 0;
+                                    for (int j{0}; j < 4; j++)
+                                        if (currentOrientation.at(j) == mainOrientation.at(j))
+                                            count++;
+                                    if (count >= 2)
+                                        break;
+                                    else
+                                        count = 1;
+                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                }
+                                limit = count + 1;
+                                for (int twotimes{0}; twotimes < 2; twotimes++)
+                                {
+                                    for (int checkside{0}; checkside < 4; checkside++)
+                                    {
+                                        if (twotimes == 0)
+                                            temp_cube.setalgo(side, "F RP", "crs");
+                                        else
+                                            temp_cube.setalgo(side, "FP L", "crs");
+                                        crossColorCount = crossChecker(temp_cube);
+                                        if (crossColorCount >= limit)
+                                        {
+                                            // Verifying the current Orientation......
+                                            currentOrientation = move(currentorientation(temp_cube));
+                                            for (int i{0}; i < 4; i++)
+                                            {
+                                                count = 0;
+                                                for (int j{0}; j < 4; j++)
+                                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                        count++;
+                                                if (count >= limit)
+                                                    break;
+                                                std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                            }
+                                            if (count >= limit)
+                                                break;
+                                        }
+                                        // reverting the previour solution....
+                                        if (twotimes == 0)
+                                            temp_cube.setalgo(side, "R FP", "null");
+                                        else
+                                            temp_cube.setalgo(side, "LP F", "null");
+                                        temp_cube.CrossSolution.pop_back();
+                                        temp_cube.CrossSolution.pop_back();
+                                        temp_cube.setalgo(side, "D", "crs");
+                                    }
+                                    // this is for breaking the two times loop .....
+                                    if (count >= limit)
+                                        break;
+                                }
+                                break;
+                            case 3:
+                                currentOrientation = move(currentorientation(temp_cube));
+                                for (int i{0}; i < 4; i++)
+                                {
+                                    count = 0;
+                                    for (int j{0}; j < 4; j++)
+                                        if (currentOrientation.at(j) == mainOrientation.at(j))
+                                            count++;
+                                    if (count >= 3)
+                                        break;
+                                    if (count >= 2)
+                                        twocorrect = 2;
+                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                }
+                                // here the arising three conditions will be checked by count number........
+                                // When all three are correct...
+                                if (count >= 3)
+                                {
+                                    for (int twotimes{0}; twotimes < 2; twotimes++)
+                                    {
+                                        for (int checkside{0}; checkside < 4; checkside++)
+                                        {
+                                            if (twotimes == 0)
+                                                temp_cube.setalgo(side, "F RP FP", "crs");
+                                            else
+                                                temp_cube.setalgo(side, "FP L F", "crs");
+                                            crossColorCount = crossChecker(temp_cube);
+                                            if (crossColorCount == 4)
+                                            {
+                                                if (checkside == 2)
+                                                {
+                                                    // reverting to get even shorter solution....
+                                                    temp_cube.setalgo(side, "F R FP", "null");
+                                                    temp_cube.CrossSolution.pop_back();
+                                                    temp_cube.CrossSolution.pop_back();
+                                                    temp_cube.CrossSolution.pop_back();
+                                                    // for removing last two D operatrions...
+                                                    temp_cube.CrossSolution.pop_back();
+                                                    temp_cube.CrossSolution.pop_back();
+                                                    break;
+                                                }
+                                                // using count as a signal to what to do next....
+                                                count = -1;
+                                                break;
+                                            }
+                                            // reverting the previour solution....
+                                            if (twotimes == 0)
+                                                temp_cube.setalgo(side, "F R FP", "null");
+                                            else
+                                                temp_cube.setalgo(side, "FP LP F", "null");
+                                            temp_cube.CrossSolution.pop_back();
+                                            temp_cube.CrossSolution.pop_back();
+                                            temp_cube.CrossSolution.pop_back();
+                                            temp_cube.setalgo(side, "D", "crs");
+                                        }
+                                        if (count == -1)
+                                            break;
+                                    }
+                                }
+                                // When two edges are correct...
+                                else if (twocorrect == 2)
+                                {
+                                    for (int twotimes{0}; twotimes < 2; twotimes++)
+                                    {
+                                        for (int checkside{0}; checkside < 4; checkside++)
+                                        {
+                                            if (twotimes == 0)
+                                                temp_cube.setalgo(side, "F RP", "crs");
+                                            else
+                                                temp_cube.setalgo(side, "FP L", "crs");
+                                            crossColorCount = crossChecker(temp_cube);
+                                            if (crossColorCount == 2)
+                                            {
+                                                if (twotimes == 0)
+                                                    temp_cube.setalgo(side, "FP", "crs");
+                                                else
+                                                    temp_cube.setalgo(side, "F", "crs");
+                                                // using twoCorrect as a singnal.....
+                                                twocorrect = -1;
+                                            }
+                                            if (crossColorCount == 3)
+                                            {
+                                                // Verifying the current orientation...
+                                                currentOrientation = move(currentorientation(temp_cube));
+                                                for (int i{0}; i < 4; i++)
+                                                {
+                                                    count = 0;
+                                                    for (int j{0}; j < 4; j++)
+                                                        if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                            count++;
+                                                    if (count >= 3)
+                                                        break;
+                                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                                }
+                                                if (count >= 3)
+                                                    break;
+                                            }
+                                            // reverting the previour solution....
+                                            if (twocorrect == -1)
+                                            {
+                                                if (twotimes == 0)
+                                                    temp_cube.setalgo(side, "F", "null");
+                                                else
+                                                    temp_cube.setalgo(side, "FP", "null");
+                                                temp_cube.CrossSolution.pop_back();
+                                            }
+                                            if (twotimes == 0)
+                                                temp_cube.setalgo(side, "R FP", "null");
+                                            else
+                                                temp_cube.setalgo(side, "LP F", "null");
+                                            temp_cube.CrossSolution.pop_back();
+                                            temp_cube.CrossSolution.pop_back();
+                                            temp_cube.setalgo(side, "D", "crs");
+                                        }
+                                        // this is for breaking the two times loop .....
+                                        if (count >= 3)
+                                            break;
+                                    }
+                                }
+                                // When only one edge is correct...
+                                else
+                                {
+                                    for (int twotimes{0}; twotimes < 2; twotimes++)
+                                    {
+                                        for (int checkside{0}; checkside < 4; checkside++)
+                                        {
+                                            if (twotimes == 0)
+                                                temp_cube.setalgo(side, "F RP", "crs");
+                                            else
+                                                temp_cube.setalgo(side, "FP L", "crs");
+                                            crossColorCount = crossChecker(temp_cube);
+                                            if (crossColorCount <= 3)
+                                            {
+                                                // Verifying the current orientation...
+                                                currentOrientation = move(currentorientation(temp_cube));
+                                                for (int i{0}; i < 4; i++)
+                                                {
+                                                    count = 0;
+                                                    for (int j{0}; j < 4; j++)
+                                                        if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                            count++;
+                                                    if (count >= 2)
+                                                        break;
+                                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                                }
+                                                if (count >= 2)
+                                                    break;
+                                            }
+                                            // reverting the previour solution....
+                                            if (twotimes == 0)
+                                                temp_cube.setalgo(side, "R FP", "null");
+                                            else
+                                                temp_cube.setalgo(side, "LP F", "null");
+                                            temp_cube.CrossSolution.pop_back();
+                                            temp_cube.CrossSolution.pop_back();
+                                            temp_cube.setalgo(side, "D", "crs");
+                                        }
+                                        // this is for breaking the two times loop .....
+                                        if (count >= 2)
+                                            break;
+                                    }
+                                }
+                                break;
+                            default:
+                                break;
+                            }
+                        }
+                        break;
+                        // this is for checking the right side edge....
+                    case 2:
+                        if (temp_cube.cubeMain[side].at(1).at(2) == bottom_color)
+                        {
+                            switch (crossColorCount)
+                            {
+                            case 0:
+                                temp_cube.setalgo(side, "RP", "crs");
+                                break;
+                            // one or two edges on the bottom
+                            case 1:
+                            case 2:
+                                currentOrientation = move(currentorientation(temp_cube));
+                                for (int i{0}; i < 4; i++)
+                                {
+                                    count = 0;
+                                    for (int j{0}; j < 4; j++)
+                                        if (currentOrientation.at(j) == mainOrientation.at(j))
+                                            count++;
+                                    if (count >= 2)
+                                        break;
+                                    else
+                                        count = 1;
+                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                }
+                                limit = count + 1;
+                                for (int checkside{0}; checkside < 4; checkside++)
+                                {
+                                    temp_cube.setalgo(side, "RP", "crs");
+                                    crossColorCount = crossChecker(temp_cube);
+                                    if (crossColorCount >= limit)
+                                    {
+                                        // Verifying the current orientation...
+                                        currentOrientation = move(currentorientation(temp_cube));
+                                        for (int i{0}; i < 4; i++)
+                                        {
+                                            count = 0;
+                                            for (int j{0}; j < 4; j++)
+                                                if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                    count++;
+                                            if (count >= limit)
+                                                break;
+                                            std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                        }
+                                        if (count >= limit)
+                                            break;
+                                    }
+                                    // reverting the previour solution....
+                                    temp_cube.setalgo(side, "R", "null");
+                                    temp_cube.CrossSolution.pop_back();
+                                    temp_cube.setalgo(side, "D", "crs");
+                                }
+                                break;
+                            case 3:
+                                currentOrientation = move(currentorientation(temp_cube));
+                                for (int i{0}; i < 4; i++)
+                                {
+                                    count = 0;
+                                    for (int j{0}; j < 4; j++)
+                                        if (currentOrientation.at(j) == mainOrientation.at(j))
+                                            count++;
+                                    if (count >= 3)
+                                        break;
+                                    if (count >= 2)
+                                        twocorrect = 2;
+                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                }
+                                // When three edges are correct...
+                                if (count >= 3)
+                                {
+                                    for (int checkside{0}; checkside < 4; checkside++)
+                                    {
+                                        temp_cube.setalgo(side, "RP", "crs");
+                                        crossColorCount = crossChecker(temp_cube);
+                                        if (crossColorCount == 4)
+                                        {
+                                            break;
+                                        }
+                                        // reverting the previour solution....
+                                        temp_cube.setalgo(side, "R", "null");
+                                        temp_cube.CrossSolution.pop_back();
+                                        temp_cube.setalgo(side, "D", "crs");
+                                    }
+                                }
+                                // When two edges are correct...
+                                else if (twocorrect == 2)
+                                {
+                                    for (int checkside{0}; checkside < 4; checkside++)
+                                    {
+                                        temp_cube.setalgo(side, "RP", "crs");
+                                        crossColorCount = crossChecker(temp_cube);
+                                        if (crossColorCount == 3)
+                                        {
+                                            // Verifying the current orientation...
+                                            currentOrientation = move(currentorientation(temp_cube));
+                                            for (int i{0}; i < 4; i++)
+                                            {
+                                                count = 0;
+                                                for (int j{0}; j < 4; j++)
+                                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                        count++;
+                                                if (count >= 3)
+                                                    break;
+                                                std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                            }
+                                            if (count >= 3)
+                                                break;
+                                        }
+                                        // reverting the previour solution....
+                                        temp_cube.setalgo(side, "R", "null");
+                                        temp_cube.CrossSolution.pop_back();
+                                        temp_cube.setalgo(side, "D", "crs");
+                                    }
+                                }
+                                // When one edge is correct...
+                                else
+                                {
+                                    for (int checkside{0}; checkside < 4; checkside++)
+                                    {
+                                        temp_cube.setalgo(side, "RP", "crs");
+                                        crossColorCount = crossChecker(temp_cube);
+                                        if (crossColorCount <= 3)
+                                        {
+                                            // Verifying the current orientation...
+                                            currentOrientation = move(currentorientation(temp_cube));
+                                            for (int i{0}; i < 4; i++)
+                                            {
+                                                count = 0;
+                                                for (int j{0}; j < 4; j++)
+                                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                        count++;
+                                                if (count >= 2)
+                                                    break;
+                                                std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                            }
+                                            if (count >= 2)
+                                                break;
+                                        }
+                                        // reverting the previour solution....
+                                        temp_cube.setalgo(side, "R", "null");
+                                        temp_cube.CrossSolution.pop_back();
+                                        temp_cube.setalgo(side, "D", "crs");
+                                    }
+                                }
+                                break;
+                            default:
+                                break;
+                            }
+                        }
+                        break;
+                        // this case is for checking the bottom side edge....
+                    case 3:
+                        if (temp_cube.cubeMain[side].at(2).at(1) == bottom_color)
+                        {
+                            switch (crossColorCount)
+                            {
+                                // no edges on the bottom...
+                            case 0:
+                                switch (rang0to1(rng))
+                                {
+                                case 0:
+                                    temp_cube.setalgo(side, "FP RP", "crs");
+                                    break;
+                                case 1:
+                                    temp_cube.setalgo(side, "F L", "crs");
+                                    break;
+                                default:
+                                    break;
+                                }
+                                break;
+                            // one or two edges on the bottom...
+                            case 1:
+                            case 2:
+                                currentOrientation = move(currentorientation(temp_cube));
+                                for (int i{0}; i < 4; i++)
+                                {
+                                    count = 0;
+                                    for (int j{0}; j < 4; j++)
+                                        if (currentOrientation.at(j) == mainOrientation.at(j))
+                                            count++;
+                                    // there is a flow in the below code and should be corrected...
+                                    if (count >= 2)
+                                        break;
+                                    else
+                                        count = 1;
+                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                }
+                                limit = count + 1;
+                                for (int checkside{0}; checkside < 4; checkside++)
+                                {
+                                    switch (checkside)
+                                    {
+                                    case 0:
+                                        temp_cube.setalgo(side, "FP D RP", "crs");
+                                        break;
+                                    case 1:
+                                        temp_cube.setalgo(side, "FP RP", "crs");
+                                        break;
+                                    case 2:
+                                        temp_cube.setalgo(side, "F D L", "crs");
+                                        break;
+                                    case 3:
+                                        temp_cube.setalgo(side, "F L", "crs");
+                                        break;
+                                    default:
+                                        break;
+                                    }
+                                    crossColorCount = crossChecker(temp_cube);
+                                    if (crossColorCount >= limit)
+                                    {
+                                        // Verifying the current orientation...
+                                        currentOrientation = move(currentorientation(temp_cube));
+                                        for (int i{0}; i < 4; i++)
+                                        {
+                                            count = 0;
+                                            for (int j{0}; j < 4; j++)
+                                                if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                    count++;
+                                            if (count >= limit)
+                                                break;
+                                            std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                        }
+                                        if (count >= limit)
+                                            break;
+                                    }
+                                    // reverting the previour solution....
+                                    switch (checkside)
+                                    {
+                                    case 0:
+                                        temp_cube.setalgo(side, "R DP F", "null");
+                                        temp_cube.CrossSolution.pop_back();
+                                        temp_cube.CrossSolution.pop_back();
+                                        temp_cube.CrossSolution.pop_back();
+                                        break;
+                                    case 1:
+                                        temp_cube.setalgo(side, "R F", "null");
+                                        temp_cube.CrossSolution.pop_back();
+                                        temp_cube.CrossSolution.pop_back();
+                                        break;
+                                    case 2:
+                                        temp_cube.setalgo(side, "LP DP FP", "null");
+                                        temp_cube.CrossSolution.pop_back();
+                                        temp_cube.CrossSolution.pop_back();
+                                        temp_cube.CrossSolution.pop_back();
+                                        break;
+                                    case 3:
+                                        temp_cube.setalgo(side, "LP FP", "null");
+                                        temp_cube.CrossSolution.pop_back();
+                                        temp_cube.CrossSolution.pop_back();
+                                        break;
+                                    default:
+                                        break;
+                                    }
+                                }
+                                break;
+                                // three edges on the bottom...
+                            case 3:
+                                currentOrientation = move(currentorientation(temp_cube));
+                                for (int i{0}; i < 4; i++)
+                                {
+                                    count = 0;
+                                    for (int j{0}; j < 4; j++)
+                                        if (currentOrientation.at(j) == mainOrientation.at(j))
+                                            count++;
+                                    if (count >= 3)
+                                        break;
+                                    if (count >= 2)
+                                        twocorrect = 2;
+                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                }
+                                // here the arising three conditions will be checked by count number........
+                                // When three edges are correct...
+                                if (count >= 3)
+                                {
+                                    switch (rang0to1(rng))
+                                    {
+                                    case 0:
+                                        temp_cube.setalgo(side, "FP D RP", "crs");
+                                        break;
+                                    case 1:
+                                        temp_cube.setalgo(side, "F DP L", "crs");
+                                        break;
+                                    default:
+                                        break;
+                                    }
+                                }
+                                // When two edges are correct...
+                                else if (twocorrect == 2)
+                                {
+                                    for (int checkside{0}; checkside < 3; checkside++)
+                                    {
+                                        switch (checkside)
+                                        {
+                                        case 0:
+                                            temp_cube.setalgo(side, "FP RP", "crs");
+                                            break;
+                                        case 1:
+                                            temp_cube.setalgo(side, "F D L", "crs");
+                                            break;
+                                        case 2:
+                                            temp_cube.setalgo(side, "F L", "crs");
+                                            break;
+                                        default:
+                                            break;
+                                        }
+                                        crossColorCount = crossChecker(temp_cube);
+                                        if (crossColorCount == 3)
+                                        {
+                                            // Verifying the current orientation...
+                                            currentOrientation = move(currentorientation(temp_cube));
+                                            for (int i{0}; i < 4; i++)
+                                            {
+                                                count = 0;
+                                                for (int j{0}; j < 4; j++)
+                                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                        count++;
+                                                if (count >= 3)
+                                                    break;
+                                                std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                            }
+                                            if (count >= 3)
+                                                break;
+                                        }
+                                        // reverting the previour solution....
+                                        switch (checkside)
+                                        {
+                                        case 0:
+                                            temp_cube.setalgo(side, "R F", "null");
+                                            temp_cube.CrossSolution.pop_back();
+                                            temp_cube.CrossSolution.pop_back();
+                                            break;
+                                        case 1:
+                                            temp_cube.setalgo(side, "LP DP FP", "null");
+                                            temp_cube.CrossSolution.pop_back();
+                                            temp_cube.CrossSolution.pop_back();
+                                            temp_cube.CrossSolution.pop_back();
+                                            break;
+                                        case 2:
+                                            temp_cube.setalgo(side, "LP FP", "null");
+                                            temp_cube.CrossSolution.pop_back();
+                                            temp_cube.CrossSolution.pop_back();
+                                            break;
+                                        default:
+                                            break;
+                                        }
+                                    }
+                                }
+                                // When one edge is correct...
+                                else
+                                {
+                                    switch (rang0to1(rng))
+                                    {
+                                    case 0:
+                                        temp_cube.setalgo(side, "F L", "crs");
+                                        break;
+                                    case 1:
+                                        temp_cube.setalgo(side, "FP RP", "crs");
+                                        break;
+                                    default:
+                                        break;
+                                    }
+                                    break;
+                                }
+                                break;
+                            default:
+                                break;
+                            }
+                        }
+                        break;
+                        // this is for checking the right side edge....
+                    case 4:
+                        if (temp_cube.cubeMain[side].at(1).at(0) == bottom_color)
+                        {
+                            switch (crossColorCount)
+                            {
+                                // no edges on the bottom...
+                            case 0:
+                                temp_cube.setalgo(side, "L", "crs");
+                                break;
+                            // one or two edges on the bottom...
+                            case 1:
+                            case 2:
+                                currentOrientation = move(currentorientation(temp_cube));
+                                for (int i{0}; i < 4; i++)
+                                {
+                                    count = 0;
+                                    for (int j{0}; j < 4; j++)
+                                        if (currentOrientation.at(j) == mainOrientation.at(j))
+                                            count++;
+                                    if (count >= 2)
+                                        break;
+                                    else
+                                        count = 1;
+                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                }
+                                limit = count + 1;
+                                for (int checkside{0}; checkside < 4; checkside++)
+                                {
+                                    temp_cube.setalgo(side, "L", "crs");
+                                    crossColorCount = crossChecker(temp_cube);
+                                    if (crossColorCount >= limit)
+                                    {
+                                        // Verifying the current orientation...
+                                        currentOrientation = move(currentorientation(temp_cube));
+                                        for (int i{0}; i < 4; i++)
+                                        {
+                                            count = 0;
+                                            for (int j{0}; j < 4; j++)
+                                                if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                    count++;
+                                            if (count >= limit)
+                                                break;
+                                            std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                        }
+                                        if (count >= limit)
+                                            break;
+                                    }
+                                    // reverting the previour solution....
+                                    temp_cube.setalgo(side, "LP", "null");
+                                    temp_cube.CrossSolution.pop_back();
+                                    temp_cube.setalgo(side, "D", "crs");
+                                }
+                                break;
+                                // When three edges on the bottom...
+                            case 3:
+                                currentOrientation = move(currentorientation(temp_cube));
+                                for (int i{0}; i < 4; i++)
+                                {
+                                    count = 0;
+                                    for (int j{0}; j < 4; j++)
+                                        if (currentOrientation.at(j) == mainOrientation.at(j))
+                                            count++;
+                                    if (count >= 3)
+                                        break;
+                                    if (count >= 2)
+                                        twocorrect = 2;
+                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                }
+                                // here the arising three conditions will be checked by count number........
+                                // three correct edges...
+                                if (count >= 3)
+                                {
+                                    for (int checkside{0}; checkside < 4; checkside++)
+                                    {
+                                        temp_cube.setalgo(side, "L", "crs");
+                                        crossColorCount = crossChecker(temp_cube);
+                                        if (crossColorCount == 4)
+                                        {
+                                            break;
+                                        }
+                                        // reverting the previour solution....
+                                        temp_cube.setalgo(side, "LP", "null");
+                                        temp_cube.CrossSolution.pop_back();
+                                        temp_cube.setalgo(side, "D", "crs");
+                                    }
+                                }
+                                // two correct edges...
+                                else if (twocorrect == 2)
+                                {
+                                    for (int checkside{0}; checkside < 4; checkside++)
+                                    {
+                                        temp_cube.setalgo(side, "L", "crs");
+                                        crossColorCount = crossChecker(temp_cube);
+                                        if (crossColorCount == 3)
+                                        {
+                                            // Verifying the current orientation...
+                                            currentOrientation = move(currentorientation(temp_cube));
+                                            for (int i{0}; i < 4; i++)
+                                            {
+                                                count = 0;
+                                                for (int j{0}; j < 4; j++)
+                                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                        count++;
+                                                if (count >= 3)
+                                                    break;
+                                                std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                            }
+                                            if (count >= 3)
+                                                break;
+                                        }
+                                        // reverting the previour solution....
+                                        temp_cube.setalgo(side, "LP", "null");
+                                        temp_cube.CrossSolution.pop_back();
+                                        temp_cube.setalgo(side, "D", "crs");
+                                    }
+                                }
+                                // one edge correct...
+                                else
+                                {
+                                    for (int checkside{0}; checkside < 4; checkside++)
+                                    {
+                                        temp_cube.setalgo(side, "L", "crs");
+                                        crossColorCount = crossChecker(temp_cube);
+                                        if (crossColorCount <= 3)
+                                        {
+                                            // Verifying the current orientation...
+                                            currentOrientation = move(currentorientation(temp_cube));
+                                            for (int i{0}; i < 4; i++)
+                                            {
+                                                count = 0;
+                                                for (int j{0}; j < 4; j++)
+                                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                        count++;
+                                                if (count >= 2)
+                                                    break;
+                                                std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                            }
+                                            if (count >= 2)
+                                                break;
+                                        }
+                                        // reverting the previour solution....
+                                        temp_cube.setalgo(side, "LP", "null");
+                                        temp_cube.CrossSolution.pop_back();
+                                        temp_cube.setalgo(side, "D", "crs");
+                                    }
+                                }
+                                break;
+                            default:
+                                break;
+                            }
+                        }
+                        break;
+                    default:
                         break;
                     }
                 }
+                else if (side == top)
+                {
+                    int side_2{-1};
+                    switch (block)
+                    {
+                    case 1:
+                        // this is for checking the face side edge....
+                        if (temp_cube.cubeMain[side].at(2).at(1) == bottom_color)
+                            side_2 = face;
+                        break;
+                    case 2:
+                        // this is for checking the right side edge....
+                        if (temp_cube.cubeMain[side].at(1).at(2) == bottom_color)
+                            side_2 = right;
+                        break;
+                    case 3:
+                        // this is for checking the back side edge....
+                        if (temp_cube.cubeMain[side].at(0).at(1) == bottom_color)
+                            side_2 = back;
+                        break;
+                    case 4:
+                        // this is for checking the left side edge....
+                        if (temp_cube.cubeMain[side].at(1).at(0) == bottom_color)
+                            side_2 = left;
+                        break;
+                    default:
+                        break;
+                    }
+                    if (side_2 != -1)
+                    {
+                        switch (crossColorCount)
+                        {
+                            // no edges on the bottom...
+                        case 0:
+                            temp_cube.setalgo(side_2, "F F", "crs");
+                            break;
+                            // one or two edges on the bottom...
+                        case 1:
+                        case 2:
+                            currentOrientation = move(currentorientation(temp_cube));
+                            for (int i{0}; i < 4; i++)
+                            {
+                                count = 0;
+                                for (int j{0}; j < 4; j++)
+                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                        count++;
+                                if (count >= 2)
+                                    break;
+                                else
+                                    count = 1;
+                                std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                            }
+                            limit = count + 1;
+                            for (int checkside{0}; checkside < 4; checkside++)
+                            {
+                                temp_cube.setalgo(side_2, "F F", "crs");
+                                crossColorCount = crossChecker(temp_cube);
+                                if (crossColorCount >= limit)
+                                {
+                                    // Verifying the current orientation...
+                                    currentOrientation = move(currentorientation(temp_cube));
+                                    for (int i{0}; i < 4; i++)
+                                    {
+                                        count = 0;
+                                        for (int j{0}; j < 4; j++)
+                                            if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                count++;
+                                        if (count >= limit)
+                                            break;
+                                        std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                    }
+                                    if (count >= limit)
+                                        break;
+                                }
+                                // reverting the previour solution....
+                                temp_cube.setalgo(side_2, "F F", "null");
+                                temp_cube.CrossSolution.pop_back();
+                                temp_cube.CrossSolution.pop_back();
+                                temp_cube.setalgo(side_2, "D", "crs");
+                            }
+                            break;
+                            // three edges on the bottom...
+                        case 3:
+                            currentOrientation = move(currentorientation(temp_cube));
+                            for (int i{0}; i < 4; i++)
+                            {
+                                count = 0;
+                                for (int j{0}; j < 4; j++)
+                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                        count++;
+                                // there is a flow in the below code and should be corrected...
+                                if (count >= 3)
+                                    break;
+                                if (count >= 2)
+                                    twocorrect = 2;
+                                std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                            }
+                            // here the arising three conditions will be checked by count number........
+                            // When three edges are correct...
+                            if (count >= 3)
+                            {
+                                for (int checkside{0}; checkside < 4; checkside++)
+                                {
+                                    temp_cube.setalgo(side_2, "F F", "crs");
+                                    crossColorCount = crossChecker(temp_cube);
+                                    if (crossColorCount == 4)
+                                    {
+                                        break;
+                                    }
+                                    // reverting the previour solution....
+                                    temp_cube.setalgo(side_2, "F F", "null");
+                                    temp_cube.CrossSolution.pop_back();
+                                    temp_cube.CrossSolution.pop_back();
+                                    temp_cube.setalgo(side_2, "D", "crs");
+                                }
+                            }
+                            // When two edges are correct...
+                            else if (twocorrect == 2)
+                            {
+                                for (int checkside{0}; checkside < 4; checkside++)
+                                {
+                                    temp_cube.setalgo(side_2, "F F", "crs");
+                                    crossColorCount = crossChecker(temp_cube);
+                                    if (crossColorCount == 3)
+                                    {
+                                        // Verifying the current orientation...
+                                        currentOrientation = move(currentorientation(temp_cube));
+                                        for (int i{0}; i < 4; i++)
+                                        {
+                                            count = 0;
+                                            for (int j{0}; j < 4; j++)
+                                                if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                    count++;
+                                            if (count >= 3)
+                                                break;
+                                            std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                        }
+                                        if (count >= 3)
+                                            break;
+                                    }
+                                    // reverting the previour solution....
+                                    temp_cube.setalgo(side_2, "F F", "null");
+                                    temp_cube.CrossSolution.pop_back();
+                                    temp_cube.CrossSolution.pop_back();
+                                    temp_cube.setalgo(side_2, "D", "crs");
+                                }
+                            }
+                            // one correct edge on the bottom...
+                            else
+                            {
+                                for (int checkside{0}; checkside < 4; checkside++)
+                                {
+                                    temp_cube.setalgo(side_2, "F F", "crs");
+                                    crossColorCount = crossChecker(temp_cube);
+                                    if (crossColorCount <= 3)
+                                    {
+                                        // Verifying the current orientation...
+                                        currentOrientation = move(currentorientation(temp_cube));
+                                        for (int i{0}; i < 4; i++)
+                                        {
+                                            count = 0;
+                                            for (int j{0}; j < 4; j++)
+                                                if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                    count++;
+                                            if (count >= 2)
+                                                break;
+                                            std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                        }
+                                        if (count >= 2)
+                                            break;
+                                    }
+                                    // reverting the previour solution....
+                                    temp_cube.setalgo(side_2, "F F", "null");
+                                    temp_cube.CrossSolution.pop_back();
+                                    temp_cube.CrossSolution.pop_back();
+                                    temp_cube.setalgo(side_2, "D", "crs");
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                        }
+                    }
+                }
             }
-            if (crossCheck == true)
-                break;
-            moves = rang1to12(rng);
-
-            switch (moves)
+            // for the condition when crosscolor count == 4....
+            else
             {
-            case 1:
-                CrossSolution.push_back("F");
-                temp_cube.F;
-                break;
-            case 2:
-                CrossSolution.push_back("L");
-                temp_cube.L;
-                break;
-            case 3:
-                CrossSolution.push_back("R");
-                temp_cube.R;
-                break;
-            case 4:
-                CrossSolution.push_back("U");
-                temp_cube.U;
-                break;
-            case 5:
-                CrossSolution.push_back("D");
-                temp_cube.D;
-                break;
-            case 6:
-                CrossSolution.push_back("B");
-                temp_cube.B;
-                break;
-            case 7:
-                CrossSolution.push_back("FP");
-                temp_cube.FP;
-                break;
-            case 8:
-                CrossSolution.push_back("LP");
-                temp_cube.LP;
-                break;
-            case 9:
-                CrossSolution.push_back("RP");
-                temp_cube.RP;
-                break;
-            case 10:
-                CrossSolution.push_back("UP");
-                temp_cube.UP;
-                break;
-            case 11:
-                CrossSolution.push_back("DP");
-                temp_cube.DP;
-                break;
-            case 12:
-                CrossSolution.push_back("BP");
-                temp_cube.BP;
-                break;
-            default:
-                break;
+                currentOrientation = move(currentorientation(temp_cube));
+                for (int i{0}; i < 4; i++)
+                {
+                    count = 0;
+                    for (int j{0}; j < 4; j++)
+                        if (currentOrientation.at(j) == mainOrientation.at(j))
+                            count++;
+                    if (count == 4 || count == 2)
+                        break;
+                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                    // moving bottom to the correct location...
+                    temp_cube.setalgo(face, "D", "crs");
+                }
+                if (count == 4)
+                {
+                    solutionOptimizer(temp_cube.CrossSolution);
+                    if (temp_cube.CrossSolution.size() < 8)
+                    {
+                        solve = true;
+                        tenTimeSolve = false;
+                        break;
+                    }
+                    cout << trials << " combination tried...\r";
+                    tenTimeSolve = true;
+                    temp_cube.CrossSolution.clear();
+                }
+                else
+                {
+                    int icside{};
+                    for (icside = 0; icside < 4; icside++)
+                        if (currentOrientation.at(icside) != mainOrientation.at(icside))
+                            break;
+                    switch (icside)
+                    {
+                    case 0:
+                        side = face;
+                        break;
+                    case 1:
+                        side = right;
+                        break;
+                    case 2:
+                        side = back;
+                        break;
+                    case 3:
+                        side = left;
+                        break;
+                    default:
+                        break;
+                    }
+                    for (int checkside{0}; checkside < 3; checkside++)
+                    {
+                        switch (checkside)
+                        {
+                        case 0:
+                            temp_cube.setalgo(side, "FP DP F D FP", "crs");
+                            break;
+                        case 1:
+                            temp_cube.setalgo(side, "F D FP DP F", "crs");
+                            break;
+                        case 2:
+                            temp_cube.setalgo(side, "F 2D FP 2D F", "crs");
+                            break;
+                        default:
+                            break;
+                        }
+                        // Verifying the current orientation...
+                        currentOrientation = move(currentorientation(temp_cube));
+                        for (int i{0}; i < 4; i++)
+                        {
+                            count = 0;
+                            for (int j{0}; j < 4; j++)
+                                if (currentOrientation.at(j) == mainOrientation.at(j))
+                                    count++;
+                            if (count == 4)
+                                break;
+                            std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                        }
+                        if (count == 4)
+                            break;
+                        // reverting the previour solution....
+                        switch (checkside)
+                        {
+                        case 0:
+                            temp_cube.setalgo(side, "F DP FP D F", "null");
+                            temp_cube.CrossSolution.pop_back();
+                            temp_cube.CrossSolution.pop_back();
+                            temp_cube.CrossSolution.pop_back();
+                            temp_cube.CrossSolution.pop_back();
+                            temp_cube.CrossSolution.pop_back();
+                            break;
+                        case 1:
+                            temp_cube.setalgo(side, "FP D F DP FP", "null");
+                            temp_cube.CrossSolution.pop_back();
+                            temp_cube.CrossSolution.pop_back();
+                            temp_cube.CrossSolution.pop_back();
+                            temp_cube.CrossSolution.pop_back();
+                            temp_cube.CrossSolution.pop_back();
+                            break;
+                        case 2:
+                            temp_cube.setalgo(side, "FP 2D F 2D FP", "null");
+                            temp_cube.CrossSolution.pop_back();
+                            temp_cube.CrossSolution.pop_back();
+                            temp_cube.CrossSolution.pop_back();
+                            temp_cube.CrossSolution.pop_back();
+                            temp_cube.CrossSolution.pop_back();
+                            break;
+                        default:
+                            break;
+                        }
+                    }
+                }
             }
-
-            trials++;
-            std::cout << "\r" << trials << " combinations tried!";
-            if ((CrossSolution.size() % 10) == 0)
-            {
-                solutionOptimizer(CrossSolution);
-            }
-            if ((CrossSolution.size() % 10) == 0)
-            {
-                CrossSolution.clear();
-                solve = false;
-                break;
-            }
-            solve = true;
         }
-        if (moves == 0)
-            return side;
     }
-    solutionOptimizer(CrossSolution);
-    // copy the temp cube to the source cube....
     *this = temp_cube;
-    std::cout << "\nCross Solved.... On " << sideColor(side) << "  side..." << endl;
-    return side;
+    this->CrossSolution = temp_cube.CrossSolution;
+    return 0;
+}
+/* ----------------------------------------------------------------------------------------------------------------------------------------
+   THIS FUNCTION COUNTS THE NUMBER OF BASE EDGES CURENTLY LOCATED AT THE BOTTOM...
+   ----------------------------------------------------------------------------------------------------------------------------------------*/
+int makeCubie::crossChecker(const makeCubie &source)
+{
+    int colorCount{0};
+    if (source.cubeMain[bottom].at(0).at(1) == source.cubeMain[bottom].at(1).at(1))
+        colorCount++;
+    if (source.cubeMain[bottom].at(1).at(0) == source.cubeMain[bottom].at(1).at(1))
+        colorCount++;
+    if (source.cubeMain[bottom].at(1).at(2) == source.cubeMain[bottom].at(1).at(1))
+        colorCount++;
+    if (source.cubeMain[bottom].at(2).at(1) == source.cubeMain[bottom].at(1).at(1))
+        colorCount++;
+    return colorCount;
+}
+/* ----------------------------------------------------------------------------------------------------------------------------------------
+   THIS FUNCTION THIS FUNCTION RETURNS THE MAIN ORIENTATION OF THE CROSS COLORS.....
+   AND A TEMPRORY MAKECUBIE CLASS SHOULD BE PROVIDED TO THE FUNCTION FOR BETTER PERFORMANCE....
+   ----------------------------------------------------------------------------------------------------------------------------------------*/
+vector<char> makeCubie::crossColorOrientation(const makeCubie &source)
+{
+    vector<char> crossColorOrientation{};
+    crossColorOrientation.push_back(source.cubeMain[face].at(1).at(1));
+    crossColorOrientation.push_back(source.cubeMain[right].at(1).at(1));
+    crossColorOrientation.push_back(source.cubeMain[back].at(1).at(1));
+    crossColorOrientation.push_back(source.cubeMain[left].at(1).at(1));
+    return std::move(crossColorOrientation);
+}
+/* ----------------------------------------------------------------------------------------------------------------------------------------
+   THIS FUNCTION THIS FUNCTION RETURNS THE CURRENT ORIENTATION OF THE CROSS EDGES ON THE BOTTOM...
+   AND A TEMPRORY MAKECUBIE CLASS SHOULD BE PROVIDED TO THE FUNCTION FOR BETTER PERFORMANCE....
+   ----------------------------------------------------------------------------------------------------------------------------------------*/
+vector<char> makeCubie::currentorientation(const makeCubie &source)
+{
+    vector<char> baseCross{};
+    if (source.cubeMain[bottom].at(0).at(1) == source.cubeMain[bottom].at(1).at(1))
+        baseCross.push_back(source.cubeMain[face].at(2).at(1));
+    else
+        baseCross.push_back('\0');
+    if (source.cubeMain[bottom].at(1).at(2) == source.cubeMain[bottom].at(1).at(1))
+        baseCross.push_back(source.cubeMain[right].at(2).at(1));
+    else
+        baseCross.push_back('\0');
+    if (source.cubeMain[bottom].at(2).at(1) == source.cubeMain[bottom].at(1).at(1))
+        baseCross.push_back(source.cubeMain[back].at(2).at(1));
+    else
+        baseCross.push_back('\0');
+    if (source.cubeMain[bottom].at(1).at(0) == source.cubeMain[bottom].at(1).at(1))
+        baseCross.push_back(source.cubeMain[left].at(2).at(1));
+    else
+        baseCross.push_back('\0');
+    return move(baseCross);
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION SOLVES THE F2L_LAYER OF THE RUBIX CUBE....
@@ -4517,37 +5567,37 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
         }
     }
 }
-bool makeCubie::crossChecker(const makeCubie &temp_cube, const int &side)
+bool makeCubie::fullCrossChecker(const makeCubie &temp_cube, const int &side)
 {
     switch (side)
     {
     case face:
-        /* code */
+
         if (temp_cube.cubeMain[top].at(2).at(1) == temp_cube.cubeMain[top].at(1).at(1) && temp_cube.cubeMain[right].at(1).at(0) == temp_cube.cubeMain[right].at(1).at(1) && temp_cube.cubeMain[bottom].at(0).at(1) == temp_cube.cubeMain[bottom].at(1).at(1) && temp_cube.cubeMain[left].at(1).at(2) == temp_cube.cubeMain[left].at(1).at(1))
             return true;
         break;
     case back:
-        /* code */
+
         if (temp_cube.cubeMain[top].at(0).at(1) == temp_cube.cubeMain[top].at(1).at(1) && temp_cube.cubeMain[left].at(1).at(0) == temp_cube.cubeMain[left].at(1).at(1) && temp_cube.cubeMain[bottom].at(2).at(1) == temp_cube.cubeMain[bottom].at(1).at(1) && temp_cube.cubeMain[right].at(1).at(2) == temp_cube.cubeMain[right].at(1).at(1))
             return true;
         break;
     case left:
-        /* code */
+
         if (temp_cube.cubeMain[top].at(1).at(0) == temp_cube.cubeMain[top].at(1).at(1) && temp_cube.cubeMain[face].at(1).at(0) == temp_cube.cubeMain[face].at(1).at(1) && temp_cube.cubeMain[bottom].at(1).at(0) == temp_cube.cubeMain[bottom].at(1).at(1) && temp_cube.cubeMain[back].at(1).at(2) == temp_cube.cubeMain[back].at(1).at(1))
             return true;
         break;
     case right:
-        /* code */
+
         if (temp_cube.cubeMain[top].at(1).at(2) == temp_cube.cubeMain[top].at(1).at(1) && temp_cube.cubeMain[back].at(1).at(0) == temp_cube.cubeMain[back].at(1).at(1) && temp_cube.cubeMain[bottom].at(1).at(2) == temp_cube.cubeMain[bottom].at(1).at(1) && temp_cube.cubeMain[face].at(1).at(2) == temp_cube.cubeMain[face].at(1).at(1))
             return true;
         break;
     case top:
-        /* code */
+
         if (temp_cube.cubeMain[face].at(0).at(1) == temp_cube.cubeMain[face].at(1).at(1) && temp_cube.cubeMain[right].at(0).at(1) == temp_cube.cubeMain[right].at(1).at(1) && temp_cube.cubeMain[back].at(0).at(1) == temp_cube.cubeMain[back].at(1).at(1) && temp_cube.cubeMain[left].at(0).at(1) == temp_cube.cubeMain[left].at(1).at(1))
             return true;
         break;
     case bottom:
-        /* code */
+
         if (temp_cube.cubeMain[face].at(2).at(1) == temp_cube.cubeMain[face].at(1).at(1) && temp_cube.cubeMain[right].at(2).at(1) == temp_cube.cubeMain[right].at(1).at(1) && temp_cube.cubeMain[back].at(2).at(1) == temp_cube.cubeMain[back].at(1).at(1) && temp_cube.cubeMain[left].at(2).at(1) == temp_cube.cubeMain[left].at(1).at(1))
             return true;
         break;
@@ -4693,23 +5743,23 @@ void makeCubie::shortestF2LSolver(const int &crossSide)
     switch (crossSide)
     {
     case face:
-        /* code */
+
         XP;
         break;
     case left:
-        /* code */
+
         ZP;
         break;
     case right:
-        /* code */
+
         Z;
         break;
     case back:
-        /* code */
+
         X;
         break;
     case top:
-        /* code */
+
         X;
         X;
         break;
@@ -4797,21 +5847,7 @@ string makeCubie::OLLCoder()
     // RETURNING THE FULLY CODED STRING.....
     return OLLCode;
 }
-/* ----------------------------------------------------------------------------------        // if (trials < 5000)
-        // {
-        //     if (F2LSolutionSize < benchmark)
-        //     {
-        //         benchmark = F2LSolutionSize;
-        //         this->tempSolution = solveF2L.F2LSolution;
-        //         solveF2L.F2LSolution.clear();
-        //         continue;
-        //     }
-        //     else
-        //     {
-        //         solveF2L.F2LSolution.clear();
-        //         continue;
-        //     }
-        // }------------------------------------------------------
+/* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION HAVE SOLUTION FOR ALL THE CONDITIONS POSSIBLE IN OLL
    LAYER AND IT DIRECTLY CALLS THE SETALGO TO APPLY THE CONDITION.
    IT RETURNS TRUE IF THE CONDITION MATCHES THE CODE AND FALSE WHEN OLLCODE DOSEN'T MATCHES ANY CONDITION
@@ -5168,6 +6204,11 @@ void makeCubie::applySolution(string_view applySolutionOn)
         for (size_t i{0}; i < tempSolution.size(); i++)
         {
             PLLSolution.push_back(tempSolution.at(i));
+        }
+    else if (applySolutionOn == "crs")
+        for (size_t i{0}; i < tempSolution.size(); i++)
+        {
+            CrossSolution.push_back(tempSolution.at(i));
         }
     tempSolution.clear();
 }

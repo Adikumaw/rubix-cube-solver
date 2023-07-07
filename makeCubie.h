@@ -82,7 +82,7 @@ public:
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       HELPER METHODS FOR CUBE SOLVING METHODS.
       ----------------------------------------------------------------------------------------------------------------------------------------*/
-   bool crossChecker(const makeCubie &temp_cube, const int &side);
+   bool fullCrossChecker(const makeCubie &temp_cube, const int &side);
    bool cornerColorsFinder(const char &bottom_color, const int &side, const int &row, const int &col);
    int sideEdgeFinder(makeCubie &temp_cube, const char &color_1, const char &color_2, string_view edgeSetter);
    bool edgeSetterOnTop(makeCubie &temp_cube, const char &color_1, const char &color_2, string_view edgeSetter);
@@ -91,6 +91,9 @@ public:
    string OLLCoder();
    bool OLLLogic(const int &side, string_view OLLcode);
    bool PLLChecker(const makeCubie &source);
+   int crossChecker(const makeCubie &source);
+   vector<char> crossColorOrientation(const makeCubie &source);
+   vector<char> currentorientation(const makeCubie &source);
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       ALGORITHEM IMPLEMENTATION METHODS.
       ----------------------------------------------------------------------------------------------------------------------------------------*/
