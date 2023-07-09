@@ -22,7 +22,7 @@ private:
    vector<string> CrossSolution, F2LSolution, OLLSolution, PLLSolution, tempSolution;
 
    // DECLARATION FOR SPEED OPOTIMIZATION....
-   short i, j;
+   short i, j, l, m;
    vector<vector<char>> tempVec{
        {'0', '0', '0'},
        {'0', '0', '0'},
@@ -69,9 +69,9 @@ public:
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       CUBE SOLVING METHODS...
       ----------------------------------------------------------------------------------------------------------------------------------------*/
-   int crossSolver();
-   void f2lSolver(makeCubie &temp_cube);
-   void shortestF2LSolver(const int &crossSide);
+   void crossSolver();
+   bool f2lSolver(makeCubie &temp_cube, const int &soluionLimit);
+   void shortestCubeSolution();
    void OLLSolver();
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       THE THREE BELLOW FUNCITON ARE FOR SIDE ROTATION LOGICS OF THE CUBE.
@@ -94,6 +94,8 @@ public:
    int crossChecker(const makeCubie &source);
    vector<char> crossColorOrientation(const makeCubie &source);
    vector<char> currentorientation(const makeCubie &source);
+   void cubeOrienter(makeCubie &source, const int &side);
+   void cubeReOrienter(makeCubie &source, const int &side);
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       ALGORITHEM IMPLEMENTATION METHODS.
       ----------------------------------------------------------------------------------------------------------------------------------------*/

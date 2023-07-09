@@ -12,6 +12,14 @@
 #define UP sideRotate(side::top, "ACW")
 #define DP sideRotate(side::bottom, "ACW")
 #define BP sideRotate(side::back, "ACW")
+
+#define F2 sideRotate(side::face, "2CW")
+#define L2 sideRotate(side::left, "2CW")
+#define R2 sideRotate(side::right, "2CW")
+#define U2 sideRotate(side::top, "2CW")
+#define D2 sideRotate(side::bottom, "2CW")
+#define B2 sideRotate(side::back, "2CW")
+
 #define M sideRotate(side::mid, "CW")
 #define E sideRotate(side::equator, "CW")
 #define S sideRotate(side::stand, "CW")
@@ -215,7 +223,113 @@ void makeCubie::getOLLSolution()
 void makeCubie::sideRotate(const int &side, string_view direction)
 {
     sideBarBackup.clear();
-    if (side >= face && side <= bottom)
+    if (direction == "2CW")
+    {
+        faceTranspose(side, direction);
+        if (side == face)
+        {
+            for (j = 2; j >= 0; j--)
+                sideBarBackup.push_back(cubeMain[top].at(2).at(j));
+            sideBarSender(bottom, "T", "REV");
+            sideBarReceiver(top, "BTM");
+            for (i = 0; i < 3; i++)
+                cubeMain[bottom].at(0).at(i) = sideBarBackup.at(i);
+
+            sideBarBackup.clear();
+            for (j = 2; j >= 0; j--)
+                sideBarBackup.push_back(cubeMain[right].at(j).at(0));
+            sideBarSender(left, "R", "REV");
+            sideBarReceiver(right, "L");
+            for (i = 0; i < 3; i++)
+                cubeMain[left].at(i).at(2) = sideBarBackup.at(i);
+        }
+        else if (side == back)
+        {
+            for (j = 2; j >= 0; j--)
+                sideBarBackup.push_back(cubeMain[top].at(0).at(j));
+            sideBarSender(bottom, "BTM", "REV");
+            sideBarReceiver(top, "T");
+            for (i = 0; i < 3; i++)
+                cubeMain[bottom].at(2).at(i) = sideBarBackup.at(i);
+
+            sideBarBackup.clear();
+            for (j = 2; j >= 0; j--)
+                sideBarBackup.push_back(cubeMain[right].at(j).at(2));
+            sideBarSender(left, "L", "REV");
+            sideBarReceiver(right, "R");
+            for (i = 0; i < 3; i++)
+                cubeMain[left].at(i).at(0) = sideBarBackup.at(i);
+        }
+        else if (side == left)
+        {
+            for (i = 0; i < 3; i++)
+                sideBarBackup.push_back(cubeMain[top].at(i).at(0));
+            sideBarSender(bottom, "L", "FWD");
+            sideBarReceiver(top, "L");
+            for (i = 0; i < 3; i++)
+                cubeMain[bottom].at(i).at(0) = sideBarBackup.at(i);
+
+            sideBarBackup.clear();
+            for (j = 2; j >= 0; j--)
+                sideBarBackup.push_back(cubeMain[face].at(j).at(0));
+            sideBarSender(back, "R", "REV");
+            sideBarReceiver(face, "L");
+            for (i = 0; i < 3; i++)
+                cubeMain[back].at(i).at(2) = sideBarBackup.at(i);
+        }
+        else if (side == right)
+        {
+            for (i = 0; i < 3; i++)
+                sideBarBackup.push_back(cubeMain[top].at(i).at(2));
+            sideBarSender(bottom, "R", "FWD");
+            sideBarReceiver(top, "R");
+            for (i = 0; i < 3; i++)
+                cubeMain[bottom].at(i).at(2) = sideBarBackup.at(i);
+
+            sideBarBackup.clear();
+            for (j = 2; j >= 0; j--)
+                sideBarBackup.push_back(cubeMain[face].at(j).at(2));
+            sideBarSender(back, "L", "REV");
+            sideBarReceiver(face, "R");
+            for (i = 0; i < 3; i++)
+                cubeMain[back].at(i).at(0) = sideBarBackup.at(i);
+        }
+        else if (side == top)
+        {
+            for (i = 0; i < 3; i++)
+                sideBarBackup.push_back(cubeMain[face].at(0).at(i));
+            sideBarSender(back, "T", "FWD");
+            sideBarReceiver(face, "T");
+            for (i = 0; i < 3; i++)
+                cubeMain[back].at(0).at(i) = sideBarBackup.at(i);
+
+            sideBarBackup.clear();
+            for (i = 0; i < 3; i++)
+                sideBarBackup.push_back(cubeMain[right].at(0).at(i));
+            sideBarSender(left, "T", "FWD");
+            sideBarReceiver(right, "T");
+            for (i = 0; i < 3; i++)
+                cubeMain[left].at(0).at(i) = sideBarBackup.at(i);
+        }
+        else if (side == bottom)
+        {
+            for (i = 0; i < 3; i++)
+                sideBarBackup.push_back(cubeMain[face].at(2).at(i));
+            sideBarSender(back, "BTM", "FWD");
+            sideBarReceiver(face, "BTM");
+            for (i = 0; i < 3; i++)
+                cubeMain[back].at(2).at(i) = sideBarBackup.at(i);
+
+            sideBarBackup.clear();
+            for (i = 0; i < 3; i++)
+                sideBarBackup.push_back(cubeMain[right].at(2).at(i));
+            sideBarSender(left, "BTM", "FWD");
+            sideBarReceiver(right, "BTM");
+            for (i = 0; i < 3; i++)
+                cubeMain[left].at(2).at(i) = sideBarBackup.at(i);
+        }
+    }
+    else if (side >= face && side <= bottom)
     {
         faceTranspose(side, direction);
         if (side == face)
@@ -522,10 +636,10 @@ void makeCubie::faceTranspose(const int &side, string_view direction)
     if (direction == "ACW")
     {
         j = 0;
-        for (size_t l{0}; l < cubeMain[side].size(); l++)
+        for (l = 0; l < 3; l++)
         {
             i = 2;
-            for (size_t m{0}; m < cubeMain[side].at(l).size(); m++)
+            for (m = 0; m < 3; m++)
             {
                 tempVec[i][j] = cubeMain[side].at(l).at(m);
                 i--;
@@ -536,14 +650,27 @@ void makeCubie::faceTranspose(const int &side, string_view direction)
     else if (direction == "CW")
     {
         j = 2;
-        for (size_t l{0}; l < cubeMain[side].size(); l++)
+        for (l = 0; l < 3; l++)
         {
             i = 0;
-            for (size_t m{0}; m < cubeMain[side].at(l).size(); m++)
+            for (m = 0; m < 3; m++)
             {
                 tempVec[i][j] = cubeMain[side].at(l).at(m);
-                ;
                 i++;
+            }
+            j--;
+        }
+    }
+    else if (direction == "2CW")
+    {
+        j = 2;
+        for (l = 0; l < 3; l++)
+        {
+            i = 2;
+            for (m = 0; m < 3; m++)
+            {
+                tempVec[j][i] = cubeMain[side].at(l).at(m);
+                i--;
             }
             j--;
         }
@@ -656,21 +783,21 @@ void makeCubie::sideBarReceiver(const int &side, string_view sideBarDirection)
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION SOLVES THE BOTTOM CROSS OF TEH RUBIX CUBE...
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-int makeCubie::crossSolver()
+void makeCubie::crossSolver()
 {
     std::mt19937 rng(std::random_device{}());
     std::uniform_int_distribution<int> rang0to4(0, 4);
     std::uniform_int_distribution<int> rang1to4(1, 4);
     std::uniform_int_distribution<int> rang0to1(0, 1);
-    int trials{0}, block{0}, side{0}, crossColorCount{0}, count{0}, twocorrect{0}, limit{0};
+    int block{0}, side{0}, crossColorCount{0}, count{0}, twocorrect{0}, limit{0};
     bool solve{false}, tenTimeSolve{false};
     const char bottom_color{cubeMain.at(bottom).at(1).at(1)};
+    CrossSolution.clear();
     makeCubie temp_cube(*this);
     vector<char> mainOrientation{}, currentOrientation{};
     mainOrientation = move(crossColorOrientation(*this));
     while (!solve)
     {
-        trials++;
         temp_cube = *this;
         tenTimeSolve = false;
         while (!tenTimeSolve)
@@ -730,6 +857,16 @@ int makeCubie::crossSolver()
                                         else
                                             temp_cube.setalgo(side, "FP L", "crs");
                                         crossColorCount = crossChecker(temp_cube);
+                                        if (limit == 3 && crossColorCount == 2)
+                                        {
+                                            if (twotimes == 0)
+                                                temp_cube.setalgo(side, "FP", "crs");
+                                            else
+                                                temp_cube.setalgo(side, "F", "crs");
+                                            // using twoCorrect as a singnal.....
+                                            twocorrect = -1;
+                                        }
+                                        crossColorCount = crossChecker(temp_cube);
                                         if (crossColorCount >= limit)
                                         {
                                             // Verifying the current Orientation......
@@ -748,6 +885,14 @@ int makeCubie::crossSolver()
                                                 break;
                                         }
                                         // reverting the previour solution....
+                                        if (twocorrect == -1)
+                                        {
+                                            if (twotimes == 0)
+                                                temp_cube.setalgo(side, "F", "null");
+                                            else
+                                                temp_cube.setalgo(side, "FP", "null");
+                                            temp_cube.CrossSolution.pop_back();
+                                        }
                                         if (twotimes == 0)
                                             temp_cube.setalgo(side, "R FP", "null");
                                         else
@@ -797,7 +942,7 @@ int makeCubie::crossSolver()
                                                     temp_cube.CrossSolution.pop_back();
                                                     temp_cube.CrossSolution.pop_back();
                                                     temp_cube.CrossSolution.pop_back();
-                                                    // for removing last two D operatrions...
+                                                    // forE2moving last two D operatrions...
                                                     temp_cube.CrossSolution.pop_back();
                                                     temp_cube.CrossSolution.pop_back();
                                                     break;
@@ -841,6 +986,7 @@ int makeCubie::crossSolver()
                                                 // using twoCorrect as a singnal.....
                                                 twocorrect = -1;
                                             }
+                                            crossColorCount = crossChecker(temp_cube);
                                             if (crossColorCount == 3)
                                             {
                                                 // Verifying the current orientation...
@@ -1489,7 +1635,7 @@ int makeCubie::crossSolver()
                         {
                             // no edges on the bottom...
                         case 0:
-                            temp_cube.setalgo(side_2, "F F", "crs");
+                            temp_cube.setalgo(side_2, "F2", "crs");
                             break;
                             // one or two edges on the bottom...
                         case 1:
@@ -1510,7 +1656,7 @@ int makeCubie::crossSolver()
                             limit = count + 1;
                             for (int checkside{0}; checkside < 4; checkside++)
                             {
-                                temp_cube.setalgo(side_2, "F F", "crs");
+                                temp_cube.setalgo(side_2, "F2", "crs");
                                 crossColorCount = crossChecker(temp_cube);
                                 if (crossColorCount >= limit)
                                 {
@@ -1530,8 +1676,7 @@ int makeCubie::crossSolver()
                                         break;
                                 }
                                 // reverting the previour solution....
-                                temp_cube.setalgo(side_2, "F F", "null");
-                                temp_cube.CrossSolution.pop_back();
+                                temp_cube.setalgo(side_2, "F2", "null");
                                 temp_cube.CrossSolution.pop_back();
                                 temp_cube.setalgo(side_2, "D", "crs");
                             }
@@ -1558,15 +1703,14 @@ int makeCubie::crossSolver()
                             {
                                 for (int checkside{0}; checkside < 4; checkside++)
                                 {
-                                    temp_cube.setalgo(side_2, "F F", "crs");
+                                    temp_cube.setalgo(side_2, "F2", "crs");
                                     crossColorCount = crossChecker(temp_cube);
                                     if (crossColorCount == 4)
                                     {
                                         break;
                                     }
                                     // reverting the previour solution....
-                                    temp_cube.setalgo(side_2, "F F", "null");
-                                    temp_cube.CrossSolution.pop_back();
+                                    temp_cube.setalgo(side_2, "F2", "null");
                                     temp_cube.CrossSolution.pop_back();
                                     temp_cube.setalgo(side_2, "D", "crs");
                                 }
@@ -1576,7 +1720,7 @@ int makeCubie::crossSolver()
                             {
                                 for (int checkside{0}; checkside < 4; checkside++)
                                 {
-                                    temp_cube.setalgo(side_2, "F F", "crs");
+                                    temp_cube.setalgo(side_2, "F2", "crs");
                                     crossColorCount = crossChecker(temp_cube);
                                     if (crossColorCount == 3)
                                     {
@@ -1596,8 +1740,7 @@ int makeCubie::crossSolver()
                                             break;
                                     }
                                     // reverting the previour solution....
-                                    temp_cube.setalgo(side_2, "F F", "null");
-                                    temp_cube.CrossSolution.pop_back();
+                                    temp_cube.setalgo(side_2, "F2", "null");
                                     temp_cube.CrossSolution.pop_back();
                                     temp_cube.setalgo(side_2, "D", "crs");
                                 }
@@ -1607,7 +1750,7 @@ int makeCubie::crossSolver()
                             {
                                 for (int checkside{0}; checkside < 4; checkside++)
                                 {
-                                    temp_cube.setalgo(side_2, "F F", "crs");
+                                    temp_cube.setalgo(side_2, "F2", "crs");
                                     crossColorCount = crossChecker(temp_cube);
                                     if (crossColorCount <= 3)
                                     {
@@ -1627,8 +1770,7 @@ int makeCubie::crossSolver()
                                             break;
                                     }
                                     // reverting the previour solution....
-                                    temp_cube.setalgo(side_2, "F F", "null");
-                                    temp_cube.CrossSolution.pop_back();
+                                    temp_cube.setalgo(side_2, "F2", "null");
                                     temp_cube.CrossSolution.pop_back();
                                     temp_cube.setalgo(side_2, "D", "crs");
                                 }
@@ -1659,13 +1801,12 @@ int makeCubie::crossSolver()
                 if (count == 4)
                 {
                     solutionOptimizer(temp_cube.CrossSolution);
-                    if (temp_cube.CrossSolution.size() < 8)
+                    if (temp_cube.CrossSolution.size() < 9)
                     {
                         solve = true;
                         tenTimeSolve = false;
                         break;
                     }
-                    cout << trials << " combination tried...\r";
                     tenTimeSolve = true;
                     temp_cube.CrossSolution.clear();
                 }
@@ -1703,7 +1844,7 @@ int makeCubie::crossSolver()
                             temp_cube.setalgo(side, "F D FP DP F", "crs");
                             break;
                         case 2:
-                            temp_cube.setalgo(side, "F 2D FP 2D F", "crs");
+                            temp_cube.setalgo(side, "F D2 FP D2 F", "crs");
                             break;
                         default:
                             break;
@@ -1742,7 +1883,7 @@ int makeCubie::crossSolver()
                             temp_cube.CrossSolution.pop_back();
                             break;
                         case 2:
-                            temp_cube.setalgo(side, "FP 2D F 2D FP", "null");
+                            temp_cube.setalgo(side, "FP D2 F D2 FP", "null");
                             temp_cube.CrossSolution.pop_back();
                             temp_cube.CrossSolution.pop_back();
                             temp_cube.CrossSolution.pop_back();
@@ -1759,7 +1900,6 @@ int makeCubie::crossSolver()
     }
     *this = temp_cube;
     this->CrossSolution = temp_cube.CrossSolution;
-    return 0;
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION COUNTS THE NUMBER OF BASE EDGES CURENTLY LOCATED AT THE BOTTOM...
@@ -1819,7 +1959,7 @@ vector<char> makeCubie::currentorientation(const makeCubie &source)
    THIS FUNCTION SOLVES THE F2L_LAYER OF THE RUBIX CUBE....
    AND A TEMPRORY MAKECUBIE CLASS SHOULD BE PROVIDED TO THE FUNCTION FOR BETTER PERFORMANCE....
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-void makeCubie::f2lSolver(makeCubie &temp_cube)
+bool makeCubie::f2lSolver(makeCubie &temp_cube, const int &soluionLimit)
 {
     // srand(time(NULL));
     std::mt19937 rng(std::random_device{}());
@@ -1828,9 +1968,10 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
     std::uniform_int_distribution<int> rang1to4(1, 4);
     int temp{}, side{}, sentinal{}, block{};
     const char bottom_color{cubeMain.at(bottom).at(1).at(1)};
-    bool cornerLocMatch{false}, boolEdgeSetter{false};
+    bool cornerLocMatch{false}, boolEdgeSetter{false}, terminater{false};
     // bool cornerFound{false};
     // while (!cornerFound)
+    F2LSolution.clear();
     while (
         cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(0).at(0) || cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(0).at(2) || cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(2).at(0) || cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(2).at(2) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(1).at(0) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(2).at(0) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(1).at(2) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(2).at(2) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(1).at(0) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(2).at(0) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(1).at(2) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(2).at(2) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(1).at(0) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(2).at(0) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(1).at(2) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(2).at(2) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(1).at(0) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(2).at(0) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(1).at(2) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(2).at(2))
     {
@@ -1866,7 +2007,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         }
                         else if (sentinal == 0)
                         {
-                            setalgo(left, "R UP R R U U R UP FP U F", "f2l");
+                            setalgo(left, "R UP R2 U2 R UP FP U F", "f2l");
                         };
                     }
                     else
@@ -1911,7 +2052,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         }
                         else if (sentinal == 0)
                         {
-                            setalgo(face, "R UP R R U U R UP FP U F", "f2l");
+                            setalgo(face, "R UP R2 U2 R UP FP U F", "f2l");
                         };
                     }
                     else
@@ -1958,7 +2099,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         }
                         else if (sentinal == 0)
                         {
-                            setalgo(back, "R UP R R U U R UP FP U F", "f2l");
+                            setalgo(back, "R UP R2 U2 R UP FP U F", "f2l");
                         };
                     }
                     else
@@ -2005,7 +2146,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         }
                         else if (sentinal == 0)
                         {
-                            setalgo(right, "R UP R R U U R UP FP U F", "f2l");
+                            setalgo(right, "R UP R2 U2 R UP FP U F", "f2l");
                         };
                     }
                     else
@@ -2051,7 +2192,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             if (sentinal == 1)
                             {
-                                setalgo(left, "U FP U F U FP U U F", "f2l");
+                                setalgo(left, "U FP U F U FP U2 F", "f2l");
                             }
                             else if (sentinal == 0)
                             {
@@ -2068,7 +2209,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(left, "R UP RP U U FP UP F", "f2l");
+                                setalgo(left, "R UP RP U2 FP UP F", "f2l");
                             }
                             else
                             {
@@ -2079,7 +2220,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(left, "U FP U U F U FP U U F", "f2l");
+                                setalgo(left, "U FP U2 F U FP U2 F", "f2l");
                             }
                             else
                             {
@@ -2090,7 +2231,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(left, "U FP UP F U FP U U F", "f2l");
+                                setalgo(left, "U FP UP F U FP U2 F", "f2l");
                             }
                             else
                             {
@@ -2105,7 +2246,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             }
                             else
                             {
-                                setalgo(left, "U FP U U F UP R U RP", "f2l");
+                                setalgo(left, "U FP U2 F UP R U RP", "f2l");
                             }
                         }
                     } // this else is for the condition when the corner or edge is not on the right location....
@@ -2128,7 +2269,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             if (sentinal == 1)
                             {
-                                setalgo(face, "UP R UP RP UP R U U RP", "f2l");
+                                setalgo(face, "UP R UP RP UP R U2 RP", "f2l");
                             }
                             else if (sentinal == 0)
                             {
@@ -2145,7 +2286,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(face, "FP U F U U R U RP", "f2l");
+                                setalgo(face, "FP U F U2 R U RP", "f2l");
                             }
                             else
                             {
@@ -2160,14 +2301,14 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             }
                             else
                             {
-                                setalgo(face, "UP R U U RP U FP UP F", "f2l");
+                                setalgo(face, "UP R U2 RP U FP UP F", "f2l");
                             }
                         }
                         else if (edgeSide == back)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(face, "UP R U RP UP R U U RP", "f2l");
+                                setalgo(face, "UP R U RP UP R U2 RP", "f2l");
                             }
                             else
                             {
@@ -2178,7 +2319,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(face, "UP R U U RP UP R U U RP", "f2l");
+                                setalgo(face, "UP R U2 RP UP R U2 RP", "f2l");
                             }
                             else
                             {
@@ -2205,11 +2346,11 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                             if (sentinal == 1)
                             {
-                                setalgo(left, "R UP RP U R U U RP U R UP RP", "f2l");
+                                setalgo(left, "R UP RP U R U2 RP U R UP RP", "f2l");
                             }
                             else if (sentinal == 0)
                             {
-                                setalgo(left, "R U RP UP R UP RP U U FP UP F", "f2l");
+                                setalgo(left, "R U RP UP R UP RP U2 FP UP F", "f2l");
                             }
                             // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
                         }
@@ -2256,7 +2397,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                             if (sentinal == 1)
                             {
-                                setalgo(face, "R UP RP UP R U RP UP R U U RP", "f2l");
+                                setalgo(face, "R UP RP UP R U RP UP R U2 RP", "f2l");
                             }
                             else if (sentinal == 0)
                             {
@@ -2316,7 +2457,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             if (sentinal == 1)
                             {
-                                setalgo(face, "U FP U F U FP U U F", "f2l");
+                                setalgo(face, "U FP U F U FP U2 F", "f2l");
                             }
                             else if (sentinal == 0)
                             {
@@ -2333,7 +2474,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(face, "R UP RP U U FP UP F", "f2l");
+                                setalgo(face, "R UP RP U2 FP UP F", "f2l");
                             }
                             else
                             {
@@ -2344,7 +2485,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(face, "U FP U U F U FP U U F", "f2l");
+                                setalgo(face, "U FP U2 F U FP U2 F", "f2l");
                             }
                             else
                             {
@@ -2355,7 +2496,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(face, "U FP UP F U FP U U F", "f2l");
+                                setalgo(face, "U FP UP F U FP U2 F", "f2l");
                             }
                             else
                             {
@@ -2370,7 +2511,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             }
                             else
                             {
-                                setalgo(face, "U FP U U F UP R U RP", "f2l");
+                                setalgo(face, "U FP U2 F UP R U RP", "f2l");
                             }
                         }
                     } // this else is for the condition when the corner or edge is not on the right location....
@@ -2393,7 +2534,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             if (sentinal == 1)
                             {
-                                setalgo(right, "UP R UP RP UP R U U RP", "f2l");
+                                setalgo(right, "UP R UP RP UP R U2 RP", "f2l");
                             }
                             else if (sentinal == 0)
                             {
@@ -2410,7 +2551,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(right, "FP U F U U R U RP", "f2l");
+                                setalgo(right, "FP U F U2 R U RP", "f2l");
                             }
                             else
                             {
@@ -2425,14 +2566,14 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             }
                             else
                             {
-                                setalgo(right, "UP R U U RP U FP UP F", "f2l");
+                                setalgo(right, "UP R U2 RP U FP UP F", "f2l");
                             }
                         }
                         else if (edgeSide == left)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(right, "UP R U RP UP R U U RP", "f2l");
+                                setalgo(right, "UP R U RP UP R U2 RP", "f2l");
                             }
                             else
                             {
@@ -2443,7 +2584,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(right, "UP R U U RP UP R U U RP", "f2l");
+                                setalgo(right, "UP R U2 RP UP R U2 RP", "f2l");
                             }
                             else
                             {
@@ -2470,11 +2611,11 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                             if (sentinal == 1)
                             {
-                                setalgo(face, "R UP RP U R U U RP U R UP RP", "f2l");
+                                setalgo(face, "R UP RP U R U2 RP U R UP RP", "f2l");
                             }
                             else if (sentinal == 0)
                             {
-                                setalgo(face, "R U RP UP R UP RP U U FP UP F", "f2l");
+                                setalgo(face, "R U RP UP R UP RP U2 FP UP F", "f2l");
                             }
                             // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
                         }
@@ -2521,7 +2662,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                             if (sentinal == 1)
                             {
-                                setalgo(right, "R UP RP UP R U RP UP R U U RP", "f2l");
+                                setalgo(right, "R UP RP UP R U RP UP R U2 RP", "f2l");
                             }
                             else if (sentinal == 0)
                             {
@@ -2581,7 +2722,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             if (sentinal == 1)
                             {
-                                setalgo(right, "U FP U F U FP U U F", "f2l");
+                                setalgo(right, "U FP U F U FP U2 F", "f2l");
                             }
                             else if (sentinal == 0)
                             {
@@ -2598,7 +2739,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(right, "R UP RP U U FP UP F", "f2l");
+                                setalgo(right, "R UP RP U2 FP UP F", "f2l");
                             }
                             else
                             {
@@ -2609,7 +2750,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(right, "U FP U U F U FP U U F", "f2l");
+                                setalgo(right, "U FP U2 F U FP U2 F", "f2l");
                             }
                             else
                             {
@@ -2620,7 +2761,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(right, "U FP UP F U FP U U F", "f2l");
+                                setalgo(right, "U FP UP F U FP U2 F", "f2l");
                             }
                             else
                             {
@@ -2635,7 +2776,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             }
                             else
                             {
-                                setalgo(right, "U FP U U F UP R U RP", "f2l");
+                                setalgo(right, "U FP U2 F UP R U RP", "f2l");
                             }
                         }
                     } // this else is for the condition when the corner or edge is not on the right location....
@@ -2658,7 +2799,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             if (sentinal == 1)
                             {
-                                setalgo(back, "UP R UP RP UP R U U RP", "f2l");
+                                setalgo(back, "UP R UP RP UP R U2 RP", "f2l");
                             }
                             else if (sentinal == 0)
                             {
@@ -2675,7 +2816,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(back, "FP U F U U R U RP", "f2l");
+                                setalgo(back, "FP U F U2 R U RP", "f2l");
                             }
                             else
                             {
@@ -2690,14 +2831,14 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             }
                             else
                             {
-                                setalgo(back, "UP R U U RP U FP UP F", "f2l");
+                                setalgo(back, "UP R U2 RP U FP UP F", "f2l");
                             }
                         }
                         else if (edgeSide == face)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(back, "UP R U RP UP R U U RP", "f2l");
+                                setalgo(back, "UP R U RP UP R U2 RP", "f2l");
                             }
                             else
                             {
@@ -2708,7 +2849,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(back, "UP R U U RP UP R U U RP", "f2l");
+                                setalgo(back, "UP R U2 RP UP R U2 RP", "f2l");
                             }
                             else
                             {
@@ -2735,11 +2876,11 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                             if (sentinal == 1)
                             {
-                                setalgo(right, "R UP RP U R U U RP U R UP RP", "f2l");
+                                setalgo(right, "R UP RP U R U2 RP U R UP RP", "f2l");
                             }
                             else if (sentinal == 0)
                             {
-                                setalgo(right, "R U RP UP R UP RP U U FP UP F", "f2l");
+                                setalgo(right, "R U RP UP R UP RP U2 FP UP F", "f2l");
                             }
                             // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
                         }
@@ -2786,7 +2927,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                             if (sentinal == 1)
                             {
-                                setalgo(back, "R UP RP UP R U RP UP R U U RP", "f2l");
+                                setalgo(back, "R UP RP UP R U RP UP R U2 RP", "f2l");
                             }
                             else if (sentinal == 0)
                             {
@@ -2846,7 +2987,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             if (sentinal == 1)
                             {
-                                setalgo(back, "U FP U F U FP U U F", "f2l");
+                                setalgo(back, "U FP U F U FP U2 F", "f2l");
                             }
                             else if (sentinal == 0)
                             {
@@ -2863,7 +3004,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(back, "R UP RP U U FP UP F", "f2l");
+                                setalgo(back, "R UP RP U2 FP UP F", "f2l");
                             }
                             else
                             {
@@ -2874,7 +3015,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(back, "U FP U U F U FP U U F", "f2l");
+                                setalgo(back, "U FP U2 F U FP U2 F", "f2l");
                             }
                             else
                             {
@@ -2885,7 +3026,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(back, "U FP UP F U FP U U F", "f2l");
+                                setalgo(back, "U FP UP F U FP U2 F", "f2l");
                             }
                             else
                             {
@@ -2900,7 +3041,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             }
                             else
                             {
-                                setalgo(back, "U FP U U F UP R U RP", "f2l");
+                                setalgo(back, "U FP U2 F UP R U RP", "f2l");
                             }
                         }
                     } // this else is for the condition when the corner or edge is not on the right location....
@@ -2923,7 +3064,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             if (sentinal == 1)
                             {
-                                setalgo(left, "UP R UP RP UP R U U RP", "f2l");
+                                setalgo(left, "UP R UP RP UP R U2 RP", "f2l");
                             }
                             else if (sentinal == 0)
                             {
@@ -2940,7 +3081,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(left, "FP U F U U R U RP", "f2l");
+                                setalgo(left, "FP U F U2 R U RP", "f2l");
                             }
                             else
                             {
@@ -2955,14 +3096,14 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             }
                             else
                             {
-                                setalgo(left, "UP R U U RP U FP UP F", "f2l");
+                                setalgo(left, "UP R U2 RP U FP UP F", "f2l");
                             }
                         }
                         else if (edgeSide == right)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(left, "UP R U RP UP R U U RP", "f2l");
+                                setalgo(left, "UP R U RP UP R U2 RP", "f2l");
                             }
                             else
                             {
@@ -2973,7 +3114,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(left, "UP R U U RP UP R U U RP", "f2l");
+                                setalgo(left, "UP R U2 RP UP R U2 RP", "f2l");
                             }
                             else
                             {
@@ -3000,11 +3141,11 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                             if (sentinal == 1)
                             {
-                                setalgo(back, "R UP RP U R U U RP U R UP RP", "f2l");
+                                setalgo(back, "R UP RP U R U2 RP U R UP RP", "f2l");
                             }
                             else if (sentinal == 0)
                             {
-                                setalgo(back, "R U RP UP R UP RP U U FP UP F", "f2l");
+                                setalgo(back, "R U RP UP R UP RP U2 FP UP F", "f2l");
                             }
                             // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
                         }
@@ -3051,7 +3192,7 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                             sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                             if (sentinal == 1)
                             {
-                                setalgo(left, "R UP RP UP R U RP UP R U U RP", "f2l");
+                                setalgo(left, "R UP RP UP R U RP UP R U2 RP", "f2l");
                             }
                             else if (sentinal == 0)
                             {
@@ -3127,44 +3268,44 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(back, "U U FP UP F UP FP U F", "f2l");
+                                setalgo(back, "U2 FP UP F UP FP U F", "f2l");
                             }
                             else
                             {
-                                setalgo(back, "U R U U RP U R UP RP", "f2l");
+                                setalgo(back, "U R U2 RP U R UP RP", "f2l");
                             }
                         }
                         else if (edgeSide == right)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(back, "UP FP U U F UP FP U F", "f2l");
+                                setalgo(back, "UP FP U2 F UP FP U F", "f2l");
                             }
                             else
                             {
-                                setalgo(back, "U U R U RP U R UP RP", "f2l");
+                                setalgo(back, "U2 R U RP U R UP RP", "f2l");
                             }
                         }
                         else if (edgeSide == back)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(back, "FP U U F U FP UP F", "f2l");
+                                setalgo(back, "FP U2 F U FP UP F", "f2l");
                             }
                             else
                             {
-                                setalgo(back, "R U RP U U R U RP UP R U RP", "f2l");
+                                setalgo(back, "R U RP U2 R U RP UP R U RP", "f2l");
                             }
                         }
                         else if (edgeSide == left)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(back, "FP UP F U U FP UP F U FP UP F", "f2l");
+                                setalgo(back, "FP UP F U2 FP UP F U FP UP F", "f2l");
                             }
                             else
                             {
-                                setalgo(back, "R U U RP UP R U RP", "f2l");
+                                setalgo(back, "R U2 RP UP R U RP", "f2l");
                             }
                         }
                     }
@@ -3203,44 +3344,44 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(right, "U R U U RP U R UP RP", "f2l");
+                                setalgo(right, "U R U2 RP U R UP RP", "f2l");
                             }
                             else
                             {
-                                setalgo(right, "U U FP UP F UP FP U F", "f2l");
+                                setalgo(right, "U2 FP UP F UP FP U F", "f2l");
                             }
                         }
                         else if (edgeSide == face)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(right, "U U R U RP U R UP RP", "f2l");
+                                setalgo(right, "U2 R U RP U R UP RP", "f2l");
                             }
                             else
                             {
-                                setalgo(right, "UP FP U U F UP FP U F", "f2l");
+                                setalgo(right, "UP FP U2 F UP FP U F", "f2l");
                             }
                         }
                         else if (edgeSide == right)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(right, "R U RP U U R U RP UP R U RP", "f2l");
+                                setalgo(right, "R U RP U2 R U RP UP R U RP", "f2l");
                             }
                             else
                             {
-                                setalgo(right, "FP U U F U FP UP F", "f2l");
+                                setalgo(right, "FP U2 F U FP UP F", "f2l");
                             }
                         }
                         else if (edgeSide == back)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(right, "R U U RP UP R U RP", "f2l");
+                                setalgo(right, "R U2 RP UP R U RP", "f2l");
                             }
                             else
                             {
-                                setalgo(right, "FP UP F U U FP UP F U FP UP F", "f2l");
+                                setalgo(right, "FP UP F U2 FP UP F U FP UP F", "f2l");
                             }
                         }
                     }
@@ -3279,44 +3420,44 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(left, "U R U U RP U R UP RP", "f2l");
+                                setalgo(left, "U R U2 RP U R UP RP", "f2l");
                             }
                             else
                             {
-                                setalgo(left, "U U FP UP F UP FP U F", "f2l");
+                                setalgo(left, "U2 FP UP F UP FP U F", "f2l");
                             }
                         }
                         else if (edgeSide == back)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(left, "U U R U RP U R UP RP", "f2l");
+                                setalgo(left, "U2 R U RP U R UP RP", "f2l");
                             }
                             else
                             {
-                                setalgo(left, "UP FP U U F UP FP U F", "f2l");
+                                setalgo(left, "UP FP U2 F UP FP U F", "f2l");
                             }
                         }
                         else if (edgeSide == left)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(left, "R U RP U U R U RP UP R U RP", "f2l");
+                                setalgo(left, "R U RP U2 R U RP UP R U RP", "f2l");
                             }
                             else
                             {
-                                setalgo(left, "FP U U F U FP UP F", "f2l");
+                                setalgo(left, "FP U2 F U FP UP F", "f2l");
                             }
                         }
                         else if (edgeSide == face)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(left, "R U U RP UP R U RP", "f2l");
+                                setalgo(left, "R U2 RP UP R U RP", "f2l");
                             }
                             else
                             {
-                                setalgo(left, "FP UP F U U FP UP F U FP UP F", "f2l");
+                                setalgo(left, "FP UP F U2 FP UP F U FP UP F", "f2l");
                             }
                         }
                     }
@@ -3355,44 +3496,44 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(face, "U U FP UP F UP FP U F", "f2l");
+                                setalgo(face, "U2 FP UP F UP FP U F", "f2l");
                             }
                             else
                             {
-                                setalgo(face, "U R U U RP U R UP RP", "f2l");
+                                setalgo(face, "U R U2 RP U R UP RP", "f2l");
                             }
                         }
                         else if (edgeSide == left)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(face, "UP FP U U F UP FP U F", "f2l");
+                                setalgo(face, "UP FP U2 F UP FP U F", "f2l");
                             }
                             else
                             {
-                                setalgo(face, "U U R U RP U R UP RP", "f2l");
+                                setalgo(face, "U2 R U RP U R UP RP", "f2l");
                             }
                         }
                         else if (edgeSide == face)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(face, "FP U U F U FP UP F", "f2l");
+                                setalgo(face, "FP U2 F U FP UP F", "f2l");
                             }
                             else
                             {
-                                setalgo(face, "R U RP U U R U RP UP R U RP", "f2l");
+                                setalgo(face, "R U RP U2 R U RP UP R U RP", "f2l");
                             }
                         }
                         else if (edgeSide == right)
                         {
                             if (topSideColor == cornerColors.at(0))
                             {
-                                setalgo(face, "FP UP F U U FP UP F U FP UP F", "f2l");
+                                setalgo(face, "FP UP F U2 FP UP F U FP UP F", "f2l");
                             }
                             else
                             {
-                                setalgo(face, "R U U RP UP R U RP", "f2l");
+                                setalgo(face, "R U2 RP UP R U RP", "f2l");
                             }
                         }
                     }
@@ -3406,15 +3547,24 @@ void makeCubie::f2lSolver(makeCubie &temp_cube)
                 break;
             }
         }
+        solutionOptimizer(F2LSolution);
+        if (F2LSolution.size() > soluionLimit)
+        {
+            terminater = true;
+            break;
+        }
     }
+    if (terminater == true)
+        return false;
     // optimising f2lsolution....
-    solutionOptimizer(F2LSolution);
+    return true;
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CALLS THE OLL LOGIC FUNCTION AND CHECKS IT ON WHICH SIDE THE OLL CONDITIONS WILL MATCHES AND SOLVES THE OLL LAYER.
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 void makeCubie::OLLSolver()
 {
+    OLLSolution.clear();
     bool solve{false};
     string OLLcode{};
     OLLcode = OLLCoder();
@@ -3461,6 +3611,9 @@ void makeCubie::OLLSolver()
         }
         OLLcode = OLLCoder();
     }
+    if (OLLSolution.size() > 0)
+        if (OLLSolution.at(0) == "SOLVED")
+            return;
     cout << "error solving Oll layer...." << endl;
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
@@ -3794,7 +3947,7 @@ bool makeCubie::edgeSetterOnTop(makeCubie &temp_cube, const char &color_1, const
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
 THIS FUNCTION SIMPLY MOVES THE CORNER ELEMENT TO THE CORRECT LOCATION, IF IT IS ON THE TOP SIDE OF THE CUBE
-   AND IF F2LHELPER === "CALL_F2LHELPER" THAN IT WILL CALL THE REQUIRED SIDE OF F2LHELPER FUNCTION
+   AND IF22LHELPER === "CALL_F2LHELPER" THAN IT WILL CALL THE REQUIRED SIDE OF22LHELPER FUNCTION
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_1, const char &color_2, const char &color_3, string_view F2LHelper)
 {
@@ -4640,7 +4793,7 @@ int makeCubie::sideEdgeFinder(makeCubie &temp_cube, const char &color_1, const c
     return -1;
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
-   THIS FUNCITON EXECUTES THE ELGORITHEMS OF F2L_LAYER ON THE BASIS OF THE SIDE AND COLORBLOCK VALUE PROVIDED
+   THIS FUNCITON EXECUTES THE ELGORITHEMS OF22L_LAYER ON THE BASIS OF THE SIDE AND COLORBLOCK VALUE PROVIDED
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colorBlock)
 {
@@ -4667,7 +4820,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         if (sentinal == 1)
                         {
-                            setalgo(left, "U FP U F U FP U U F", "f2l");
+                            setalgo(left, "U FP U F U FP U2 F", "f2l");
                         }
                         else if (sentinal == 0)
                         {
@@ -4684,7 +4837,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "R UP RP U U FP UP F", "f2l");
+                            setalgo(left, "R UP RP U2 FP UP F", "f2l");
                         }
                         else
                         {
@@ -4695,7 +4848,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "U FP U U F U FP U U F", "f2l");
+                            setalgo(left, "U FP U2 F U FP U2 F", "f2l");
                         }
                         else
                         {
@@ -4706,7 +4859,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "U FP UP F U FP U U F", "f2l");
+                            setalgo(left, "U FP UP F U FP U2 F", "f2l");
                         }
                         else
                         {
@@ -4721,7 +4874,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         }
                         else
                         {
-                            setalgo(left, "U FP U U F UP R U RP", "f2l");
+                            setalgo(left, "U FP U2 F UP R U RP", "f2l");
                         }
                     }
                 }
@@ -4740,7 +4893,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         if (sentinal == 1)
                         {
-                            setalgo(face, "UP R UP RP UP R U U RP", "f2l");
+                            setalgo(face, "UP R UP RP UP R U2 RP", "f2l");
                         }
                         else if (sentinal == 0)
                         {
@@ -4757,7 +4910,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "FP U F U U R U RP", "f2l");
+                            setalgo(face, "FP U F U2 R U RP", "f2l");
                         }
                         else
                         {
@@ -4772,14 +4925,14 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         }
                         else
                         {
-                            setalgo(face, "UP R U U RP U FP UP F", "f2l");
+                            setalgo(face, "UP R U2 RP U FP UP F", "f2l");
                         }
                     }
                     else if (edgeSide == back)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "UP R U RP UP R U U RP", "f2l");
+                            setalgo(face, "UP R U RP UP R U2 RP", "f2l");
                         }
                         else
                         {
@@ -4790,7 +4943,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "UP R U U RP UP R U U RP", "f2l");
+                            setalgo(face, "UP R U2 RP UP R U2 RP", "f2l");
                         }
                         else
                         {
@@ -4822,7 +4975,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         if (sentinal == 1)
                         {
-                            setalgo(face, "U FP U F U FP U U F", "f2l");
+                            setalgo(face, "U FP U F U FP U2 F", "f2l");
                         }
                         else if (sentinal == 0)
                         {
@@ -4839,7 +4992,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "R UP RP U U FP UP F", "f2l");
+                            setalgo(face, "R UP RP U2 FP UP F", "f2l");
                         }
                         else
                         {
@@ -4850,7 +5003,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "U FP U U F U FP U U F", "f2l");
+                            setalgo(face, "U FP U2 F U FP U2 F", "f2l");
                         }
                         else
                         {
@@ -4861,7 +5014,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "U FP UP F U FP U U F", "f2l");
+                            setalgo(face, "U FP UP F U FP U2 F", "f2l");
                         }
                         else
                         {
@@ -4876,7 +5029,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         }
                         else
                         {
-                            setalgo(face, "U FP U U F UP R U RP", "f2l");
+                            setalgo(face, "U FP U2 F UP R U RP", "f2l");
                         }
                     }
                 }
@@ -4895,7 +5048,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         if (sentinal == 1)
                         {
-                            setalgo(right, "UP R UP RP UP R U U RP", "f2l");
+                            setalgo(right, "UP R UP RP UP R U2 RP", "f2l");
                         }
                         else if (sentinal == 0)
                         {
@@ -4912,7 +5065,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "FP U F U U R U RP", "f2l");
+                            setalgo(right, "FP U F U2 R U RP", "f2l");
                         }
                         else
                         {
@@ -4927,14 +5080,14 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         }
                         else
                         {
-                            setalgo(right, "UP R U U RP U FP UP F", "f2l");
+                            setalgo(right, "UP R U2 RP U FP UP F", "f2l");
                         }
                     }
                     else if (edgeSide == left)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "UP R U RP UP R U U RP", "f2l");
+                            setalgo(right, "UP R U RP UP R U2 RP", "f2l");
                         }
                         else
                         {
@@ -4945,7 +5098,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "UP R U U RP UP R U U RP", "f2l");
+                            setalgo(right, "UP R U2 RP UP R U2 RP", "f2l");
                         }
                         else
                         {
@@ -4977,7 +5130,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         if (sentinal == 1)
                         {
-                            setalgo(right, "U FP U F U FP U U F", "f2l");
+                            setalgo(right, "U FP U F U FP U2 F", "f2l");
                         }
                         else if (sentinal == 0)
                         {
@@ -4994,7 +5147,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "R UP RP U U FP UP F", "f2l");
+                            setalgo(right, "R UP RP U2 FP UP F", "f2l");
                         }
                         else
                         {
@@ -5005,7 +5158,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "U FP U U F U FP U U F", "f2l");
+                            setalgo(right, "U FP U2 F U FP U2 F", "f2l");
                         }
                         else
                         {
@@ -5016,7 +5169,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "U FP UP F U FP U U F", "f2l");
+                            setalgo(right, "U FP UP F U FP U2 F", "f2l");
                         }
                         else
                         {
@@ -5031,7 +5184,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         }
                         else
                         {
-                            setalgo(right, "U FP U U F UP R U RP", "f2l");
+                            setalgo(right, "U FP U2 F UP R U RP", "f2l");
                         }
                     }
                 }
@@ -5050,7 +5203,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         if (sentinal == 1)
                         {
-                            setalgo(back, "UP R UP RP UP R U U RP", "f2l");
+                            setalgo(back, "UP R UP RP UP R U2 RP", "f2l");
                         }
                         else if (sentinal == 0)
                         {
@@ -5067,7 +5220,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "FP U F U U R U RP", "f2l");
+                            setalgo(back, "FP U F U2 R U RP", "f2l");
                         }
                         else
                         {
@@ -5082,14 +5235,14 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         }
                         else
                         {
-                            setalgo(back, "UP R U U RP U FP UP F", "f2l");
+                            setalgo(back, "UP R U2 RP U FP UP F", "f2l");
                         }
                     }
                     else if (edgeSide == face)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "UP R U RP UP R U U RP", "f2l");
+                            setalgo(back, "UP R U RP UP R U2 RP", "f2l");
                         }
                         else
                         {
@@ -5100,7 +5253,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "UP R U U RP UP R U U RP", "f2l");
+                            setalgo(back, "UP R U2 RP UP R U2 RP", "f2l");
                         }
                         else
                         {
@@ -5132,7 +5285,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         if (sentinal == 1)
                         {
-                            setalgo(back, "U FP U F U FP U U F", "f2l");
+                            setalgo(back, "U FP U F U FP U2 F", "f2l");
                         }
                         else if (sentinal == 0)
                         {
@@ -5149,7 +5302,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "R UP RP U U FP UP F", "f2l");
+                            setalgo(back, "R UP RP U2 FP UP F", "f2l");
                         }
                         else
                         {
@@ -5160,7 +5313,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "U FP U U F U FP U U F", "f2l");
+                            setalgo(back, "U FP U2 F U FP U2 F", "f2l");
                         }
                         else
                         {
@@ -5171,7 +5324,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "U FP UP F U FP U U F", "f2l");
+                            setalgo(back, "U FP UP F U FP U2 F", "f2l");
                         }
                         else
                         {
@@ -5186,7 +5339,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         }
                         else
                         {
-                            setalgo(back, "U FP U U F UP R U RP", "f2l");
+                            setalgo(back, "U FP U2 F UP R U RP", "f2l");
                         }
                     }
                 }
@@ -5205,7 +5358,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         if (sentinal == 1)
                         {
-                            setalgo(left, "UP R UP RP UP R U U RP", "f2l");
+                            setalgo(left, "UP R UP RP UP R U2 RP", "f2l");
                         }
                         else if (sentinal == 0)
                         {
@@ -5222,7 +5375,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "FP U F U U R U RP", "f2l");
+                            setalgo(left, "FP U F U2 R U RP", "f2l");
                         }
                         else
                         {
@@ -5237,14 +5390,14 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                         }
                         else
                         {
-                            setalgo(left, "UP R U U RP U FP UP F", "f2l");
+                            setalgo(left, "UP R U2 RP U FP UP F", "f2l");
                         }
                     }
                     else if (edgeSide == right)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "UP R U RP UP R U U RP", "f2l");
+                            setalgo(left, "UP R U RP UP R U2 RP", "f2l");
                         }
                         else
                         {
@@ -5255,7 +5408,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "UP R U U RP UP R U U RP", "f2l");
+                            setalgo(left, "UP R U2 RP UP R U2 RP", "f2l");
                         }
                         else
                         {
@@ -5303,44 +5456,44 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "U U FP UP F UP FP U F", "f2l");
+                            setalgo(back, "U2 FP UP F UP FP U F", "f2l");
                         }
                         else
                         {
-                            setalgo(back, "U R U U RP U R UP RP", "f2l");
+                            setalgo(back, "U R U2 RP U R UP RP", "f2l");
                         }
                     }
                     else if (edgeSide == right)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "UP FP U U F UP FP U F", "f2l");
+                            setalgo(back, "UP FP U2 F UP FP U F", "f2l");
                         }
                         else
                         {
-                            setalgo(back, "U U R U RP U R UP RP", "f2l");
+                            setalgo(back, "U2 R U RP U R UP RP", "f2l");
                         }
                     }
                     else if (edgeSide == back)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "FP U U F U FP UP F", "f2l");
+                            setalgo(back, "FP U2 F U FP UP F", "f2l");
                         }
                         else
                         {
-                            setalgo(back, "R U RP U U R U RP UP R U RP", "f2l");
+                            setalgo(back, "R U RP U2 R U RP UP R U RP", "f2l");
                         }
                     }
                     else if (edgeSide == left)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "FP UP F U U FP UP F U FP UP F", "f2l");
+                            setalgo(back, "FP UP F U2 FP UP F U FP UP F", "f2l");
                         }
                         else
                         {
-                            setalgo(back, "R U U RP UP R U RP", "f2l");
+                            setalgo(back, "R U2 RP UP R U RP", "f2l");
                         }
                     }
                 }
@@ -5375,44 +5528,44 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "U R U U RP U R UP RP", "f2l");
+                            setalgo(right, "U R U2 RP U R UP RP", "f2l");
                         }
                         else
                         {
-                            setalgo(right, "U U FP UP F UP FP U F", "f2l");
+                            setalgo(right, "U2 FP UP F UP FP U F", "f2l");
                         }
                     }
                     else if (edgeSide == face)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "U U R U RP U R UP RP", "f2l");
+                            setalgo(right, "U2 R U RP U R UP RP", "f2l");
                         }
                         else
                         {
-                            setalgo(right, "UP FP U U F UP FP U F", "f2l");
+                            setalgo(right, "UP FP U2 F UP FP U F", "f2l");
                         }
                     }
                     else if (edgeSide == right)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "R U RP U U R U RP UP R U RP", "f2l");
+                            setalgo(right, "R U RP U2 R U RP UP R U RP", "f2l");
                         }
                         else
                         {
-                            setalgo(right, "FP U U F U FP UP F", "f2l");
+                            setalgo(right, "FP U2 F U FP UP F", "f2l");
                         }
                     }
                     else if (edgeSide == back)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "R U U RP UP R U RP", "f2l");
+                            setalgo(right, "R U2 RP UP R U RP", "f2l");
                         }
                         else
                         {
-                            setalgo(right, "FP UP F U U FP UP F U FP UP F", "f2l");
+                            setalgo(right, "FP UP F U2 FP UP F U FP UP F", "f2l");
                         }
                     }
                 }
@@ -5447,44 +5600,44 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "U R U U RP U R UP RP", "f2l");
+                            setalgo(left, "U R U2 RP U R UP RP", "f2l");
                         }
                         else
                         {
-                            setalgo(left, "U U FP UP F UP FP U F", "f2l");
+                            setalgo(left, "U2 FP UP F UP FP U F", "f2l");
                         }
                     }
                     else if (edgeSide == back)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "U U R U RP U R UP RP", "f2l");
+                            setalgo(left, "U2 R U RP U R UP RP", "f2l");
                         }
                         else
                         {
-                            setalgo(left, "UP FP U U F UP FP U F", "f2l");
+                            setalgo(left, "UP FP U2 F UP FP U F", "f2l");
                         }
                     }
                     else if (edgeSide == left)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "R U RP U U R U RP UP R U RP", "f2l");
+                            setalgo(left, "R U RP U2 R U RP UP R U RP", "f2l");
                         }
                         else
                         {
-                            setalgo(left, "FP U U F U FP UP F", "f2l");
+                            setalgo(left, "FP U2 F U FP UP F", "f2l");
                         }
                     }
                     else if (edgeSide == face)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "R U U RP UP R U RP", "f2l");
+                            setalgo(left, "R U2 RP UP R U RP", "f2l");
                         }
                         else
                         {
-                            setalgo(left, "FP UP F U U FP UP F U FP UP F", "f2l");
+                            setalgo(left, "FP UP F U2 FP UP F U FP UP F", "f2l");
                         }
                     }
                 }
@@ -5519,44 +5672,44 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "U U FP UP F UP FP U F", "f2l");
+                            setalgo(face, "U2 FP UP F UP FP U F", "f2l");
                         }
                         else
                         {
-                            setalgo(face, "U R U U RP U R UP RP", "f2l");
+                            setalgo(face, "U R U2 RP U R UP RP", "f2l");
                         }
                     }
                     else if (edgeSide == left)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "UP FP U U F UP FP U F", "f2l");
+                            setalgo(face, "UP FP U2 F UP FP U F", "f2l");
                         }
                         else
                         {
-                            setalgo(face, "U U R U RP U R UP RP", "f2l");
+                            setalgo(face, "U2 R U RP U R UP RP", "f2l");
                         }
                     }
                     else if (edgeSide == face)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "FP U U F U FP UP F", "f2l");
+                            setalgo(face, "FP U2 F U FP UP F", "f2l");
                         }
                         else
                         {
-                            setalgo(face, "R U RP U U R U RP UP R U RP", "f2l");
+                            setalgo(face, "R U RP U2 R U RP UP R U RP", "f2l");
                         }
                     }
                     else if (edgeSide == right)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "FP UP F U U FP UP F U FP UP F", "f2l");
+                            setalgo(face, "FP UP F U2 FP UP F U FP UP F", "f2l");
                         }
                         else
                         {
-                            setalgo(face, "R U U RP UP R U RP", "f2l");
+                            setalgo(face, "R U2 RP UP R U RP", "f2l");
                         }
                     }
                 }
@@ -5567,48 +5720,6 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
         }
     }
 }
-bool makeCubie::fullCrossChecker(const makeCubie &temp_cube, const int &side)
-{
-    switch (side)
-    {
-    case face:
-
-        if (temp_cube.cubeMain[top].at(2).at(1) == temp_cube.cubeMain[top].at(1).at(1) && temp_cube.cubeMain[right].at(1).at(0) == temp_cube.cubeMain[right].at(1).at(1) && temp_cube.cubeMain[bottom].at(0).at(1) == temp_cube.cubeMain[bottom].at(1).at(1) && temp_cube.cubeMain[left].at(1).at(2) == temp_cube.cubeMain[left].at(1).at(1))
-            return true;
-        break;
-    case back:
-
-        if (temp_cube.cubeMain[top].at(0).at(1) == temp_cube.cubeMain[top].at(1).at(1) && temp_cube.cubeMain[left].at(1).at(0) == temp_cube.cubeMain[left].at(1).at(1) && temp_cube.cubeMain[bottom].at(2).at(1) == temp_cube.cubeMain[bottom].at(1).at(1) && temp_cube.cubeMain[right].at(1).at(2) == temp_cube.cubeMain[right].at(1).at(1))
-            return true;
-        break;
-    case left:
-
-        if (temp_cube.cubeMain[top].at(1).at(0) == temp_cube.cubeMain[top].at(1).at(1) && temp_cube.cubeMain[face].at(1).at(0) == temp_cube.cubeMain[face].at(1).at(1) && temp_cube.cubeMain[bottom].at(1).at(0) == temp_cube.cubeMain[bottom].at(1).at(1) && temp_cube.cubeMain[back].at(1).at(2) == temp_cube.cubeMain[back].at(1).at(1))
-            return true;
-        break;
-    case right:
-
-        if (temp_cube.cubeMain[top].at(1).at(2) == temp_cube.cubeMain[top].at(1).at(1) && temp_cube.cubeMain[back].at(1).at(0) == temp_cube.cubeMain[back].at(1).at(1) && temp_cube.cubeMain[bottom].at(1).at(2) == temp_cube.cubeMain[bottom].at(1).at(1) && temp_cube.cubeMain[face].at(1).at(2) == temp_cube.cubeMain[face].at(1).at(1))
-            return true;
-        break;
-    case top:
-
-        if (temp_cube.cubeMain[face].at(0).at(1) == temp_cube.cubeMain[face].at(1).at(1) && temp_cube.cubeMain[right].at(0).at(1) == temp_cube.cubeMain[right].at(1).at(1) && temp_cube.cubeMain[back].at(0).at(1) == temp_cube.cubeMain[back].at(1).at(1) && temp_cube.cubeMain[left].at(0).at(1) == temp_cube.cubeMain[left].at(1).at(1))
-            return true;
-        break;
-    case bottom:
-
-        if (temp_cube.cubeMain[face].at(2).at(1) == temp_cube.cubeMain[face].at(1).at(1) && temp_cube.cubeMain[right].at(2).at(1) == temp_cube.cubeMain[right].at(1).at(1) && temp_cube.cubeMain[back].at(2).at(1) == temp_cube.cubeMain[back].at(1).at(1) && temp_cube.cubeMain[left].at(2).at(1) == temp_cube.cubeMain[left].at(1).at(1))
-            return true;
-        break;
-
-    default:
-        return false;
-        break;
-    }
-    return false;
-}
-
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCITON CHANGES THE CUBE_SOLVING_ALGORITHEMS TO THE REQUIRED IMPLEMENTAION SIDE ON THE BASIS OF SIDE PROVIDED.
    ----------------------------------------------------------------------------------------------------------------------------------------*/
@@ -5632,10 +5743,14 @@ void makeCubie::setalgo(const int &side, string str_algo, string_view applySolut
             else if (str_algo[i] == 'S')
             {
                 // S will become MP
-                if (str_algo[i + 1] != 'P')
+                if (str_algo[i + 1] == ' ')
                 {
                     str_algo.erase(i, 1);
                     str_algo.insert(i, "MP");
+                }
+                else if (str_algo[i + 1] == '2')
+                {
+                    str_algo[i] = 'M';
                 }
                 else
                 {
@@ -5662,9 +5777,13 @@ void makeCubie::setalgo(const int &side, string str_algo, string_view applySolut
             else if (str_algo[i] == 'M')
             {
                 // M will become MP
-                if (str_algo[i + 1] != 'P')
+                if (str_algo[i + 1] == ' ')
                 {
                     str_algo.insert(i + 1, 1, 'P');
+                }
+                else if (str_algo[i + 1] == '2')
+                {
+                    // M2 will remain M2
                 }
                 else
                 {
@@ -5675,9 +5794,12 @@ void makeCubie::setalgo(const int &side, string str_algo, string_view applySolut
             else if (str_algo[i] == 'S')
             {
                 // S will become SP
-                if (str_algo[i + 1] != 'P')
+                if (str_algo[i + 1] == ' ')
                 {
                     str_algo.insert(i + 1, 1, 'P');
+                }
+                else if (str_algo[i + 1] == '2')
+                {
                 }
                 else
                 {
@@ -5699,13 +5821,17 @@ void makeCubie::setalgo(const int &side, string str_algo, string_view applySolut
                 str_algo[i] = 'F';
             else if (str_algo[i] == 'B')
                 str_algo[i] = 'R';
-            else if (str_algo[i] == 'S')
+            else if (str_algo[i] == 'M')
             {
                 // M will become SP
-                if (str_algo[i + 1] != 'P')
+                if (str_algo[i + 1] == ' ')
                 {
                     str_algo.erase(i, 1);
                     str_algo.insert(i, "SP");
+                }
+                else if (str_algo[i + 1] == '2')
+                {
+                    str_algo[i] = 'S';
                 }
                 else
                 {
@@ -5737,74 +5863,53 @@ void makeCubie::setalgo(const int &side, string str_algo, string_view applySolut
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CALLS THE F2LSOLVER ON TEMPRORY CUBE UNTIL IT FINDES THE SHORTEST POSSIBLE F2L SOLUTION.
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-void makeCubie::shortestF2LSolver(const int &crossSide)
+void makeCubie::shortestCubeSolution()
 {
-    // CORRECTING THE CUBES ORIENTATIONS FOR SOLVING F2L LAYER
-    switch (crossSide)
-    {
-    case face:
-
-        XP;
-        break;
-    case left:
-
-        ZP;
-        break;
-    case right:
-
-        Z;
-        break;
-    case back:
-
-        X;
-        break;
-    case top:
-
-        X;
-        X;
-        break;
-    default:
-        break;
-    }
     unsigned int trials{0};
-    int F2LSolutionSize{0}, benchmark{35};
-    bool solve{false};
-    makeCubie solveF2L(*this);
-    makeCubie temp_cube(*this);
-    while (!solve)
+    int F2LSolutionSize{0}, benchmark{35}, side{0}, limit{27};
+    bool solve{false}, isf2lsolve{false};
+    vector<string> tempf2lsolution{};
+    makeCubie solveF2L(*this), passF2L(*this), temp_cube(*this);
+    for (int _600times{0}; _600times < 200; _600times++)
     {
-        ++trials;
-        cout << "\r " << trials << " tried....";
-        solveF2L = temp_cube = *this;
-        solveF2L.f2lSolver(temp_cube);
-        F2LSolutionSize = solveF2L.F2LSolution.size();
-        if (F2LSolutionSize < 25)
+        for (side = face; side <= bottom; side++)
         {
+            cubeOrienter(*this, side);
+            ++trials;
+            cout << "\r" << trials << " Times solved...";
+            isf2lsolve = false;
+            temp_cube = *this;
+            temp_cube.crossSolver();
+            for (int _100times{0}; _100times < 100 && !isf2lsolve; _100times++)
+            {
+                solveF2L = passF2L = temp_cube;
+                isf2lsolve = solveF2L.f2lSolver(passF2L, limit);
+            }
+            if (!isf2lsolve)
+                continue;
             solveF2L.OLLSolver();
             if (solveF2L.PLLChecker(solveF2L))
-            {
-                this->tempSolution = solveF2L.F2LSolution;
-                this->applySolution("f2l");
-                this->tempSolution = solveF2L.OLLSolution;
-                this->applySolution("oll");
+                solve = true;
+            cubeReOrienter(*this, side);
+            if (solve == true)
                 break;
-            }
-            solveF2L.F2LSolution.clear();
-            solveF2L.OLLSolution.clear();
-            continue;
         }
-        solveF2L.F2LSolution.clear();
-        solveF2L.OLLSolution.clear();
-        continue;
-        solve = true;
+        if (solve == true)
+            break;
     }
-    algorithmCorrector(crossSide, this->F2LSolution);
-    algorithmCorrector(crossSide, this->OLLSolution);
+    *this = solveF2L;
+    algorithmCorrector(side, temp_cube.CrossSolution);
+    algorithmCorrector(side, solveF2L.F2LSolution);
+    algorithmCorrector(side, solveF2L.OLLSolution);
+    this->CrossSolution = temp_cube.CrossSolution;
+    this->F2LSolution = solveF2L.F2LSolution;
+    this->OLLSolution = solveF2L.OLLSolution;
+    cout << "\n\nCROSS SOLVED BY TAKING \"" << sideColor(side) << "\" SIDE AS BOTTOM..." << endl;
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CODES THE OLL LAYER IN '1' AND '0' CHARACTER.
    THE VERY FIRST 9 CHARACTERS ARE FOR TOP SIDE
-   THE OTHER THREE FOR FIRST ROW OF FACE AND
+   THE OTHER THREE FOR FIRST ROW OF2ACE AND
    THE OTHER THREE FOR FIRST ROW OF RIGHT AND
    THE OTHER THREE FOR FIRST ROW OF BACK AND
    THE LAST THREE CHARACHTER IS FOR FIRST ROW OF LEFT
@@ -5820,7 +5925,7 @@ string makeCubie::OLLCoder()
                 OLLCode += '1';
             else
                 OLLCode += '0';
-    // CODING FIRST ROW OF FACE SIDE OF THE CUBE.....
+    // CODING FIRST ROW OF2ACE SIDE OF THE CUBE.....
     for (auto vecOfchar : cubeMain[face].at(0))
         if (vecOfchar == top_color)
             OLLCode += '1';
@@ -5854,14 +5959,18 @@ string makeCubie::OLLCoder()
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 bool makeCubie::OLLLogic(const int &side, string_view OLLcode)
 {
-    // DOT CONDITIONS...
-    if (OLLcode == "000010000010111010111")
+    if (OLLcode == "111111111000000000000")
     {
-        setalgo(side, "R U BP R B R R UP RP F R FP", "oll");
+        OLLSolution.push_back("SOLVED");
+    }
+    // DOT CONDITIONS...
+    else if (OLLcode == "000010000010111010111")
+    {
+        setalgo(side, "R U BP R B R2 UP RP F R FP", "oll");
     }
     else if (OLLcode == "000010000111011010110")
     {
-        setalgo(side, "RP F R FP U U RP F R F F U U F", "oll");
+        setalgo(side, "RP F R FP U2 RP F R F2 U2 F", "oll");
     }
     else if (OLLcode == "000010001010011011011")
     {
@@ -5869,23 +5978,23 @@ bool makeCubie::OLLLogic(const int &side, string_view OLLcode)
     }
     else if (OLLcode == "001010000110110010110")
     {
-        setalgo(side, "RP U U RP F R FP UP FP UP F UP R", "oll");
+        setalgo(side, "RP U2 RP F R FP UP FP UP F UP R", "oll");
     }
     else if (OLLcode == "100010001010010110011")
     {
-        setalgo(side, "R U RP U RP F R FP U U RP F R FP", "oll");
+        setalgo(side, "R U RP U RP F R FP U2 RP F R FP", "oll");
     }
     else if (OLLcode == "101010101010010010010")
     {
-        setalgo(side, "MP U U M U U MP U M U U MP U U M", "oll");
+        setalgo(side, "MP U2 M U2 MP U M U2 MP U2 M", "oll");
     }
     else if (OLLcode == "101010000010110010011")
     {
-        setalgo(side, "RP U U F R U RP UP F F U U F R", "oll");
+        setalgo(side, "RP U2 F R U RP UP F2 U2 F R", "oll");
     }
     else if (OLLcode == "000010101010010111010")
     {
-        setalgo(side, "F R U RP U FP U U FP L F LP", "oll");
+        setalgo(side, "F R U RP U FP U2 FP L F LP", "oll");
     }
     // LINE CONDITIONS...
     else if (OLLcode == "010010010100111001010")
@@ -5894,7 +6003,7 @@ bool makeCubie::OLLLogic(const int &side, string_view OLLcode)
     }
     else if (OLLcode == "010010010000111000111")
     {
-        setalgo(side, "R UP B B D BP U U B DP B B U RP", "oll");
+        setalgo(side, "R UP B2 D BP U2 B DP B2 U RP", "oll");
     }
     else if (OLLcode == "000111000110101011000")
     {
@@ -5911,7 +6020,7 @@ bool makeCubie::OLLLogic(const int &side, string_view OLLcode)
     }
     else if (OLLcode == "010111010000101000101")
     {
-        setalgo(side, "R U RP U R UP RP U R U U RP", "oll");
+        setalgo(side, "R U RP U R UP RP U R U2 RP", "oll");
     }
     else if (OLLcode == "010111011100000100100")
     {
@@ -5919,7 +6028,7 @@ bool makeCubie::OLLLogic(const int &side, string_view OLLcode)
     }
     else if (OLLcode == "010111011000001001001")
     {
-        setalgo(side, "RP U U R U RP U R", "oll");
+        setalgo(side, "RP U2 R U RP U R", "oll");
     }
     else if (OLLcode == "110111110001000100000")
     {
@@ -5927,7 +6036,7 @@ bool makeCubie::OLLLogic(const int &side, string_view OLLcode)
     }
     else if (OLLcode == "111111010101000000000")
     {
-        setalgo(side, "R R D RP U U R DP RP U U RP", "oll");
+        setalgo(side, "R2 D RP U2 R DP RP U2 RP", "oll");
     }
     else if (OLLcode == "110111011000000100001")
     {
@@ -5936,7 +6045,7 @@ bool makeCubie::OLLLogic(const int &side, string_view OLLcode)
     // 4 CORNERS....
     else if (OLLcode == "101110111000010010000")
     {
-        setalgo(side, "MP UP M U U MP UP M", "oll");
+        setalgo(side, "MP UP M U2 MP UP M", "oll");
     }
     else if (OLLcode == "101111101010000010000")
     {
@@ -5945,7 +6054,7 @@ bool makeCubie::OLLLogic(const int &side, string_view OLLcode)
     // SHAPE _| .......
     else if (OLLcode == "010110100011011001000")
     {
-        setalgo(side, "L F RP F R F F LP", "oll");
+        setalgo(side, "L F RP F R F2 LP", "oll");
     }
     else if (OLLcode == "110110001110011000000")
     {
@@ -5957,7 +6066,7 @@ bool makeCubie::OLLLogic(const int &side, string_view OLLcode)
     }
     else if (OLLcode == "010110101010010101000")
     {
-        setalgo(side, "UP R U U RP UP R UP R R FP UP F U R", "oll");
+        setalgo(side, "UP R U2 RP UP R UP R2 FP UP F U R", "oll");
     }
     else if (OLLcode == "010110000011010100101")
     {
@@ -5965,16 +6074,16 @@ bool makeCubie::OLLLogic(const int &side, string_view OLLcode)
     }
     else if (OLLcode == "010110000111010101000")
     {
-        setalgo(side, "L FP LP F U U L L B L BP L", "oll");
+        setalgo(side, "L FP LP F U2 L2 B L BP L", "oll");
     }
     // SHAPE \_ .....
     else if (OLLcode == "010011101010000101010")
     {
-        setalgo(side, "UP RP U U R U RP U R R B U BP UP RP", "oll");
+        setalgo(side, "UP RP U2 R U RP U R2 B U BP UP RP", "oll");
     }
     else if (OLLcode == "011011000110100000110")
     {
-        setalgo(side, "L F F RP FP R FP LP", "oll");
+        setalgo(side, "L F2 RP FP R FP LP", "oll");
     }
     else if (OLLcode == "010011000110101001010")
     {
@@ -5982,15 +6091,15 @@ bool makeCubie::OLLLogic(const int &side, string_view OLLcode)
     }
     else if (OLLcode == "011011100010100001010")
     {
-        setalgo(side, "RP U U R R BP RP B RP U U R", "oll");
+        setalgo(side, "RP U2 R2 BP RP B RP U2 R", "oll");
     }
     else if (OLLcode == "010011000111000101010")
     {
-        setalgo(side, "RP F R FP U U R R BP RP B RP", "oll");
+        setalgo(side, "RP F R FP U2 R2 BP RP B RP", "oll");
     }
     else if (OLLcode == "010011000011000100111")
     {
-        setalgo(side, "RP F RP FP R R U U BP R B RP", "oll");
+        setalgo(side, "RP F RP FP R2 U2 BP R B RP", "oll");
     }
     // SHAPE -\ .....
     else if (OLLcode == "001110010001010011001")
@@ -6003,28 +6112,28 @@ bool makeCubie::OLLLogic(const int &side, string_view OLLcode)
     }
     else if (OLLcode == "000110011100010110100")
     {
-        setalgo(side, "M LP UP L UP LP U U L UP MP", "oll");
+        setalgo(side, "M LP UP L UP LP U2 L UP MP", "oll");
     }
     else if (OLLcode == "101110010000110010001")
     {
-        setalgo(side, "BP R BP R R U R U RP UP R B B", "oll");
+        setalgo(side, "BP R BP R2 U R U RP UP R B2", "oll");
     }
     // SHAPE \- ....
     else if (OLLcode == "000011010001000110111")
     {
-        setalgo(side, "LP B L L FP L L BP L L F LP", "oll");
+        setalgo(side, "LP B L2 FP L2 BP L2 F LP", "oll");
     }
     else if (OLLcode == "000011110001001011010")
     {
-        setalgo(side, "M R U RP U R U U RP U MP", "oll");
+        setalgo(side, "M R U RP U R U2 RP U MP", "oll");
     }
     else if (OLLcode == "000011011000001011011")
     {
-        setalgo(side, "LP B B R B RP B L", "oll");
+        setalgo(side, "LP B2 R B RP B L", "oll");
     }
     else if (OLLcode == "101011010000100010011")
     {
-        setalgo(side, "R R U RP BP R UP R R U R B RP", "oll");
+        setalgo(side, "R2 U RP BP R UP R2 U R B RP", "oll");
     }
     // SHAPE C ....
     else if (OLLcode == "110010110000111000010")
@@ -6132,36 +6241,18 @@ void makeCubie::applySolution(string_view applySolutionOn)
             DP;
         else if (tempSolution.at(i) == "BP")
             BP;
-        else if (tempSolution.at(i) == "2F")
-        {
-            F;
-            F;
-        }
-        else if (tempSolution.at(i) == "2L")
-        {
-            L;
-            L;
-        }
-        else if (tempSolution.at(i) == "2R")
-        {
-            R;
-            R;
-        }
-        else if (tempSolution.at(i) == "2U")
-        {
-            U;
-            U;
-        }
-        else if (tempSolution.at(i) == "2D")
-        {
-            D;
-            D;
-        }
-        else if (tempSolution.at(i) == "2B")
-        {
-            B;
-            B;
-        }
+        else if (tempSolution.at(i) == "F2")
+            F2;
+        else if (tempSolution.at(i) == "L2")
+            L2;
+        else if (tempSolution.at(i) == "R2")
+            R2;
+        else if (tempSolution.at(i) == "U2")
+            U2;
+        else if (tempSolution.at(i) == "D2")
+            D2;
+        else if (tempSolution.at(i) == "B2")
+            B2;
         else if (tempSolution.at(i) == "M")
             M;
         else if (tempSolution.at(i) == "S")
@@ -6174,17 +6265,17 @@ void makeCubie::applySolution(string_view applySolutionOn)
             SP;
         else if (tempSolution.at(i) == "EP")
             EP;
-        else if (tempSolution.at(i) == "2M")
+        else if (tempSolution.at(i) == "M2")
         {
             M;
             M;
         }
-        else if (tempSolution.at(i) == "2S")
+        else if (tempSolution.at(i) == "S2")
         {
             S;
             S;
         }
-        else if (tempSolution.at(i) == "2E")
+        else if (tempSolution.at(i) == "E2")
         {
             E;
             E;
@@ -6257,20 +6348,25 @@ void solutionOptimizer(vector<std::string> &solution)
         {
             if (solution.at(i) == solution.at(j))
             {
-                // for the condition when we have 2u and 2u .....
-                if (solution.at(i).at(0) == '2')
+                // for the condition when we have U2 and U2 .....
+                if (solution.at(i).size() == 2)
                 {
-                    solution.erase(solution.begin() + i, solution.begin() + (j + 1));
-                    checks++;
+                    if (solution.at(i).at(1) == '2')
+                    {
+                        solution.erase(solution.begin() + i, solution.begin() + (j + 1));
+                        checks++;
+                    }
+                    else
+                    {
+                        solution.at(i).at(1) = '2';
+                        // removing j element....
+                        solution.erase(solution.begin() + j);
+                        checks++;
+                    }
                 }
                 else
                 {
-                    solution.at(i) = '2' + solution.at(i);
-                    // poping the "p" from step....
-                    if (solution.at(i).size() == 3)
-                    {
-                        solution.at(i).pop_back();
-                    }
+                    solution.at(i) = solution.at(i) + '2';
                     // removing j element....
                     solution.erase(solution.begin() + j);
                     checks++;
@@ -6281,15 +6377,18 @@ void solutionOptimizer(vector<std::string> &solution)
                 // for the condition when we have up and u so we cancel both....
                 if (solution.at(i).at(0) == solution.at(j).at(0))
                 {
-                    solution.erase(solution.begin() + i, solution.begin() + (j + 1));
-                    checks++;
-                }
-                // ex: 2U + U = UP
-                else if (solution.at(i).at(1) == solution.at(j).at(0))
-                {
-                    solution.at(i) = solution.at(j) + 'P';
-                    solution.erase(solution.begin() + j);
-                    checks++;
+                    if (solution.at(i).at(1) == 'P')
+                    {
+                        solution.erase(solution.begin() + i, solution.begin() + (j + 1));
+                        checks++;
+                    }
+                    else
+                    {
+                        // ex: U2 + U = UP
+                        solution.at(i) = solution.at(j) + 'P';
+                        solution.erase(solution.begin() + j);
+                        checks++;
+                    }
                 }
             }
             else if (solution.at(i).size() == 1 && solution.at(j).size() == 2)
@@ -6297,29 +6396,32 @@ void solutionOptimizer(vector<std::string> &solution)
                 // for the condition when we have U and UP so we cancel both....
                 if (solution.at(i).at(0) == solution.at(j).at(0))
                 {
-                    solution.erase(solution.begin() + i, solution.begin() + (j + 1));
-                    checks++;
-                }
-                // ex: U + 2U = UP
-                else if (solution.at(j).at(1) == solution.at(i).at(0))
-                {
-                    solution.at(i) = solution.at(i) + 'P';
-                    solution.erase(solution.begin() + j);
-                    checks++;
+                    if (solution.at(j).at(1) == 'P')
+                    {
+                        solution.erase(solution.begin() + i, solution.begin() + (j + 1));
+                        checks++;
+                    }
+                    else
+                    {
+                        // ex: U + U2 = UP
+                        solution.at(i) = solution.at(i) + 'P';
+                        solution.erase(solution.begin() + j);
+                        checks++;
+                    }
                 }
             }
             else if (solution.at(i).size() == solution.at(j).size() && solution.at(i).size() == 2)
             {
-                if (solution.at(i).at(1) == solution.at(j).at(0))
+                if (solution.at(i).at(0) == solution.at(j).at(0))
                 {
-                    // ex: 2U + UP = U
+                    // ex: U2 + UP = U
                     solution.at(i) = solution.at(j).at(0);
                     solution.erase(solution.begin() + j);
                     checks++;
                 }
-                else if (solution.at(i).at(0) == solution.at(j).at(1))
+                else if (solution.at(i).at(0) == solution.at(j).at(0))
                 {
-                    // ex: UP + 2U = U
+                    // ex: UP + U2 = U
                     solution.at(i) = solution.at(i).at(0);
                     solution.erase(solution.begin() + j);
                     checks++;
@@ -6328,7 +6430,9 @@ void solutionOptimizer(vector<std::string> &solution)
         }
     }
 }
-
+/* ----------------------------------------------------------------------------------------------------------------------------------------
+   THIS FUNCTION CORRECTS THE ALGORITHM APPLIED AFTER THE ORIENTATION & RE-ORIENTATION OF THE CUBE ON THE BASIS OF SIDE OF ORIENTATOION..
+   ----------------------------------------------------------------------------------------------------------------------------------------*/
 void makeCubie::algorithmCorrector(const int &side, vector<string> &algorithm)
 {
     if (side == face)
@@ -6340,30 +6444,32 @@ void makeCubie::algorithmCorrector(const int &side, vector<string> &algorithm)
             // M will remain same in this case....
             if (algorithm.at(i).at(0) == 'F')
                 algorithm.at(i).at(0) = 'U';
-            else if (algorithm.at(i) == "2F")
-                algorithm.at(i) = "2U";
+            else if (algorithm.at(i) == "F2")
+                algorithm.at(i) = "U2";
             else if (algorithm.at(i).at(0) == 'U')
                 algorithm.at(i).at(0) = 'B';
-            else if (algorithm.at(i) == "2U")
-                algorithm.at(i) = "2B";
+            else if (algorithm.at(i) == "U2")
+                algorithm.at(i) = "B2";
             else if (algorithm.at(i).at(0) == 'D')
                 algorithm.at(i).at(0) = 'F';
-            else if (algorithm.at(i) == "2D")
-                algorithm.at(i) = "2F";
+            else if (algorithm.at(i) == "D2")
+                algorithm.at(i) = "F2";
             else if (algorithm.at(i).at(0) == 'B')
                 algorithm.at(i).at(0) = 'D';
-            else if (algorithm.at(i) == "2B")
-                algorithm.at(i) = "2D";
+            else if (algorithm.at(i) == "B2")
+                algorithm.at(i) = "D2";
             else if (algorithm.at(i).at(0) == 'E')
                 algorithm.at(i).at(0) = 'S';
-            else if (algorithm.at(i) == "2E")
-                algorithm.at(i) = "2S";
+            else if (algorithm.at(i) == "E2")
+                algorithm.at(i) = "S2";
             else if (algorithm.at(i) == "S")
                 algorithm.at(i) = "EP";
             else if (algorithm.at(i) == "SP")
                 algorithm.at(i) = "E";
-            else if (algorithm.at(i) == "2S")
-                algorithm.at(i) = "2E";
+            else if (algorithm.at(i) == "S2")
+                algorithm.at(i) = "E2";
+            else
+                ;
         }
     }
     else if (side == left)
@@ -6375,30 +6481,32 @@ void makeCubie::algorithmCorrector(const int &side, vector<string> &algorithm)
             // S will remain same in this case....
             if (algorithm.at(i).at(0) == 'L')
                 algorithm.at(i).at(0) = 'U';
-            else if (algorithm.at(i) == "2L")
-                algorithm.at(i) = "2U";
+            else if (algorithm.at(i) == "L2")
+                algorithm.at(i) = "U2";
             else if (algorithm.at(i).at(0) == 'R')
                 algorithm.at(i).at(0) = 'D';
-            else if (algorithm.at(i) == "2R")
-                algorithm.at(i) = "2D";
+            else if (algorithm.at(i) == "R2")
+                algorithm.at(i) = "D2";
             else if (algorithm.at(i).at(0) == 'U')
                 algorithm.at(i).at(0) = 'R';
-            else if (algorithm.at(i) == "2U")
-                algorithm.at(i) = "2R";
+            else if (algorithm.at(i) == "U2")
+                algorithm.at(i) = "R2";
             else if (algorithm.at(i).at(0) == 'D')
                 algorithm.at(i).at(0) = 'L';
-            else if (algorithm.at(i) == "2D")
-                algorithm.at(i) = "2L";
+            else if (algorithm.at(i) == "D2")
+                algorithm.at(i) = "L2";
             else if (algorithm.at(i) == "M")
                 algorithm.at(i) = "EP";
             else if (algorithm.at(i) == "MP")
                 algorithm.at(i) = "E";
-            else if (algorithm.at(i) == "2M")
-                algorithm.at(i) = "2E";
+            else if (algorithm.at(i) == "M2")
+                algorithm.at(i) = "E2";
             else if (algorithm.at(i).at(0) == 'E')
                 algorithm.at(i).at(0) = 'M';
-            else if (algorithm.at(i) == "2E")
-                algorithm.at(i) = "2M";
+            else if (algorithm.at(i) == "E2")
+                algorithm.at(i) = "M2";
+            else
+                ;
         }
     }
     else if (side == right)
@@ -6410,30 +6518,32 @@ void makeCubie::algorithmCorrector(const int &side, vector<string> &algorithm)
             // S will remain same in this case....
             if (algorithm.at(i).at(0) == 'L')
                 algorithm.at(i).at(0) = 'D';
-            else if (algorithm.at(i) == "2L")
-                algorithm.at(i) = "2D";
+            else if (algorithm.at(i) == "L2")
+                algorithm.at(i) = "D2";
             else if (algorithm.at(i).at(0) == 'R')
                 algorithm.at(i).at(0) = 'U';
-            else if (algorithm.at(i) == "2R")
-                algorithm.at(i) = "2U";
+            else if (algorithm.at(i) == "R2")
+                algorithm.at(i) = "U2";
             else if (algorithm.at(i).at(0) == 'U')
                 algorithm.at(i).at(0) = 'L';
-            else if (algorithm.at(i) == "2U")
-                algorithm.at(i) = "2L";
+            else if (algorithm.at(i) == "U2")
+                algorithm.at(i) = "L2";
             else if (algorithm.at(i).at(0) == 'D')
                 algorithm.at(i).at(0) = 'R';
-            else if (algorithm.at(i) == "2D")
-                algorithm.at(i) = "2R";
+            else if (algorithm.at(i) == "D2")
+                algorithm.at(i) = "R2";
             else if (algorithm.at(i).at(0) == 'M')
                 algorithm.at(i).at(0) = 'E';
-            else if (algorithm.at(i) == "2M")
-                algorithm.at(i) = "2E";
+            else if (algorithm.at(i) == "M2")
+                algorithm.at(i) = "E2";
             else if (algorithm.at(i) == "E")
                 algorithm.at(i) = "MP";
             else if (algorithm.at(i) == "EP")
                 algorithm.at(i) = "M";
-            else if (algorithm.at(i) == "2E")
-                algorithm.at(i) = "2M";
+            else if (algorithm.at(i) == "E2")
+                algorithm.at(i) = "M2";
+            else
+                ;
         }
     }
     else if (side == back)
@@ -6445,30 +6555,32 @@ void makeCubie::algorithmCorrector(const int &side, vector<string> &algorithm)
             // M will remain same in this case....
             if (algorithm.at(i).at(0) == 'F')
                 algorithm.at(i).at(0) = 'D';
-            else if (algorithm.at(i) == "2F")
-                algorithm.at(i) = "2D";
+            else if (algorithm.at(i) == "F2")
+                algorithm.at(i) = "D2";
             else if (algorithm.at(i).at(0) == 'U')
                 algorithm.at(i).at(0) = 'F';
-            else if (algorithm.at(i) == "2U")
-                algorithm.at(i) = "2F";
+            else if (algorithm.at(i) == "U2")
+                algorithm.at(i) = "F2";
             else if (algorithm.at(i).at(0) == 'D')
                 algorithm.at(i).at(0) = 'B';
-            else if (algorithm.at(i) == "2D")
-                algorithm.at(i) = "2B";
+            else if (algorithm.at(i) == "D2")
+                algorithm.at(i) = "B2";
             else if (algorithm.at(i).at(0) == 'B')
                 algorithm.at(i).at(0) = 'U';
-            else if (algorithm.at(i) == "2B")
-                algorithm.at(i) = "2U";
+            else if (algorithm.at(i) == "B2")
+                algorithm.at(i) = "U2";
             else if (algorithm.at(i) == "E")
                 algorithm.at(i) = "SP";
             else if (algorithm.at(i) == "EP")
                 algorithm.at(i) = "S";
-            else if (algorithm.at(i) == "2E")
-                algorithm.at(i) = "2S";
+            else if (algorithm.at(i) == "E2")
+                algorithm.at(i) = "S2";
             else if (algorithm.at(i).at(0) == 'S')
                 algorithm.at(i).at(0) = 'E';
-            else if (algorithm.at(i) == "2S")
-                algorithm.at(i) = "2E";
+            else if (algorithm.at(i) == "S2")
+                algorithm.at(i) = "E2";
+            else
+                ;
         }
     }
     else if (side == top)
@@ -6480,20 +6592,20 @@ void makeCubie::algorithmCorrector(const int &side, vector<string> &algorithm)
             // M will remain same in this case....
             if (algorithm.at(i).at(0) == 'F')
                 algorithm.at(i).at(0) = 'B';
-            else if (algorithm.at(i) == "2F")
-                algorithm.at(i) = "2B";
+            else if (algorithm.at(i) == "F2")
+                algorithm.at(i) = "B2";
             else if (algorithm.at(i).at(0) == 'U')
                 algorithm.at(i).at(0) = 'D';
-            else if (algorithm.at(i) == "2U")
-                algorithm.at(i) = "2D";
+            else if (algorithm.at(i) == "U2")
+                algorithm.at(i) = "D2";
             else if (algorithm.at(i).at(0) == 'D')
                 algorithm.at(i).at(0) = 'U';
-            else if (algorithm.at(i) == "2D")
-                algorithm.at(i) = "2U";
+            else if (algorithm.at(i) == "D2")
+                algorithm.at(i) = "U2";
             else if (algorithm.at(i).at(0) == 'B')
                 algorithm.at(i).at(0) = 'F';
-            else if (algorithm.at(i) == "2B")
-                algorithm.at(i) = "2F";
+            else if (algorithm.at(i) == "B2")
+                algorithm.at(i) = "F2";
             else if (algorithm.at(i) == "E")
                 algorithm.at(i) = "EP";
             else if (algorithm.at(i) == "EP")
@@ -6502,10 +6614,70 @@ void makeCubie::algorithmCorrector(const int &side, vector<string> &algorithm)
                 algorithm.at(i) = "SP";
             else if (algorithm.at(i) == "SP")
                 algorithm.at(i) = "S";
+            else
+                ;
         }
     }
 }
-
+/* ----------------------------------------------------------------------------------------------------------------------------------------
+   THIS FUNCTION ORIENTS THE CUBE BY MAKING THE GIVEN SIDE TO THE BASE SIDE...
+   ----------------------------------------------------------------------------------------------------------------------------------------*/
+void makeCubie::cubeOrienter(makeCubie &source, const int &side)
+{
+    // Orienting the cube on the basis of side value passed....
+    switch (side)
+    {
+    case face:
+        source.XP;
+        break;
+    case left:
+        source.ZP;
+        break;
+    case right:
+        source.Z;
+        break;
+    case back:
+        source.X;
+        break;
+    case top:
+        source.X;
+        source.X;
+        break;
+    default:
+        break;
+    }
+}
+/* ----------------------------------------------------------------------------------------------------------------------------------------
+   THIS FUNCTION RE-ORIENTS THE CUBE TO THE PAST CONDIDTION...
+   ----------------------------------------------------------------------------------------------------------------------------------------*/
+void makeCubie::cubeReOrienter(makeCubie &source, const int &side)
+{
+    // Re Orienting the cube on the basis of side value passed....
+    switch (side)
+    {
+    case face:
+        source.X;
+        break;
+    case left:
+        source.Z;
+        break;
+    case right:
+        source.ZP;
+        break;
+    case back:
+        source.XP;
+        break;
+    case top:
+        source.X;
+        source.X;
+        break;
+    default:
+        break;
+    }
+}
+/* ----------------------------------------------------------------------------------------------------------------------------------------
+   THIS FUNCTION CHECKS IF THE CUBE REQUIRED TO SOLVE THE PLL LAYER...
+   ----------------------------------------------------------------------------------------------------------------------------------------*/
 bool makeCubie::PLLChecker(const makeCubie &source)
 {
     if (source.cubeMain[face].at(0).at(0) == source.cubeMain[face].at(0).at(1) && source.cubeMain[face].at(0).at(1) == source.cubeMain[face].at(0).at(2) && source.cubeMain[right].at(0).at(0) == source.cubeMain[right].at(0).at(1) && source.cubeMain[right].at(0).at(1) == source.cubeMain[right].at(0).at(2) && source.cubeMain[back].at(0).at(0) == source.cubeMain[back].at(0).at(1) && source.cubeMain[back].at(0).at(1) == source.cubeMain[back].at(0).at(2) && source.cubeMain[left].at(0).at(0) == source.cubeMain[left].at(0).at(1) && source.cubeMain[left].at(0).at(1) == source.cubeMain[left].at(0).at(2))
