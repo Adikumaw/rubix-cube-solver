@@ -217,6 +217,18 @@ void makeCubie::getOLLSolution()
         std::cout << OLLSolution.at(i) << " ";
     }
 }
+int makeCubie::getSolutionSize(string_view solutionName)
+{
+    if (solutionName == "crs")
+        return CrossSolution.size();
+    else if (solutionName == "f2l")
+        return F2LSolution.size();
+    else if (solutionName == "oll")
+        return OLLSolution.size();
+    else if (solutionName == "pll")
+        return PLLSolution.size();
+    return -1;
+}
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CALLS THE SIDE ROTATION LOGIC FUNCTION ON THE BASIS OF SIDE AND DIRECTION PROVIDED
    ----------------------------------------------------------------------------------------------------------------------------------------*/
@@ -798,6 +810,7 @@ void makeCubie::crossSolver()
     mainOrientation = move(crossColorOrientation(*this));
     while (!solve)
     {
+        temp_cube.CrossSolution.clear();
         temp_cube = *this;
         tenTimeSolve = false;
         while (!tenTimeSolve)
@@ -942,7 +955,7 @@ void makeCubie::crossSolver()
                                                     temp_cube.CrossSolution.pop_back();
                                                     temp_cube.CrossSolution.pop_back();
                                                     temp_cube.CrossSolution.pop_back();
-                                                    // forE2moving last two D operatrions...
+                                                    // for removing last two D operatrions...
                                                     temp_cube.CrossSolution.pop_back();
                                                     temp_cube.CrossSolution.pop_back();
                                                     break;
@@ -1801,14 +1814,13 @@ void makeCubie::crossSolver()
                 if (count == 4)
                 {
                     solutionOptimizer(temp_cube.CrossSolution);
-                    if (temp_cube.CrossSolution.size() < 9)
+                    if (temp_cube.CrossSolution.size() < 10)
                     {
                         solve = true;
-                        tenTimeSolve = false;
                         break;
                     }
                     tenTimeSolve = true;
-                    temp_cube.CrossSolution.clear();
+                    break;
                 }
                 else
                 {
@@ -1968,6 +1980,7 @@ bool makeCubie::f2lSolver(makeCubie &temp_cube, const int &soluionLimit)
     std::uniform_int_distribution<int> rang1to4(1, 4);
     int temp{}, side{}, sentinal{}, block{};
     const char bottom_color{cubeMain.at(bottom).at(1).at(1)};
+    vector<int> f2lCorners{};
     bool cornerLocMatch{false}, boolEdgeSetter{false}, terminater{false};
     // bool cornerFound{false};
     // while (!cornerFound)
@@ -1975,6 +1988,29 @@ bool makeCubie::f2lSolver(makeCubie &temp_cube, const int &soluionLimit)
     while (
         cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(0).at(0) || cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(0).at(2) || cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(2).at(0) || cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(2).at(2) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(1).at(0) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(2).at(0) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(1).at(2) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(2).at(2) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(1).at(0) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(2).at(0) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(1).at(2) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(2).at(2) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(1).at(0) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(2).at(0) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(1).at(2) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(2).at(2) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(1).at(0) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(2).at(0) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(1).at(2) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(2).at(2))
     {
+        if (cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(0).at(0) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(1).at(0) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(2).at(0) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(1).at(2) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(2).at(2))
+        {
+            // first f2l corner...
+            f2lCorners.push_back(1);
+        }
+
+        if (cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(0).at(2) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(1).at(2) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(2).at(2) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(1).at(0) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(2).at(0))
+        {
+            // second f2l corner...
+            f2lCorners.push_back(2);
+        }
+
+        if (cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(2).at(0) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(1).at(2) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(2).at(2) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(1).at(0) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(2).at(0))
+        {
+            // third f2l corner...
+            f2lCorners.push_back(3);
+        }
+
+        if (cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(2).at(2) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(1).at(0) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(2).at(0) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(1).at(2) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(2).at(2))
+        {
+            // fourth f2l corner...
+            f2lCorners.push_back(4);
+        }
         // side = ((rand() % (5 - 0 + 1)) + 0);
         side = rang0to5(rng);
         block = rang1to4(rng);
@@ -3547,6 +3583,7 @@ bool makeCubie::f2lSolver(makeCubie &temp_cube, const int &soluionLimit)
                 break;
             }
         }
+        // optimising f2lsolution....
         solutionOptimizer(F2LSolution);
         if (F2LSolution.size() > soluionLimit)
         {
@@ -3556,7 +3593,6 @@ bool makeCubie::f2lSolver(makeCubie &temp_cube, const int &soluionLimit)
     }
     if (terminater == true)
         return false;
-    // optimising f2lsolution....
     return true;
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
@@ -3947,7 +3983,7 @@ bool makeCubie::edgeSetterOnTop(makeCubie &temp_cube, const char &color_1, const
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
 THIS FUNCTION SIMPLY MOVES THE CORNER ELEMENT TO THE CORRECT LOCATION, IF IT IS ON THE TOP SIDE OF THE CUBE
-   AND IF22LHELPER === "CALL_F2LHELPER" THAN IT WILL CALL THE REQUIRED SIDE OF22LHELPER FUNCTION
+   AND IF F2LHELPER === "CALL_F2LHELPER" THAN IT WILL CALL THE REQUIRED SIDE OF F2LHELPER FUNCTION
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 void makeCubie::cornerSetterOnTop(makeCubie &temp_cube, const char &color_1, const char &color_2, const char &color_3, string_view F2LHelper)
 {
@@ -4793,7 +4829,7 @@ int makeCubie::sideEdgeFinder(makeCubie &temp_cube, const char &color_1, const c
     return -1;
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
-   THIS FUNCITON EXECUTES THE ELGORITHEMS OF22L_LAYER ON THE BASIS OF THE SIDE AND COLORBLOCK VALUE PROVIDED
+   THIS FUNCITON EXECUTES THE ELGORITHEMS OF F2L_LAYER ON THE BASIS OF THE SIDE AND COLORBLOCK VALUE PROVIDED
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colorBlock)
 {
@@ -5880,13 +5916,16 @@ void makeCubie::shortestCubeSolution()
             isf2lsolve = false;
             temp_cube = *this;
             temp_cube.crossSolver();
-            for (int _100times{0}; _100times < 100 && !isf2lsolve; _100times++)
+            for (int _100times{0}; _100times < 200 && !isf2lsolve; _100times++)
             {
                 solveF2L = passF2L = temp_cube;
                 isf2lsolve = solveF2L.f2lSolver(passF2L, limit);
             }
             if (!isf2lsolve)
+            {
+                cubeReOrienter(*this, side);
                 continue;
+            }
             solveF2L.OLLSolver();
             if (solveF2L.PLLChecker(solveF2L))
                 solve = true;
@@ -5909,7 +5948,7 @@ void makeCubie::shortestCubeSolution()
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CODES THE OLL LAYER IN '1' AND '0' CHARACTER.
    THE VERY FIRST 9 CHARACTERS ARE FOR TOP SIDE
-   THE OTHER THREE FOR FIRST ROW OF2ACE AND
+   THE OTHER THREE FOR FIRST ROW OF FACE AND
    THE OTHER THREE FOR FIRST ROW OF RIGHT AND
    THE OTHER THREE FOR FIRST ROW OF BACK AND
    THE LAST THREE CHARACHTER IS FOR FIRST ROW OF LEFT
@@ -5925,7 +5964,7 @@ string makeCubie::OLLCoder()
                 OLLCode += '1';
             else
                 OLLCode += '0';
-    // CODING FIRST ROW OF2ACE SIDE OF THE CUBE.....
+    // CODING FIRST ROW OF FACE SIDE OF THE CUBE.....
     for (auto vecOfchar : cubeMain[face].at(0))
         if (vecOfchar == top_color)
             OLLCode += '1';
@@ -6415,13 +6454,6 @@ void solutionOptimizer(vector<std::string> &solution)
                 if (solution.at(i).at(0) == solution.at(j).at(0))
                 {
                     // ex: U2 + UP = U
-                    solution.at(i) = solution.at(j).at(0);
-                    solution.erase(solution.begin() + j);
-                    checks++;
-                }
-                else if (solution.at(i).at(0) == solution.at(j).at(0))
-                {
-                    // ex: UP + U2 = U
                     solution.at(i) = solution.at(i).at(0);
                     solution.erase(solution.begin() + j);
                     checks++;
@@ -6444,32 +6476,20 @@ void makeCubie::algorithmCorrector(const int &side, vector<string> &algorithm)
             // M will remain same in this case....
             if (algorithm.at(i).at(0) == 'F')
                 algorithm.at(i).at(0) = 'U';
-            else if (algorithm.at(i) == "F2")
-                algorithm.at(i) = "U2";
             else if (algorithm.at(i).at(0) == 'U')
                 algorithm.at(i).at(0) = 'B';
-            else if (algorithm.at(i) == "U2")
-                algorithm.at(i) = "B2";
             else if (algorithm.at(i).at(0) == 'D')
                 algorithm.at(i).at(0) = 'F';
-            else if (algorithm.at(i) == "D2")
-                algorithm.at(i) = "F2";
             else if (algorithm.at(i).at(0) == 'B')
                 algorithm.at(i).at(0) = 'D';
-            else if (algorithm.at(i) == "B2")
-                algorithm.at(i) = "D2";
             else if (algorithm.at(i).at(0) == 'E')
                 algorithm.at(i).at(0) = 'S';
-            else if (algorithm.at(i) == "E2")
-                algorithm.at(i) = "S2";
             else if (algorithm.at(i) == "S")
                 algorithm.at(i) = "EP";
             else if (algorithm.at(i) == "SP")
                 algorithm.at(i) = "E";
             else if (algorithm.at(i) == "S2")
                 algorithm.at(i) = "E2";
-            else
-                ;
         }
     }
     else if (side == left)
@@ -6481,20 +6501,12 @@ void makeCubie::algorithmCorrector(const int &side, vector<string> &algorithm)
             // S will remain same in this case....
             if (algorithm.at(i).at(0) == 'L')
                 algorithm.at(i).at(0) = 'U';
-            else if (algorithm.at(i) == "L2")
-                algorithm.at(i) = "U2";
             else if (algorithm.at(i).at(0) == 'R')
                 algorithm.at(i).at(0) = 'D';
-            else if (algorithm.at(i) == "R2")
-                algorithm.at(i) = "D2";
             else if (algorithm.at(i).at(0) == 'U')
                 algorithm.at(i).at(0) = 'R';
-            else if (algorithm.at(i) == "U2")
-                algorithm.at(i) = "R2";
             else if (algorithm.at(i).at(0) == 'D')
                 algorithm.at(i).at(0) = 'L';
-            else if (algorithm.at(i) == "D2")
-                algorithm.at(i) = "L2";
             else if (algorithm.at(i) == "M")
                 algorithm.at(i) = "EP";
             else if (algorithm.at(i) == "MP")
@@ -6503,10 +6515,6 @@ void makeCubie::algorithmCorrector(const int &side, vector<string> &algorithm)
                 algorithm.at(i) = "E2";
             else if (algorithm.at(i).at(0) == 'E')
                 algorithm.at(i).at(0) = 'M';
-            else if (algorithm.at(i) == "E2")
-                algorithm.at(i) = "M2";
-            else
-                ;
         }
     }
     else if (side == right)
@@ -6518,32 +6526,20 @@ void makeCubie::algorithmCorrector(const int &side, vector<string> &algorithm)
             // S will remain same in this case....
             if (algorithm.at(i).at(0) == 'L')
                 algorithm.at(i).at(0) = 'D';
-            else if (algorithm.at(i) == "L2")
-                algorithm.at(i) = "D2";
             else if (algorithm.at(i).at(0) == 'R')
                 algorithm.at(i).at(0) = 'U';
-            else if (algorithm.at(i) == "R2")
-                algorithm.at(i) = "U2";
             else if (algorithm.at(i).at(0) == 'U')
                 algorithm.at(i).at(0) = 'L';
-            else if (algorithm.at(i) == "U2")
-                algorithm.at(i) = "L2";
             else if (algorithm.at(i).at(0) == 'D')
                 algorithm.at(i).at(0) = 'R';
-            else if (algorithm.at(i) == "D2")
-                algorithm.at(i) = "R2";
             else if (algorithm.at(i).at(0) == 'M')
                 algorithm.at(i).at(0) = 'E';
-            else if (algorithm.at(i) == "M2")
-                algorithm.at(i) = "E2";
             else if (algorithm.at(i) == "E")
                 algorithm.at(i) = "MP";
             else if (algorithm.at(i) == "EP")
                 algorithm.at(i) = "M";
             else if (algorithm.at(i) == "E2")
                 algorithm.at(i) = "M2";
-            else
-                ;
         }
     }
     else if (side == back)
@@ -6555,20 +6551,12 @@ void makeCubie::algorithmCorrector(const int &side, vector<string> &algorithm)
             // M will remain same in this case....
             if (algorithm.at(i).at(0) == 'F')
                 algorithm.at(i).at(0) = 'D';
-            else if (algorithm.at(i) == "F2")
-                algorithm.at(i) = "D2";
             else if (algorithm.at(i).at(0) == 'U')
                 algorithm.at(i).at(0) = 'F';
-            else if (algorithm.at(i) == "U2")
-                algorithm.at(i) = "F2";
             else if (algorithm.at(i).at(0) == 'D')
                 algorithm.at(i).at(0) = 'B';
-            else if (algorithm.at(i) == "D2")
-                algorithm.at(i) = "B2";
             else if (algorithm.at(i).at(0) == 'B')
                 algorithm.at(i).at(0) = 'U';
-            else if (algorithm.at(i) == "B2")
-                algorithm.at(i) = "U2";
             else if (algorithm.at(i) == "E")
                 algorithm.at(i) = "SP";
             else if (algorithm.at(i) == "EP")
@@ -6577,10 +6565,6 @@ void makeCubie::algorithmCorrector(const int &side, vector<string> &algorithm)
                 algorithm.at(i) = "S2";
             else if (algorithm.at(i).at(0) == 'S')
                 algorithm.at(i).at(0) = 'E';
-            else if (algorithm.at(i) == "S2")
-                algorithm.at(i) = "E2";
-            else
-                ;
         }
     }
     else if (side == top)
@@ -6592,20 +6576,12 @@ void makeCubie::algorithmCorrector(const int &side, vector<string> &algorithm)
             // M will remain same in this case....
             if (algorithm.at(i).at(0) == 'F')
                 algorithm.at(i).at(0) = 'B';
-            else if (algorithm.at(i) == "F2")
-                algorithm.at(i) = "B2";
             else if (algorithm.at(i).at(0) == 'U')
                 algorithm.at(i).at(0) = 'D';
-            else if (algorithm.at(i) == "U2")
-                algorithm.at(i) = "D2";
             else if (algorithm.at(i).at(0) == 'D')
                 algorithm.at(i).at(0) = 'U';
-            else if (algorithm.at(i) == "D2")
-                algorithm.at(i) = "U2";
             else if (algorithm.at(i).at(0) == 'B')
                 algorithm.at(i).at(0) = 'F';
-            else if (algorithm.at(i) == "B2")
-                algorithm.at(i) = "F2";
             else if (algorithm.at(i) == "E")
                 algorithm.at(i) = "EP";
             else if (algorithm.at(i) == "EP")
@@ -6614,8 +6590,6 @@ void makeCubie::algorithmCorrector(const int &side, vector<string> &algorithm)
                 algorithm.at(i) = "SP";
             else if (algorithm.at(i) == "SP")
                 algorithm.at(i) = "S";
-            else
-                ;
         }
     }
 }

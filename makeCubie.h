@@ -62,6 +62,7 @@ public:
    void getCrossSolution();
    void getF2LSolution();
    void getOLLSolution();
+   int getSolutionSize(string_view solutionName);
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       SIDE ROTATION METHOD...
       ----------------------------------------------------------------------------------------------------------------------------------------*/
@@ -82,7 +83,6 @@ public:
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       HELPER METHODS FOR CUBE SOLVING METHODS.
       ----------------------------------------------------------------------------------------------------------------------------------------*/
-   bool fullCrossChecker(const makeCubie &temp_cube, const int &side);
    bool cornerColorsFinder(const char &bottom_color, const int &side, const int &row, const int &col);
    int sideEdgeFinder(makeCubie &temp_cube, const char &color_1, const char &color_2, string_view edgeSetter);
    bool edgeSetterOnTop(makeCubie &temp_cube, const char &color_1, const char &color_2, string_view edgeSetter);
