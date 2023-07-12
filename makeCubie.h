@@ -20,6 +20,7 @@ private:
    char topSideColor;
    short edgeSide;
    vector<string> CrossSolution, F2LSolution, OLLSolution, PLLSolution, tempSolution;
+   vector<vector<string>> crossSolutions, f2lsolutions, ollSolutions;
 
    // DECLARATION FOR SPEED OPOTIMIZATION....
    short i, j, l, m;
@@ -70,8 +71,8 @@ public:
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       CUBE SOLVING METHODS...
       ----------------------------------------------------------------------------------------------------------------------------------------*/
-   void crossSolver();
-   bool f2lSolver(makeCubie &temp_cube, const int &soluionLimit);
+   void crossSolver(makeCubie &storeSolution);
+   void f2lSolver(makeCubie &temp_cube);
    void shortestCubeSolution();
    void OLLSolver();
    /* ----------------------------------------------------------------------------------------------------------------------------------------
@@ -83,6 +84,8 @@ public:
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       HELPER METHODS FOR CUBE SOLVING METHODS.
       ----------------------------------------------------------------------------------------------------------------------------------------*/
+   bool edgeCoordinateFinder(const char &color_1, int &side, int &block);
+   bool cornerCoordinateFinder(const char &color_1, const char &color_2, int &side, int &block);
    bool cornerColorsFinder(const char &bottom_color, const int &side, const int &row, const int &col);
    int sideEdgeFinder(makeCubie &temp_cube, const char &color_1, const char &color_2, string_view edgeSetter);
    bool edgeSetterOnTop(makeCubie &temp_cube, const char &color_1, const char &color_2, string_view edgeSetter);

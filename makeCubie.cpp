@@ -160,6 +160,9 @@ makeCubie &makeCubie::operator=(const makeCubie &source)
             }
         }
     }
+    this->F2LSolution = source.F2LSolution;
+    this->CrossSolution = source.CrossSolution;
+    this->OLLSolution = source.OLLSolution;
     return *this;
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
@@ -795,7 +798,7 @@ void makeCubie::sideBarReceiver(const int &side, string_view sideBarDirection)
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION SOLVES THE BOTTOM CROSS OF TEH RUBIX CUBE...
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-void makeCubie::crossSolver()
+void makeCubie::crossSolver(makeCubie &storeSolution)
 {
     std::mt19937 rng(std::random_device{}());
     std::uniform_int_distribution<int> rang0to4(0, 4);
@@ -804,415 +807,413 @@ void makeCubie::crossSolver()
     int block{0}, side{0}, crossColorCount{0}, count{0}, twocorrect{0}, limit{0};
     bool solve{false}, tenTimeSolve{false};
     const char bottom_color{cubeMain.at(bottom).at(1).at(1)};
-    CrossSolution.clear();
-    makeCubie temp_cube(*this);
+    char edgeColor{};
     vector<char> mainOrientation{}, currentOrientation{};
+    vector<int> crsEdges{};
     mainOrientation = move(crossColorOrientation(*this));
-    while (!solve)
+    currentOrientation = move(currentorientation(*this));
+    crossColorCount = crossChecker(*this);
+    // while (!solve)
+    // {
+    //     .CrossSolution.clear();
+    //      = *this;
+    //     tenTimeSolve = false;
+    //     while (!tenTimeSolve)
+    //     {
+    if (crossColorCount == 4)
     {
-        temp_cube.CrossSolution.clear();
-        temp_cube = *this;
-        tenTimeSolve = false;
-        while (!tenTimeSolve)
+        // for the condition when crosscolor count == 4....
+        currentOrientation = move(currentorientation(*this));
+        for (int i{0}; i < 4; i++)
         {
-            side = rang0to4(rng);
-            block = rang1to4(rng);
-            crossColorCount = crossChecker(temp_cube);
-            if (crossColorCount != 4)
+            count = 0;
+            for (int j{0}; j < 4; j++)
+                if (currentOrientation.at(j) == mainOrientation.at(j))
+                    count++;
+            if (count == 4 || count == 2)
+                break;
+            std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+            // moving bottom to the correct location...
+            setalgo(face, "D", "crs");
+        }
+        if (count == 4)
+        {
+            // Optimising F2Lsolution....
+            solutionOptimizer(CrossSolution);
+            storeSolution.crossSolutions.push_back(CrossSolution);
+            return;
+        }
+        else
+        {
+            int icside{};
+            for (icside = 0; icside < 4; icside++)
+                if (currentOrientation.at(icside) != mainOrientation.at(icside))
+                    break;
+            switch (icside)
             {
-                if (side >= face && side <= right)
+            case 0:
+                side = face;
+                break;
+            case 1:
+                side = right;
+                break;
+            case 2:
+                side = back;
+                break;
+            case 3:
+                side = left;
+                break;
+            default:
+                break;
+            }
+            for (int checkside{0}; checkside < 3; checkside++)
+            {
+                switch (checkside)
                 {
-                    switch (block)
+                case 0:
+                    setalgo(side, "FP DP F D FP", "crs");
+                    break;
+                case 1:
+                    setalgo(side, "F D FP DP F", "crs");
+                    break;
+                case 2:
+                    setalgo(side, "F D2 FP D2 F", "crs");
+                    break;
+                default:
+                    break;
+                }
+                // Verifying the current orientation...
+                currentOrientation = move(currentorientation(*this));
+                for (int i{0}; i < 4; i++)
+                {
+                    count = 0;
+                    for (int j{0}; j < 4; j++)
+                        if (currentOrientation.at(j) == mainOrientation.at(j))
+                            count++;
+                    if (count == 4)
+                        break;
+                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                }
+                if (count == 4)
+                    break;
+                // reverting the previour solution....
+                switch (checkside)
+                {
+                case 0:
+                    setalgo(side, "F DP FP D F", "null");
+                    CrossSolution.pop_back();
+                    CrossSolution.pop_back();
+                    CrossSolution.pop_back();
+                    CrossSolution.pop_back();
+                    CrossSolution.pop_back();
+                    break;
+                case 1:
+                    setalgo(side, "FP D F DP FP", "null");
+                    CrossSolution.pop_back();
+                    CrossSolution.pop_back();
+                    CrossSolution.pop_back();
+                    CrossSolution.pop_back();
+                    CrossSolution.pop_back();
+                    break;
+                case 2:
+                    setalgo(side, "FP D2 F D2 FP", "null");
+                    CrossSolution.pop_back();
+                    CrossSolution.pop_back();
+                    CrossSolution.pop_back();
+                    CrossSolution.pop_back();
+                    CrossSolution.pop_back();
+                    break;
+                default:
+                    break;
+                }
+            }
+        }
+    }
+    if (mainOrientation.at(0) != currentOrientation.at(0) && mainOrientation.at(0) != currentOrientation.at(1) && mainOrientation.at(0) != currentOrientation.at(2) && mainOrientation.at(0) != currentOrientation.at(3))
+        crsEdges.push_back(1);
+    // second f2l corner...
+    if (mainOrientation.at(1) != currentOrientation.at(0) && mainOrientation.at(1) != currentOrientation.at(1) && mainOrientation.at(1) != currentOrientation.at(2) && mainOrientation.at(1) != currentOrientation.at(3))
+        crsEdges.push_back(2);
+    // third f2l corner...
+    if (mainOrientation.at(2) != currentOrientation.at(0) && mainOrientation.at(2) != currentOrientation.at(1) && mainOrientation.at(2) != currentOrientation.at(2) && mainOrientation.at(2) != currentOrientation.at(3))
+        crsEdges.push_back(3);
+    // fourth f2l corner...
+    if (mainOrientation.at(3) != currentOrientation.at(0) && mainOrientation.at(3) != currentOrientation.at(1) && mainOrientation.at(3) != currentOrientation.at(2) && mainOrientation.at(3) != currentOrientation.at(3))
+        crsEdges.push_back(4);
+
+    makeCubie sourceBackup, sourceCpy;
+    for (size_t i{0}; i < crsEdges.size(); i++)
+    {
+        // cornerColors.clear();
+        switch (crsEdges.at(i))
+        {
+        case 1:
+            /* code */
+            edgeColor = mainOrientation.at(0);
+            break;
+        case 2:
+            /* code */
+            edgeColor = mainOrientation.at(1);
+            break;
+        case 3:
+            /* code */
+            edgeColor = mainOrientation.at(2);
+            break;
+        case 4:
+            /* code */
+            edgeColor = mainOrientation.at(3);
+            break;
+        default:
+            break;
+        }
+        sourceBackup = *this;
+        if (!edgeCoordinateFinder(edgeColor, side, block))
+            std::cout << "error finding coordinate...." << endl;
+        // side = rang0to4(rng);
+        // block = rang1to4(rng);
+        crossColorCount = crossChecker(*this);
+        if (crossColorCount != 4)
+        {
+            if (side >= face && side <= right)
+            {
+                switch (block)
+                {
+                // this case is for checking the top side edge....
+                case 1:
+                    if (cubeMain[side].at(0).at(1) == bottom_color)
                     {
-                    // this case is for checking the top side edge....
-                    case 1:
-                        if (temp_cube.cubeMain[side].at(0).at(1) == bottom_color)
+                        switch (crossColorCount)
                         {
-                            switch (crossColorCount)
+                            // No edges on the bottom...
+                        case 0:
+                            switch (rang0to1(rng))
                             {
-                                // No edges on the bottom...
                             case 0:
-                                switch (rang0to1(rng))
-                                {
-                                case 0:
-                                    temp_cube.setalgo(side, "F RP", "crs");
-                                    break;
-                                case 1:
-                                    temp_cube.setalgo(side, "FP L", "crs");
-                                    break;
-                                default:
-                                    break;
-                                }
+                                setalgo(side, "F RP", "crs");
                                 break;
-                            // one or two edges on the bottom...
                             case 1:
-                            case 2:
-                                currentOrientation = move(currentorientation(temp_cube));
-                                for (int i{0}; i < 4; i++)
+                                setalgo(side, "FP L", "crs");
+                                break;
+                            default:
+                                break;
+                            }
+                            break;
+                        // one or two edges on the bottom...
+                        case 1:
+                        case 2:
+                            currentOrientation = move(currentorientation(*this));
+                            for (int i{0}; i < 4; i++)
+                            {
+                                count = 0;
+                                for (int j{0}; j < 4; j++)
+                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                        count++;
+                                if (count >= 2)
+                                    break;
+                                else
+                                    count = 1;
+                                std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                            }
+                            limit = count + 1;
+                            for (int twotimes{0}; twotimes < 2; twotimes++)
+                            {
+                                for (int checkside{0}; checkside < 4; checkside++)
                                 {
-                                    count = 0;
-                                    for (int j{0}; j < 4; j++)
-                                        if (currentOrientation.at(j) == mainOrientation.at(j))
-                                            count++;
-                                    if (count >= 2)
-                                        break;
+                                    if (twotimes == 0)
+                                        setalgo(side, "F RP", "crs");
                                     else
-                                        count = 1;
-                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                        setalgo(side, "FP L", "crs");
+                                    crossColorCount = crossChecker(*this);
+                                    if (limit == 3 && crossColorCount == 2)
+                                    {
+                                        if (twotimes == 0)
+                                            setalgo(side, "FP", "crs");
+                                        else
+                                            setalgo(side, "F", "crs");
+                                        // using twoCorrect as a singnal.....
+                                        twocorrect = -1;
+                                    }
+                                    else
+                                        twocorrect = 0;
+                                    crossColorCount = crossChecker(*this);
+                                    if (crossColorCount >= limit)
+                                    {
+                                        // Verifying the current Orientation......
+                                        currentOrientation = move(currentorientation(*this));
+                                        for (int i{0}; i < 4; i++)
+                                        {
+                                            count = 0;
+                                            for (int j{0}; j < 4; j++)
+                                                if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                    count++;
+                                            if (count >= limit)
+                                                break;
+                                            std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                        }
+                                        if (count >= limit)
+                                            break;
+                                    }
+                                    // reverting the previour solution....
+                                    if (twocorrect == -1)
+                                    {
+                                        if (twotimes == 0)
+                                            setalgo(side, "F", "null");
+                                        else
+                                            setalgo(side, "FP", "null");
+                                        CrossSolution.pop_back();
+                                    }
+                                    if (twotimes == 0)
+                                        setalgo(side, "R FP", "null");
+                                    else
+                                        setalgo(side, "LP F", "null");
+                                    CrossSolution.pop_back();
+                                    CrossSolution.pop_back();
+                                    setalgo(side, "D", "crs");
                                 }
-                                limit = count + 1;
+                                // this is for breaking the two times loop .....
+                                if (count >= limit)
+                                    break;
+                            }
+                            break;
+                        case 3:
+                            currentOrientation = move(currentorientation(*this));
+                            for (int i{0}; i < 4; i++)
+                            {
+                                count = 0;
+                                for (int j{0}; j < 4; j++)
+                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                        count++;
+                                if (count >= 3)
+                                    break;
+                                if (count >= 2)
+                                    twocorrect = 2;
+                                std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                            }
+                            // here the arising three conditions will be checked by count number........
+                            // When all three are correct...
+                            if (count >= 3)
+                            {
                                 for (int twotimes{0}; twotimes < 2; twotimes++)
                                 {
                                     for (int checkside{0}; checkside < 4; checkside++)
                                     {
                                         if (twotimes == 0)
-                                            temp_cube.setalgo(side, "F RP", "crs");
+                                            setalgo(side, "F RP FP", "crs");
                                         else
-                                            temp_cube.setalgo(side, "FP L", "crs");
-                                        crossColorCount = crossChecker(temp_cube);
-                                        if (limit == 3 && crossColorCount == 2)
+                                            setalgo(side, "FP L F", "crs");
+                                        crossColorCount = crossChecker(*this);
+                                        if (crossColorCount == 4)
+                                        {
+                                            if (checkside == 2)
+                                            {
+                                                // reverting to get even shorter solution....
+                                                setalgo(side, "F R FP", "null");
+                                                CrossSolution.pop_back();
+                                                CrossSolution.pop_back();
+                                                CrossSolution.pop_back();
+                                                // for removing last two D operatrions...
+                                                setalgo(side, "D2", "null");
+                                                CrossSolution.pop_back();
+                                                CrossSolution.pop_back();
+                                                break;
+                                            }
+                                            // using count as a signal to what to do next....
+                                            count = -1;
+                                            break;
+                                        }
+                                        // reverting the previour solution....
+                                        if (twotimes == 0)
+                                            setalgo(side, "F R FP", "null");
+                                        else
+                                            setalgo(side, "FP LP F", "null");
+                                        CrossSolution.pop_back();
+                                        CrossSolution.pop_back();
+                                        CrossSolution.pop_back();
+                                        setalgo(side, "D", "crs");
+                                    }
+                                    if (count == -1)
+                                        break;
+                                }
+                            }
+                            // When two edges are correct...
+                            else if (twocorrect == 2)
+                            {
+                                for (int twotimes{0}; twotimes < 2; twotimes++)
+                                {
+                                    for (int checkside{0}; checkside < 4; checkside++)
+                                    {
+                                        if (twotimes == 0)
+                                            setalgo(side, "F RP", "crs");
+                                        else
+                                            setalgo(side, "FP L", "crs");
+                                        crossColorCount = crossChecker(*this);
+                                        if (crossColorCount == 2)
                                         {
                                             if (twotimes == 0)
-                                                temp_cube.setalgo(side, "FP", "crs");
+                                                setalgo(side, "FP", "crs");
                                             else
-                                                temp_cube.setalgo(side, "F", "crs");
+                                                setalgo(side, "F", "crs");
                                             // using twoCorrect as a singnal.....
                                             twocorrect = -1;
                                         }
-                                        crossColorCount = crossChecker(temp_cube);
-                                        if (crossColorCount >= limit)
+                                        else
+                                            twocorrect = 0;
+                                        crossColorCount = crossChecker(*this);
+                                        if (crossColorCount == 3)
                                         {
-                                            // Verifying the current Orientation......
-                                            currentOrientation = move(currentorientation(temp_cube));
+                                            // Verifying the current orientation...
+                                            currentOrientation = move(currentorientation(*this));
                                             for (int i{0}; i < 4; i++)
                                             {
                                                 count = 0;
                                                 for (int j{0}; j < 4; j++)
                                                     if (currentOrientation.at(j) == mainOrientation.at(j))
                                                         count++;
-                                                if (count >= limit)
+                                                if (count >= 3)
                                                     break;
                                                 std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
                                             }
-                                            if (count >= limit)
+                                            if (count >= 3)
                                                 break;
                                         }
                                         // reverting the previour solution....
                                         if (twocorrect == -1)
                                         {
                                             if (twotimes == 0)
-                                                temp_cube.setalgo(side, "F", "null");
+                                                setalgo(side, "F", "null");
                                             else
-                                                temp_cube.setalgo(side, "FP", "null");
-                                            temp_cube.CrossSolution.pop_back();
+                                                setalgo(side, "FP", "null");
+                                            CrossSolution.pop_back();
                                         }
                                         if (twotimes == 0)
-                                            temp_cube.setalgo(side, "R FP", "null");
+                                            setalgo(side, "R FP", "null");
                                         else
-                                            temp_cube.setalgo(side, "LP F", "null");
-                                        temp_cube.CrossSolution.pop_back();
-                                        temp_cube.CrossSolution.pop_back();
-                                        temp_cube.setalgo(side, "D", "crs");
+                                            setalgo(side, "LP F", "null");
+                                        CrossSolution.pop_back();
+                                        CrossSolution.pop_back();
+                                        setalgo(side, "D", "crs");
                                     }
                                     // this is for breaking the two times loop .....
-                                    if (count >= limit)
-                                        break;
-                                }
-                                break;
-                            case 3:
-                                currentOrientation = move(currentorientation(temp_cube));
-                                for (int i{0}; i < 4; i++)
-                                {
-                                    count = 0;
-                                    for (int j{0}; j < 4; j++)
-                                        if (currentOrientation.at(j) == mainOrientation.at(j))
-                                            count++;
                                     if (count >= 3)
                                         break;
-                                    if (count >= 2)
-                                        twocorrect = 2;
-                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
                                 }
-                                // here the arising three conditions will be checked by count number........
-                                // When all three are correct...
-                                if (count >= 3)
-                                {
-                                    for (int twotimes{0}; twotimes < 2; twotimes++)
-                                    {
-                                        for (int checkside{0}; checkside < 4; checkside++)
-                                        {
-                                            if (twotimes == 0)
-                                                temp_cube.setalgo(side, "F RP FP", "crs");
-                                            else
-                                                temp_cube.setalgo(side, "FP L F", "crs");
-                                            crossColorCount = crossChecker(temp_cube);
-                                            if (crossColorCount == 4)
-                                            {
-                                                if (checkside == 2)
-                                                {
-                                                    // reverting to get even shorter solution....
-                                                    temp_cube.setalgo(side, "F R FP", "null");
-                                                    temp_cube.CrossSolution.pop_back();
-                                                    temp_cube.CrossSolution.pop_back();
-                                                    temp_cube.CrossSolution.pop_back();
-                                                    // for removing last two D operatrions...
-                                                    temp_cube.CrossSolution.pop_back();
-                                                    temp_cube.CrossSolution.pop_back();
-                                                    break;
-                                                }
-                                                // using count as a signal to what to do next....
-                                                count = -1;
-                                                break;
-                                            }
-                                            // reverting the previour solution....
-                                            if (twotimes == 0)
-                                                temp_cube.setalgo(side, "F R FP", "null");
-                                            else
-                                                temp_cube.setalgo(side, "FP LP F", "null");
-                                            temp_cube.CrossSolution.pop_back();
-                                            temp_cube.CrossSolution.pop_back();
-                                            temp_cube.CrossSolution.pop_back();
-                                            temp_cube.setalgo(side, "D", "crs");
-                                        }
-                                        if (count == -1)
-                                            break;
-                                    }
-                                }
-                                // When two edges are correct...
-                                else if (twocorrect == 2)
-                                {
-                                    for (int twotimes{0}; twotimes < 2; twotimes++)
-                                    {
-                                        for (int checkside{0}; checkside < 4; checkside++)
-                                        {
-                                            if (twotimes == 0)
-                                                temp_cube.setalgo(side, "F RP", "crs");
-                                            else
-                                                temp_cube.setalgo(side, "FP L", "crs");
-                                            crossColorCount = crossChecker(temp_cube);
-                                            if (crossColorCount == 2)
-                                            {
-                                                if (twotimes == 0)
-                                                    temp_cube.setalgo(side, "FP", "crs");
-                                                else
-                                                    temp_cube.setalgo(side, "F", "crs");
-                                                // using twoCorrect as a singnal.....
-                                                twocorrect = -1;
-                                            }
-                                            crossColorCount = crossChecker(temp_cube);
-                                            if (crossColorCount == 3)
-                                            {
-                                                // Verifying the current orientation...
-                                                currentOrientation = move(currentorientation(temp_cube));
-                                                for (int i{0}; i < 4; i++)
-                                                {
-                                                    count = 0;
-                                                    for (int j{0}; j < 4; j++)
-                                                        if (currentOrientation.at(j) == mainOrientation.at(j))
-                                                            count++;
-                                                    if (count >= 3)
-                                                        break;
-                                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
-                                                }
-                                                if (count >= 3)
-                                                    break;
-                                            }
-                                            // reverting the previour solution....
-                                            if (twocorrect == -1)
-                                            {
-                                                if (twotimes == 0)
-                                                    temp_cube.setalgo(side, "F", "null");
-                                                else
-                                                    temp_cube.setalgo(side, "FP", "null");
-                                                temp_cube.CrossSolution.pop_back();
-                                            }
-                                            if (twotimes == 0)
-                                                temp_cube.setalgo(side, "R FP", "null");
-                                            else
-                                                temp_cube.setalgo(side, "LP F", "null");
-                                            temp_cube.CrossSolution.pop_back();
-                                            temp_cube.CrossSolution.pop_back();
-                                            temp_cube.setalgo(side, "D", "crs");
-                                        }
-                                        // this is for breaking the two times loop .....
-                                        if (count >= 3)
-                                            break;
-                                    }
-                                }
-                                // When only one edge is correct...
-                                else
-                                {
-                                    for (int twotimes{0}; twotimes < 2; twotimes++)
-                                    {
-                                        for (int checkside{0}; checkside < 4; checkside++)
-                                        {
-                                            if (twotimes == 0)
-                                                temp_cube.setalgo(side, "F RP", "crs");
-                                            else
-                                                temp_cube.setalgo(side, "FP L", "crs");
-                                            crossColorCount = crossChecker(temp_cube);
-                                            if (crossColorCount <= 3)
-                                            {
-                                                // Verifying the current orientation...
-                                                currentOrientation = move(currentorientation(temp_cube));
-                                                for (int i{0}; i < 4; i++)
-                                                {
-                                                    count = 0;
-                                                    for (int j{0}; j < 4; j++)
-                                                        if (currentOrientation.at(j) == mainOrientation.at(j))
-                                                            count++;
-                                                    if (count >= 2)
-                                                        break;
-                                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
-                                                }
-                                                if (count >= 2)
-                                                    break;
-                                            }
-                                            // reverting the previour solution....
-                                            if (twotimes == 0)
-                                                temp_cube.setalgo(side, "R FP", "null");
-                                            else
-                                                temp_cube.setalgo(side, "LP F", "null");
-                                            temp_cube.CrossSolution.pop_back();
-                                            temp_cube.CrossSolution.pop_back();
-                                            temp_cube.setalgo(side, "D", "crs");
-                                        }
-                                        // this is for breaking the two times loop .....
-                                        if (count >= 2)
-                                            break;
-                                    }
-                                }
-                                break;
-                            default:
-                                break;
                             }
-                        }
-                        break;
-                        // this is for checking the right side edge....
-                    case 2:
-                        if (temp_cube.cubeMain[side].at(1).at(2) == bottom_color)
-                        {
-                            switch (crossColorCount)
+                            // When only one edge is correct...
+                            else
                             {
-                            case 0:
-                                temp_cube.setalgo(side, "RP", "crs");
-                                break;
-                            // one or two edges on the bottom
-                            case 1:
-                            case 2:
-                                currentOrientation = move(currentorientation(temp_cube));
-                                for (int i{0}; i < 4; i++)
-                                {
-                                    count = 0;
-                                    for (int j{0}; j < 4; j++)
-                                        if (currentOrientation.at(j) == mainOrientation.at(j))
-                                            count++;
-                                    if (count >= 2)
-                                        break;
-                                    else
-                                        count = 1;
-                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
-                                }
-                                limit = count + 1;
-                                for (int checkside{0}; checkside < 4; checkside++)
-                                {
-                                    temp_cube.setalgo(side, "RP", "crs");
-                                    crossColorCount = crossChecker(temp_cube);
-                                    if (crossColorCount >= limit)
-                                    {
-                                        // Verifying the current orientation...
-                                        currentOrientation = move(currentorientation(temp_cube));
-                                        for (int i{0}; i < 4; i++)
-                                        {
-                                            count = 0;
-                                            for (int j{0}; j < 4; j++)
-                                                if (currentOrientation.at(j) == mainOrientation.at(j))
-                                                    count++;
-                                            if (count >= limit)
-                                                break;
-                                            std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
-                                        }
-                                        if (count >= limit)
-                                            break;
-                                    }
-                                    // reverting the previour solution....
-                                    temp_cube.setalgo(side, "R", "null");
-                                    temp_cube.CrossSolution.pop_back();
-                                    temp_cube.setalgo(side, "D", "crs");
-                                }
-                                break;
-                            case 3:
-                                currentOrientation = move(currentorientation(temp_cube));
-                                for (int i{0}; i < 4; i++)
-                                {
-                                    count = 0;
-                                    for (int j{0}; j < 4; j++)
-                                        if (currentOrientation.at(j) == mainOrientation.at(j))
-                                            count++;
-                                    if (count >= 3)
-                                        break;
-                                    if (count >= 2)
-                                        twocorrect = 2;
-                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
-                                }
-                                // When three edges are correct...
-                                if (count >= 3)
+                                for (int twotimes{0}; twotimes < 2; twotimes++)
                                 {
                                     for (int checkside{0}; checkside < 4; checkside++)
                                     {
-                                        temp_cube.setalgo(side, "RP", "crs");
-                                        crossColorCount = crossChecker(temp_cube);
-                                        if (crossColorCount == 4)
-                                        {
-                                            break;
-                                        }
-                                        // reverting the previour solution....
-                                        temp_cube.setalgo(side, "R", "null");
-                                        temp_cube.CrossSolution.pop_back();
-                                        temp_cube.setalgo(side, "D", "crs");
-                                    }
-                                }
-                                // When two edges are correct...
-                                else if (twocorrect == 2)
-                                {
-                                    for (int checkside{0}; checkside < 4; checkside++)
-                                    {
-                                        temp_cube.setalgo(side, "RP", "crs");
-                                        crossColorCount = crossChecker(temp_cube);
-                                        if (crossColorCount == 3)
-                                        {
-                                            // Verifying the current orientation...
-                                            currentOrientation = move(currentorientation(temp_cube));
-                                            for (int i{0}; i < 4; i++)
-                                            {
-                                                count = 0;
-                                                for (int j{0}; j < 4; j++)
-                                                    if (currentOrientation.at(j) == mainOrientation.at(j))
-                                                        count++;
-                                                if (count >= 3)
-                                                    break;
-                                                std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
-                                            }
-                                            if (count >= 3)
-                                                break;
-                                        }
-                                        // reverting the previour solution....
-                                        temp_cube.setalgo(side, "R", "null");
-                                        temp_cube.CrossSolution.pop_back();
-                                        temp_cube.setalgo(side, "D", "crs");
-                                    }
-                                }
-                                // When one edge is correct...
-                                else
-                                {
-                                    for (int checkside{0}; checkside < 4; checkside++)
-                                    {
-                                        temp_cube.setalgo(side, "RP", "crs");
-                                        crossColorCount = crossChecker(temp_cube);
+                                        if (twotimes == 0)
+                                            setalgo(side, "F RP", "crs");
+                                        else
+                                            setalgo(side, "FP L", "crs");
+                                        crossColorCount = crossChecker(*this);
                                         if (crossColorCount <= 3)
                                         {
                                             // Verifying the current orientation...
-                                            currentOrientation = move(currentorientation(temp_cube));
+                                            currentOrientation = move(currentorientation(*this));
                                             for (int i{0}; i < 4; i++)
                                             {
                                                 count = 0;
@@ -1227,433 +1228,38 @@ void makeCubie::crossSolver()
                                                 break;
                                         }
                                         // reverting the previour solution....
-                                        temp_cube.setalgo(side, "R", "null");
-                                        temp_cube.CrossSolution.pop_back();
-                                        temp_cube.setalgo(side, "D", "crs");
+                                        if (twotimes == 0)
+                                            setalgo(side, "R FP", "null");
+                                        else
+                                            setalgo(side, "LP F", "null");
+                                        CrossSolution.pop_back();
+                                        CrossSolution.pop_back();
+                                        setalgo(side, "D", "crs");
                                     }
+                                    // this is for breaking the two times loop .....
+                                    if (count >= 2)
+                                        break;
                                 }
-                                break;
-                            default:
-                                break;
                             }
+                            break;
+                        default:
+                            break;
                         }
-                        break;
-                        // this case is for checking the bottom side edge....
-                    case 3:
-                        if (temp_cube.cubeMain[side].at(2).at(1) == bottom_color)
-                        {
-                            switch (crossColorCount)
-                            {
-                                // no edges on the bottom...
-                            case 0:
-                                switch (rang0to1(rng))
-                                {
-                                case 0:
-                                    temp_cube.setalgo(side, "FP RP", "crs");
-                                    break;
-                                case 1:
-                                    temp_cube.setalgo(side, "F L", "crs");
-                                    break;
-                                default:
-                                    break;
-                                }
-                                break;
-                            // one or two edges on the bottom...
-                            case 1:
-                            case 2:
-                                currentOrientation = move(currentorientation(temp_cube));
-                                for (int i{0}; i < 4; i++)
-                                {
-                                    count = 0;
-                                    for (int j{0}; j < 4; j++)
-                                        if (currentOrientation.at(j) == mainOrientation.at(j))
-                                            count++;
-                                    // there is a flow in the below code and should be corrected...
-                                    if (count >= 2)
-                                        break;
-                                    else
-                                        count = 1;
-                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
-                                }
-                                limit = count + 1;
-                                for (int checkside{0}; checkside < 4; checkside++)
-                                {
-                                    switch (checkside)
-                                    {
-                                    case 0:
-                                        temp_cube.setalgo(side, "FP D RP", "crs");
-                                        break;
-                                    case 1:
-                                        temp_cube.setalgo(side, "FP RP", "crs");
-                                        break;
-                                    case 2:
-                                        temp_cube.setalgo(side, "F D L", "crs");
-                                        break;
-                                    case 3:
-                                        temp_cube.setalgo(side, "F L", "crs");
-                                        break;
-                                    default:
-                                        break;
-                                    }
-                                    crossColorCount = crossChecker(temp_cube);
-                                    if (crossColorCount >= limit)
-                                    {
-                                        // Verifying the current orientation...
-                                        currentOrientation = move(currentorientation(temp_cube));
-                                        for (int i{0}; i < 4; i++)
-                                        {
-                                            count = 0;
-                                            for (int j{0}; j < 4; j++)
-                                                if (currentOrientation.at(j) == mainOrientation.at(j))
-                                                    count++;
-                                            if (count >= limit)
-                                                break;
-                                            std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
-                                        }
-                                        if (count >= limit)
-                                            break;
-                                    }
-                                    // reverting the previour solution....
-                                    switch (checkside)
-                                    {
-                                    case 0:
-                                        temp_cube.setalgo(side, "R DP F", "null");
-                                        temp_cube.CrossSolution.pop_back();
-                                        temp_cube.CrossSolution.pop_back();
-                                        temp_cube.CrossSolution.pop_back();
-                                        break;
-                                    case 1:
-                                        temp_cube.setalgo(side, "R F", "null");
-                                        temp_cube.CrossSolution.pop_back();
-                                        temp_cube.CrossSolution.pop_back();
-                                        break;
-                                    case 2:
-                                        temp_cube.setalgo(side, "LP DP FP", "null");
-                                        temp_cube.CrossSolution.pop_back();
-                                        temp_cube.CrossSolution.pop_back();
-                                        temp_cube.CrossSolution.pop_back();
-                                        break;
-                                    case 3:
-                                        temp_cube.setalgo(side, "LP FP", "null");
-                                        temp_cube.CrossSolution.pop_back();
-                                        temp_cube.CrossSolution.pop_back();
-                                        break;
-                                    default:
-                                        break;
-                                    }
-                                }
-                                break;
-                                // three edges on the bottom...
-                            case 3:
-                                currentOrientation = move(currentorientation(temp_cube));
-                                for (int i{0}; i < 4; i++)
-                                {
-                                    count = 0;
-                                    for (int j{0}; j < 4; j++)
-                                        if (currentOrientation.at(j) == mainOrientation.at(j))
-                                            count++;
-                                    if (count >= 3)
-                                        break;
-                                    if (count >= 2)
-                                        twocorrect = 2;
-                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
-                                }
-                                // here the arising three conditions will be checked by count number........
-                                // When three edges are correct...
-                                if (count >= 3)
-                                {
-                                    switch (rang0to1(rng))
-                                    {
-                                    case 0:
-                                        temp_cube.setalgo(side, "FP D RP", "crs");
-                                        break;
-                                    case 1:
-                                        temp_cube.setalgo(side, "F DP L", "crs");
-                                        break;
-                                    default:
-                                        break;
-                                    }
-                                }
-                                // When two edges are correct...
-                                else if (twocorrect == 2)
-                                {
-                                    for (int checkside{0}; checkside < 3; checkside++)
-                                    {
-                                        switch (checkside)
-                                        {
-                                        case 0:
-                                            temp_cube.setalgo(side, "FP RP", "crs");
-                                            break;
-                                        case 1:
-                                            temp_cube.setalgo(side, "F D L", "crs");
-                                            break;
-                                        case 2:
-                                            temp_cube.setalgo(side, "F L", "crs");
-                                            break;
-                                        default:
-                                            break;
-                                        }
-                                        crossColorCount = crossChecker(temp_cube);
-                                        if (crossColorCount == 3)
-                                        {
-                                            // Verifying the current orientation...
-                                            currentOrientation = move(currentorientation(temp_cube));
-                                            for (int i{0}; i < 4; i++)
-                                            {
-                                                count = 0;
-                                                for (int j{0}; j < 4; j++)
-                                                    if (currentOrientation.at(j) == mainOrientation.at(j))
-                                                        count++;
-                                                if (count >= 3)
-                                                    break;
-                                                std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
-                                            }
-                                            if (count >= 3)
-                                                break;
-                                        }
-                                        // reverting the previour solution....
-                                        switch (checkside)
-                                        {
-                                        case 0:
-                                            temp_cube.setalgo(side, "R F", "null");
-                                            temp_cube.CrossSolution.pop_back();
-                                            temp_cube.CrossSolution.pop_back();
-                                            break;
-                                        case 1:
-                                            temp_cube.setalgo(side, "LP DP FP", "null");
-                                            temp_cube.CrossSolution.pop_back();
-                                            temp_cube.CrossSolution.pop_back();
-                                            temp_cube.CrossSolution.pop_back();
-                                            break;
-                                        case 2:
-                                            temp_cube.setalgo(side, "LP FP", "null");
-                                            temp_cube.CrossSolution.pop_back();
-                                            temp_cube.CrossSolution.pop_back();
-                                            break;
-                                        default:
-                                            break;
-                                        }
-                                    }
-                                }
-                                // When one edge is correct...
-                                else
-                                {
-                                    switch (rang0to1(rng))
-                                    {
-                                    case 0:
-                                        temp_cube.setalgo(side, "F L", "crs");
-                                        break;
-                                    case 1:
-                                        temp_cube.setalgo(side, "FP RP", "crs");
-                                        break;
-                                    default:
-                                        break;
-                                    }
-                                    break;
-                                }
-                                break;
-                            default:
-                                break;
-                            }
-                        }
-                        break;
-                        // this is for checking the right side edge....
-                    case 4:
-                        if (temp_cube.cubeMain[side].at(1).at(0) == bottom_color)
-                        {
-                            switch (crossColorCount)
-                            {
-                                // no edges on the bottom...
-                            case 0:
-                                temp_cube.setalgo(side, "L", "crs");
-                                break;
-                            // one or two edges on the bottom...
-                            case 1:
-                            case 2:
-                                currentOrientation = move(currentorientation(temp_cube));
-                                for (int i{0}; i < 4; i++)
-                                {
-                                    count = 0;
-                                    for (int j{0}; j < 4; j++)
-                                        if (currentOrientation.at(j) == mainOrientation.at(j))
-                                            count++;
-                                    if (count >= 2)
-                                        break;
-                                    else
-                                        count = 1;
-                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
-                                }
-                                limit = count + 1;
-                                for (int checkside{0}; checkside < 4; checkside++)
-                                {
-                                    temp_cube.setalgo(side, "L", "crs");
-                                    crossColorCount = crossChecker(temp_cube);
-                                    if (crossColorCount >= limit)
-                                    {
-                                        // Verifying the current orientation...
-                                        currentOrientation = move(currentorientation(temp_cube));
-                                        for (int i{0}; i < 4; i++)
-                                        {
-                                            count = 0;
-                                            for (int j{0}; j < 4; j++)
-                                                if (currentOrientation.at(j) == mainOrientation.at(j))
-                                                    count++;
-                                            if (count >= limit)
-                                                break;
-                                            std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
-                                        }
-                                        if (count >= limit)
-                                            break;
-                                    }
-                                    // reverting the previour solution....
-                                    temp_cube.setalgo(side, "LP", "null");
-                                    temp_cube.CrossSolution.pop_back();
-                                    temp_cube.setalgo(side, "D", "crs");
-                                }
-                                break;
-                                // When three edges on the bottom...
-                            case 3:
-                                currentOrientation = move(currentorientation(temp_cube));
-                                for (int i{0}; i < 4; i++)
-                                {
-                                    count = 0;
-                                    for (int j{0}; j < 4; j++)
-                                        if (currentOrientation.at(j) == mainOrientation.at(j))
-                                            count++;
-                                    if (count >= 3)
-                                        break;
-                                    if (count >= 2)
-                                        twocorrect = 2;
-                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
-                                }
-                                // here the arising three conditions will be checked by count number........
-                                // three correct edges...
-                                if (count >= 3)
-                                {
-                                    for (int checkside{0}; checkside < 4; checkside++)
-                                    {
-                                        temp_cube.setalgo(side, "L", "crs");
-                                        crossColorCount = crossChecker(temp_cube);
-                                        if (crossColorCount == 4)
-                                        {
-                                            break;
-                                        }
-                                        // reverting the previour solution....
-                                        temp_cube.setalgo(side, "LP", "null");
-                                        temp_cube.CrossSolution.pop_back();
-                                        temp_cube.setalgo(side, "D", "crs");
-                                    }
-                                }
-                                // two correct edges...
-                                else if (twocorrect == 2)
-                                {
-                                    for (int checkside{0}; checkside < 4; checkside++)
-                                    {
-                                        temp_cube.setalgo(side, "L", "crs");
-                                        crossColorCount = crossChecker(temp_cube);
-                                        if (crossColorCount == 3)
-                                        {
-                                            // Verifying the current orientation...
-                                            currentOrientation = move(currentorientation(temp_cube));
-                                            for (int i{0}; i < 4; i++)
-                                            {
-                                                count = 0;
-                                                for (int j{0}; j < 4; j++)
-                                                    if (currentOrientation.at(j) == mainOrientation.at(j))
-                                                        count++;
-                                                if (count >= 3)
-                                                    break;
-                                                std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
-                                            }
-                                            if (count >= 3)
-                                                break;
-                                        }
-                                        // reverting the previour solution....
-                                        temp_cube.setalgo(side, "LP", "null");
-                                        temp_cube.CrossSolution.pop_back();
-                                        temp_cube.setalgo(side, "D", "crs");
-                                    }
-                                }
-                                // one edge correct...
-                                else
-                                {
-                                    for (int checkside{0}; checkside < 4; checkside++)
-                                    {
-                                        temp_cube.setalgo(side, "L", "crs");
-                                        crossColorCount = crossChecker(temp_cube);
-                                        if (crossColorCount <= 3)
-                                        {
-                                            // Verifying the current orientation...
-                                            currentOrientation = move(currentorientation(temp_cube));
-                                            for (int i{0}; i < 4; i++)
-                                            {
-                                                count = 0;
-                                                for (int j{0}; j < 4; j++)
-                                                    if (currentOrientation.at(j) == mainOrientation.at(j))
-                                                        count++;
-                                                if (count >= 2)
-                                                    break;
-                                                std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
-                                            }
-                                            if (count >= 2)
-                                                break;
-                                        }
-                                        // reverting the previour solution....
-                                        temp_cube.setalgo(side, "LP", "null");
-                                        temp_cube.CrossSolution.pop_back();
-                                        temp_cube.setalgo(side, "D", "crs");
-                                    }
-                                }
-                                break;
-                            default:
-                                break;
-                            }
-                        }
-                        break;
-                    default:
-                        break;
                     }
-                }
-                else if (side == top)
-                {
-                    int side_2{-1};
-                    switch (block)
-                    {
-                    case 1:
-                        // this is for checking the face side edge....
-                        if (temp_cube.cubeMain[side].at(2).at(1) == bottom_color)
-                            side_2 = face;
-                        break;
-                    case 2:
-                        // this is for checking the right side edge....
-                        if (temp_cube.cubeMain[side].at(1).at(2) == bottom_color)
-                            side_2 = right;
-                        break;
-                    case 3:
-                        // this is for checking the back side edge....
-                        if (temp_cube.cubeMain[side].at(0).at(1) == bottom_color)
-                            side_2 = back;
-                        break;
-                    case 4:
-                        // this is for checking the left side edge....
-                        if (temp_cube.cubeMain[side].at(1).at(0) == bottom_color)
-                            side_2 = left;
-                        break;
-                    default:
-                        break;
-                    }
-                    if (side_2 != -1)
+                    break;
+                    // this is for checking the right side edge....
+                case 2:
+                    if (cubeMain[side].at(1).at(2) == bottom_color)
                     {
                         switch (crossColorCount)
                         {
-                            // no edges on the bottom...
                         case 0:
-                            temp_cube.setalgo(side_2, "F2", "crs");
+                            setalgo(side, "RP", "crs");
                             break;
-                            // one or two edges on the bottom...
+                        // one or two edges on the bottom
                         case 1:
                         case 2:
-                            currentOrientation = move(currentorientation(temp_cube));
+                            currentOrientation = move(currentorientation(*this));
                             for (int i{0}; i < 4; i++)
                             {
                                 count = 0;
@@ -1669,12 +1275,12 @@ void makeCubie::crossSolver()
                             limit = count + 1;
                             for (int checkside{0}; checkside < 4; checkside++)
                             {
-                                temp_cube.setalgo(side_2, "F2", "crs");
-                                crossColorCount = crossChecker(temp_cube);
+                                setalgo(side, "RP", "crs");
+                                crossColorCount = crossChecker(*this);
                                 if (crossColorCount >= limit)
                                 {
                                     // Verifying the current orientation...
-                                    currentOrientation = move(currentorientation(temp_cube));
+                                    currentOrientation = move(currentorientation(*this));
                                     for (int i{0}; i < 4; i++)
                                     {
                                         count = 0;
@@ -1689,43 +1295,40 @@ void makeCubie::crossSolver()
                                         break;
                                 }
                                 // reverting the previour solution....
-                                temp_cube.setalgo(side_2, "F2", "null");
-                                temp_cube.CrossSolution.pop_back();
-                                temp_cube.setalgo(side_2, "D", "crs");
+                                setalgo(side, "R", "null");
+                                CrossSolution.pop_back();
+                                setalgo(side, "D", "crs");
                             }
                             break;
-                            // three edges on the bottom...
                         case 3:
-                            currentOrientation = move(currentorientation(temp_cube));
+                            currentOrientation = move(currentorientation(*this));
                             for (int i{0}; i < 4; i++)
                             {
                                 count = 0;
                                 for (int j{0}; j < 4; j++)
                                     if (currentOrientation.at(j) == mainOrientation.at(j))
                                         count++;
-                                // there is a flow in the below code and should be corrected...
                                 if (count >= 3)
                                     break;
                                 if (count >= 2)
                                     twocorrect = 2;
                                 std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
                             }
-                            // here the arising three conditions will be checked by count number........
                             // When three edges are correct...
                             if (count >= 3)
                             {
                                 for (int checkside{0}; checkside < 4; checkside++)
                                 {
-                                    temp_cube.setalgo(side_2, "F2", "crs");
-                                    crossColorCount = crossChecker(temp_cube);
+                                    setalgo(side, "RP", "crs");
+                                    crossColorCount = crossChecker(*this);
                                     if (crossColorCount == 4)
                                     {
                                         break;
                                     }
                                     // reverting the previour solution....
-                                    temp_cube.setalgo(side_2, "F2", "null");
-                                    temp_cube.CrossSolution.pop_back();
-                                    temp_cube.setalgo(side_2, "D", "crs");
+                                    setalgo(side, "R", "null");
+                                    CrossSolution.pop_back();
+                                    setalgo(side, "D", "crs");
                                 }
                             }
                             // When two edges are correct...
@@ -1733,12 +1336,12 @@ void makeCubie::crossSolver()
                             {
                                 for (int checkside{0}; checkside < 4; checkside++)
                                 {
-                                    temp_cube.setalgo(side_2, "F2", "crs");
-                                    crossColorCount = crossChecker(temp_cube);
+                                    setalgo(side, "RP", "crs");
+                                    crossColorCount = crossChecker(*this);
                                     if (crossColorCount == 3)
                                     {
                                         // Verifying the current orientation...
-                                        currentOrientation = move(currentorientation(temp_cube));
+                                        currentOrientation = move(currentorientation(*this));
                                         for (int i{0}; i < 4; i++)
                                         {
                                             count = 0;
@@ -1753,22 +1356,22 @@ void makeCubie::crossSolver()
                                             break;
                                     }
                                     // reverting the previour solution....
-                                    temp_cube.setalgo(side_2, "F2", "null");
-                                    temp_cube.CrossSolution.pop_back();
-                                    temp_cube.setalgo(side_2, "D", "crs");
+                                    setalgo(side, "R", "null");
+                                    CrossSolution.pop_back();
+                                    setalgo(side, "D", "crs");
                                 }
                             }
-                            // one correct edge on the bottom...
+                            // When one edge is correct...
                             else
                             {
                                 for (int checkside{0}; checkside < 4; checkside++)
                                 {
-                                    temp_cube.setalgo(side_2, "F2", "crs");
-                                    crossColorCount = crossChecker(temp_cube);
+                                    setalgo(side, "RP", "crs");
+                                    crossColorCount = crossChecker(*this);
                                     if (crossColorCount <= 3)
                                     {
                                         // Verifying the current orientation...
-                                        currentOrientation = move(currentorientation(temp_cube));
+                                        currentOrientation = move(currentorientation(*this));
                                         for (int i{0}; i < 4; i++)
                                         {
                                             count = 0;
@@ -1783,9 +1386,9 @@ void makeCubie::crossSolver()
                                             break;
                                     }
                                     // reverting the previour solution....
-                                    temp_cube.setalgo(side_2, "F2", "null");
-                                    temp_cube.CrossSolution.pop_back();
-                                    temp_cube.setalgo(side_2, "D", "crs");
+                                    setalgo(side, "R", "null");
+                                    CrossSolution.pop_back();
+                                    setalgo(side, "D", "crs");
                                 }
                             }
                             break;
@@ -1793,125 +1396,571 @@ void makeCubie::crossSolver()
                             break;
                         }
                     }
-                }
-            }
-            // for the condition when crosscolor count == 4....
-            else
-            {
-                currentOrientation = move(currentorientation(temp_cube));
-                for (int i{0}; i < 4; i++)
-                {
-                    count = 0;
-                    for (int j{0}; j < 4; j++)
-                        if (currentOrientation.at(j) == mainOrientation.at(j))
-                            count++;
-                    if (count == 4 || count == 2)
-                        break;
-                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
-                    // moving bottom to the correct location...
-                    temp_cube.setalgo(face, "D", "crs");
-                }
-                if (count == 4)
-                {
-                    solutionOptimizer(temp_cube.CrossSolution);
-                    if (temp_cube.CrossSolution.size() < 10)
-                    {
-                        solve = true;
-                        break;
-                    }
-                    tenTimeSolve = true;
                     break;
-                }
-                else
-                {
-                    int icside{};
-                    for (icside = 0; icside < 4; icside++)
-                        if (currentOrientation.at(icside) != mainOrientation.at(icside))
-                            break;
-                    switch (icside)
+                    // this case is for checking the bottom side edge....
+                case 3:
+                    if (cubeMain[side].at(2).at(1) == bottom_color)
                     {
-                    case 0:
-                        side = face;
-                        break;
-                    case 1:
-                        side = right;
-                        break;
-                    case 2:
-                        side = back;
-                        break;
-                    case 3:
-                        side = left;
-                        break;
-                    default:
-                        break;
-                    }
-                    for (int checkside{0}; checkside < 3; checkside++)
-                    {
-                        switch (checkside)
+                        switch (crossColorCount)
                         {
+                            // no edges on the bottom...
                         case 0:
-                            temp_cube.setalgo(side, "FP DP F D FP", "crs");
+                            switch (rang0to1(rng))
+                            {
+                            case 0:
+                                setalgo(side, "FP RP", "crs");
+                                break;
+                            case 1:
+                                setalgo(side, "F L", "crs");
+                                break;
+                            default:
+                                break;
+                            }
                             break;
+                        // one or two edges on the bottom...
                         case 1:
-                            temp_cube.setalgo(side, "F D FP DP F", "crs");
-                            break;
                         case 2:
-                            temp_cube.setalgo(side, "F D2 FP D2 F", "crs");
+                            currentOrientation = move(currentorientation(*this));
+                            for (int i{0}; i < 4; i++)
+                            {
+                                count = 0;
+                                for (int j{0}; j < 4; j++)
+                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                        count++;
+                                // there is a flow in the below code and should be corrected...
+                                if (count >= 2)
+                                    break;
+                                else
+                                    count = 1;
+                                std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                            }
+                            limit = count + 1;
+                            for (int checkside{0}; checkside < 4; checkside++)
+                            {
+                                switch (checkside)
+                                {
+                                case 0:
+                                    setalgo(side, "FP D RP", "crs");
+                                    break;
+                                case 1:
+                                    setalgo(side, "FP RP", "crs");
+                                    break;
+                                case 2:
+                                    setalgo(side, "F D L", "crs");
+                                    break;
+                                case 3:
+                                    setalgo(side, "F L", "crs");
+                                    break;
+                                default:
+                                    break;
+                                }
+                                crossColorCount = crossChecker(*this);
+                                if (crossColorCount >= limit)
+                                {
+                                    // Verifying the current orientation...
+                                    currentOrientation = move(currentorientation(*this));
+                                    for (int i{0}; i < 4; i++)
+                                    {
+                                        count = 0;
+                                        for (int j{0}; j < 4; j++)
+                                            if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                count++;
+                                        if (count >= limit)
+                                            break;
+                                        std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                    }
+                                    if (count >= limit)
+                                        break;
+                                }
+                                // reverting the previour solution....
+                                switch (checkside)
+                                {
+                                case 0:
+                                    setalgo(side, "R DP F", "null");
+                                    CrossSolution.pop_back();
+                                    CrossSolution.pop_back();
+                                    CrossSolution.pop_back();
+                                    break;
+                                case 1:
+                                    setalgo(side, "R F", "null");
+                                    CrossSolution.pop_back();
+                                    CrossSolution.pop_back();
+                                    break;
+                                case 2:
+                                    setalgo(side, "LP DP FP", "null");
+                                    CrossSolution.pop_back();
+                                    CrossSolution.pop_back();
+                                    CrossSolution.pop_back();
+                                    break;
+                                case 3:
+                                    setalgo(side, "LP FP", "null");
+                                    CrossSolution.pop_back();
+                                    CrossSolution.pop_back();
+                                    break;
+                                default:
+                                    break;
+                                }
+                            }
+                            break;
+                            // three edges on the bottom...
+                        case 3:
+                            currentOrientation = move(currentorientation(*this));
+                            for (int i{0}; i < 4; i++)
+                            {
+                                count = 0;
+                                for (int j{0}; j < 4; j++)
+                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                        count++;
+                                if (count >= 3)
+                                    break;
+                                if (count >= 2)
+                                    twocorrect = 2;
+                                std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                            }
+                            // here the arising three conditions will be checked by count number........
+                            // When three edges are correct...
+                            if (count >= 3)
+                            {
+                                switch (rang0to1(rng))
+                                {
+                                case 0:
+                                    setalgo(side, "FP D RP", "crs");
+                                    break;
+                                case 1:
+                                    setalgo(side, "F DP L", "crs");
+                                    break;
+                                default:
+                                    break;
+                                }
+                            }
+                            // When two edges are correct...
+                            else if (twocorrect == 2)
+                            {
+                                for (int checkside{0}; checkside < 3; checkside++)
+                                {
+                                    switch (checkside)
+                                    {
+                                    case 0:
+                                        setalgo(side, "FP RP", "crs");
+                                        break;
+                                    case 1:
+                                        setalgo(side, "F D L", "crs");
+                                        break;
+                                    case 2:
+                                        setalgo(side, "F L", "crs");
+                                        break;
+                                    default:
+                                        break;
+                                    }
+                                    crossColorCount = crossChecker(*this);
+                                    if (crossColorCount == 3)
+                                    {
+                                        // Verifying the current orientation...
+                                        currentOrientation = move(currentorientation(*this));
+                                        for (int i{0}; i < 4; i++)
+                                        {
+                                            count = 0;
+                                            for (int j{0}; j < 4; j++)
+                                                if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                    count++;
+                                            if (count >= 3)
+                                                break;
+                                            std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                        }
+                                        if (count >= 3)
+                                            break;
+                                    }
+                                    // reverting the previour solution....
+                                    switch (checkside)
+                                    {
+                                    case 0:
+                                        setalgo(side, "R F", "null");
+                                        CrossSolution.pop_back();
+                                        CrossSolution.pop_back();
+                                        break;
+                                    case 1:
+                                        setalgo(side, "LP DP FP", "null");
+                                        CrossSolution.pop_back();
+                                        CrossSolution.pop_back();
+                                        CrossSolution.pop_back();
+                                        break;
+                                    case 2:
+                                        setalgo(side, "LP FP", "null");
+                                        CrossSolution.pop_back();
+                                        CrossSolution.pop_back();
+                                        break;
+                                    default:
+                                        break;
+                                    }
+                                }
+                            }
+                            // When one edge is correct...
+                            else
+                            {
+                                switch (rang0to1(rng))
+                                {
+                                case 0:
+                                    setalgo(side, "F L", "crs");
+                                    break;
+                                case 1:
+                                    setalgo(side, "FP RP", "crs");
+                                    break;
+                                default:
+                                    break;
+                                }
+                                break;
+                            }
                             break;
                         default:
                             break;
                         }
-                        // Verifying the current orientation...
-                        currentOrientation = move(currentorientation(temp_cube));
+                    }
+                    break;
+                    // this is for checking the right side edge....
+                case 4:
+                    if (cubeMain[side].at(1).at(0) == bottom_color)
+                    {
+                        switch (crossColorCount)
+                        {
+                            // no edges on the bottom...
+                        case 0:
+                            setalgo(side, "L", "crs");
+                            break;
+                        // one or two edges on the bottom...
+                        case 1:
+                        case 2:
+                            currentOrientation = move(currentorientation(*this));
+                            for (int i{0}; i < 4; i++)
+                            {
+                                count = 0;
+                                for (int j{0}; j < 4; j++)
+                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                        count++;
+                                if (count >= 2)
+                                    break;
+                                else
+                                    count = 1;
+                                std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                            }
+                            limit = count + 1;
+                            for (int checkside{0}; checkside < 4; checkside++)
+                            {
+                                setalgo(side, "L", "crs");
+                                crossColorCount = crossChecker(*this);
+                                if (crossColorCount >= limit)
+                                {
+                                    // Verifying the current orientation...
+                                    currentOrientation = move(currentorientation(*this));
+                                    for (int i{0}; i < 4; i++)
+                                    {
+                                        count = 0;
+                                        for (int j{0}; j < 4; j++)
+                                            if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                count++;
+                                        if (count >= limit)
+                                            break;
+                                        std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                    }
+                                    if (count >= limit)
+                                        break;
+                                }
+                                // reverting the previour solution....
+                                setalgo(side, "LP", "null");
+                                CrossSolution.pop_back();
+                                setalgo(side, "D", "crs");
+                            }
+                            break;
+                            // When three edges on the bottom...
+                        case 3:
+                            currentOrientation = move(currentorientation(*this));
+                            for (int i{0}; i < 4; i++)
+                            {
+                                count = 0;
+                                for (int j{0}; j < 4; j++)
+                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                        count++;
+                                if (count >= 3)
+                                    break;
+                                if (count >= 2)
+                                    twocorrect = 2;
+                                std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                            }
+                            // here the arising three conditions will be checked by count number........
+                            // three correct edges...
+                            if (count >= 3)
+                            {
+                                for (int checkside{0}; checkside < 4; checkside++)
+                                {
+                                    setalgo(side, "L", "crs");
+                                    crossColorCount = crossChecker(*this);
+                                    if (crossColorCount == 4)
+                                    {
+                                        break;
+                                    }
+                                    // reverting the previour solution....
+                                    setalgo(side, "LP", "null");
+                                    CrossSolution.pop_back();
+                                    setalgo(side, "D", "crs");
+                                }
+                            }
+                            // two correct edges...
+                            else if (twocorrect == 2)
+                            {
+                                for (int checkside{0}; checkside < 4; checkside++)
+                                {
+                                    setalgo(side, "L", "crs");
+                                    crossColorCount = crossChecker(*this);
+                                    if (crossColorCount == 3)
+                                    {
+                                        // Verifying the current orientation...
+                                        currentOrientation = move(currentorientation(*this));
+                                        for (int i{0}; i < 4; i++)
+                                        {
+                                            count = 0;
+                                            for (int j{0}; j < 4; j++)
+                                                if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                    count++;
+                                            if (count >= 3)
+                                                break;
+                                            std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                        }
+                                        if (count >= 3)
+                                            break;
+                                    }
+                                    // reverting the previour solution....
+                                    setalgo(side, "LP", "null");
+                                    CrossSolution.pop_back();
+                                    setalgo(side, "D", "crs");
+                                }
+                            }
+                            // one edge correct...
+                            else
+                            {
+                                for (int checkside{0}; checkside < 4; checkside++)
+                                {
+                                    setalgo(side, "L", "crs");
+                                    crossColorCount = crossChecker(*this);
+                                    if (crossColorCount <= 3)
+                                    {
+                                        // Verifying the current orientation...
+                                        currentOrientation = move(currentorientation(*this));
+                                        for (int i{0}; i < 4; i++)
+                                        {
+                                            count = 0;
+                                            for (int j{0}; j < 4; j++)
+                                                if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                    count++;
+                                            if (count >= 2)
+                                                break;
+                                            std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                        }
+                                        if (count >= 2)
+                                            break;
+                                    }
+                                    // reverting the previour solution....
+                                    setalgo(side, "LP", "null");
+                                    CrossSolution.pop_back();
+                                    setalgo(side, "D", "crs");
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+                }
+            }
+            else if (side == top)
+            {
+                int side_2{-1};
+                switch (block)
+                {
+                case 1:
+                    // this is for checking the face side edge....
+                    if (cubeMain[side].at(2).at(1) == bottom_color)
+                        side_2 = face;
+                    break;
+                case 2:
+                    // this is for checking the right side edge....
+                    if (cubeMain[side].at(1).at(2) == bottom_color)
+                        side_2 = right;
+                    break;
+                case 3:
+                    // this is for checking the back side edge....
+                    if (cubeMain[side].at(0).at(1) == bottom_color)
+                        side_2 = back;
+                    break;
+                case 4:
+                    // this is for checking the left side edge....
+                    if (cubeMain[side].at(1).at(0) == bottom_color)
+                        side_2 = left;
+                    break;
+                default:
+                    break;
+                }
+                if (side_2 != -1)
+                {
+                    switch (crossColorCount)
+                    {
+                        // no edges on the bottom...
+                    case 0:
+                        setalgo(side_2, "F2", "crs");
+                        break;
+                        // one or two edges on the bottom...
+                    case 1:
+                    case 2:
+                        currentOrientation = move(currentorientation(*this));
                         for (int i{0}; i < 4; i++)
                         {
                             count = 0;
                             for (int j{0}; j < 4; j++)
                                 if (currentOrientation.at(j) == mainOrientation.at(j))
                                     count++;
-                            if (count == 4)
+                            if (count >= 2)
                                 break;
+                            else
+                                count = 1;
                             std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
                         }
-                        if (count == 4)
-                            break;
-                        // reverting the previour solution....
-                        switch (checkside)
+                        limit = count + 1;
+                        for (int checkside{0}; checkside < 4; checkside++)
                         {
-                        case 0:
-                            temp_cube.setalgo(side, "F DP FP D F", "null");
-                            temp_cube.CrossSolution.pop_back();
-                            temp_cube.CrossSolution.pop_back();
-                            temp_cube.CrossSolution.pop_back();
-                            temp_cube.CrossSolution.pop_back();
-                            temp_cube.CrossSolution.pop_back();
-                            break;
-                        case 1:
-                            temp_cube.setalgo(side, "FP D F DP FP", "null");
-                            temp_cube.CrossSolution.pop_back();
-                            temp_cube.CrossSolution.pop_back();
-                            temp_cube.CrossSolution.pop_back();
-                            temp_cube.CrossSolution.pop_back();
-                            temp_cube.CrossSolution.pop_back();
-                            break;
-                        case 2:
-                            temp_cube.setalgo(side, "FP D2 F D2 FP", "null");
-                            temp_cube.CrossSolution.pop_back();
-                            temp_cube.CrossSolution.pop_back();
-                            temp_cube.CrossSolution.pop_back();
-                            temp_cube.CrossSolution.pop_back();
-                            temp_cube.CrossSolution.pop_back();
-                            break;
-                        default:
-                            break;
+                            setalgo(side_2, "F2", "crs");
+                            crossColorCount = crossChecker(*this);
+                            if (crossColorCount >= limit)
+                            {
+                                // Verifying the current orientation...
+                                currentOrientation = move(currentorientation(*this));
+                                for (int i{0}; i < 4; i++)
+                                {
+                                    count = 0;
+                                    for (int j{0}; j < 4; j++)
+                                        if (currentOrientation.at(j) == mainOrientation.at(j))
+                                            count++;
+                                    if (count >= limit)
+                                        break;
+                                    std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                }
+                                if (count >= limit)
+                                    break;
+                            }
+                            // reverting the previour solution....
+                            setalgo(side_2, "F2", "null");
+                            CrossSolution.pop_back();
+                            setalgo(side_2, "D", "crs");
                         }
+                        break;
+                        // three edges on the bottom...
+                    case 3:
+                        currentOrientation = move(currentorientation(*this));
+                        for (int i{0}; i < 4; i++)
+                        {
+                            count = 0;
+                            for (int j{0}; j < 4; j++)
+                                if (currentOrientation.at(j) == mainOrientation.at(j))
+                                    count++;
+                            // there is a flow in the below code and should be corrected...
+                            if (count >= 3)
+                                break;
+                            if (count >= 2)
+                                twocorrect = 2;
+                            std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                        }
+                        // here the arising three conditions will be checked by count number........
+                        // When three edges are correct...
+                        if (count >= 3)
+                        {
+                            for (int checkside{0}; checkside < 4; checkside++)
+                            {
+                                setalgo(side_2, "F2", "crs");
+                                crossColorCount = crossChecker(*this);
+                                if (crossColorCount == 4)
+                                {
+                                    break;
+                                }
+                                // reverting the previour solution....
+                                setalgo(side_2, "F2", "null");
+                                CrossSolution.pop_back();
+                                setalgo(side_2, "D", "crs");
+                            }
+                        }
+                        // When two edges are correct...
+                        else if (twocorrect == 2)
+                        {
+                            for (int checkside{0}; checkside < 4; checkside++)
+                            {
+                                setalgo(side_2, "F2", "crs");
+                                crossColorCount = crossChecker(*this);
+                                if (crossColorCount == 3)
+                                {
+                                    // Verifying the current orientation...
+                                    currentOrientation = move(currentorientation(*this));
+                                    for (int i{0}; i < 4; i++)
+                                    {
+                                        count = 0;
+                                        for (int j{0}; j < 4; j++)
+                                            if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                count++;
+                                        if (count >= 3)
+                                            break;
+                                        std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                    }
+                                    if (count >= 3)
+                                        break;
+                                }
+                                // reverting the previour solution....
+                                setalgo(side_2, "F2", "null");
+                                CrossSolution.pop_back();
+                                setalgo(side_2, "D", "crs");
+                            }
+                        }
+                        // one correct edge on the bottom...
+                        else
+                        {
+                            for (int checkside{0}; checkside < 4; checkside++)
+                            {
+                                setalgo(side_2, "F2", "crs");
+                                crossColorCount = crossChecker(*this);
+                                if (crossColorCount <= 3)
+                                {
+                                    // Verifying the current orientation...
+                                    currentOrientation = move(currentorientation(*this));
+                                    for (int i{0}; i < 4; i++)
+                                    {
+                                        count = 0;
+                                        for (int j{0}; j < 4; j++)
+                                            if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                count++;
+                                        if (count >= 2)
+                                            break;
+                                        std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
+                                    }
+                                    if (count >= 2)
+                                        break;
+                                }
+                                // reverting the previour solution....
+                                setalgo(side_2, "F2", "null");
+                                CrossSolution.pop_back();
+                                setalgo(side_2, "D", "crs");
+                            }
+                        }
+                        break;
+                    default:
+                        break;
                     }
                 }
             }
+
+            sourceCpy = *this;
+            *this = sourceBackup;
+            sourceCpy.crossSolver(storeSolution);
         }
     }
-    *this = temp_cube;
-    this->CrossSolution = temp_cube.CrossSolution;
+    // *this = ;
+    // this->CrossSolution = .CrossSolution;
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION COUNTS THE NUMBER OF BASE EDGES CURENTLY LOCATED AT THE BOTTOM...
@@ -1971,1629 +2020,1618 @@ vector<char> makeCubie::currentorientation(const makeCubie &source)
    THIS FUNCTION SOLVES THE F2L_LAYER OF THE RUBIX CUBE....
    AND A TEMPRORY MAKECUBIE CLASS SHOULD BE PROVIDED TO THE FUNCTION FOR BETTER PERFORMANCE....
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-bool makeCubie::f2lSolver(makeCubie &temp_cube, const int &soluionLimit)
+void makeCubie::f2lSolver(makeCubie &temp_cube)
 {
     // srand(time(NULL));
+    // std::uniform_int_distribution<int> rang0to5(0, 5);
+    // std::uniform_int_distribution<int> rang1to4(1, 4);
     std::mt19937 rng(std::random_device{}());
-    std::uniform_int_distribution<int> rang0to5(0, 5);
     std::uniform_int_distribution<int> rang0to1(0, 1);
-    std::uniform_int_distribution<int> rang1to4(1, 4);
-    int temp{}, side{}, sentinal{}, block{};
+    int side{}, sentinal{}, block{};
     const char bottom_color{cubeMain.at(bottom).at(1).at(1)};
     vector<int> f2lCorners{};
-    bool cornerLocMatch{false}, boolEdgeSetter{false}, terminater{false};
-    // bool cornerFound{false};
-    // while (!cornerFound)
-    F2LSolution.clear();
-    while (
-        cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(0).at(0) || cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(0).at(2) || cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(2).at(0) || cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(2).at(2) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(1).at(0) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(2).at(0) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(1).at(2) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(2).at(2) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(1).at(0) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(2).at(0) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(1).at(2) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(2).at(2) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(1).at(0) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(2).at(0) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(1).at(2) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(2).at(2) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(1).at(0) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(2).at(0) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(1).at(2) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(2).at(2))
+    bool cornerLocMatch{false}, boolEdgeSetter{false};
+
+    // first f2l corner...
+    if (cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(0).at(0) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(1).at(0) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(2).at(0) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(1).at(2) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(2).at(2))
+        f2lCorners.push_back(1);
+    // second f2l corner...
+    if (cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(0).at(2) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(1).at(2) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(2).at(2) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(1).at(0) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(2).at(0))
+        f2lCorners.push_back(2);
+    // third f2l corner...
+    if (cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(2).at(0) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(1).at(2) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(2).at(2) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(1).at(0) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(2).at(0))
+        f2lCorners.push_back(3);
+    // fourth f2l corner...
+    if (cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(2).at(2) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(1).at(0) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(2).at(0) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(1).at(2) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(2).at(2))
+        f2lCorners.push_back(4);
+    // IF WILL WORK IF THE CUBE IS SOLVED....
+    if (f2lCorners.size() == 0)
     {
-        if (cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(0).at(0) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(1).at(0) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(2).at(0) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(1).at(2) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(2).at(2))
+        // Optimising F2Lsolution....
+        solutionOptimizer(F2LSolution);
+        OLLSolver();
+        if (PLLChecker(*this))
         {
-            // first f2l corner...
-            f2lCorners.push_back(1);
+            temp_cube.f2lsolutions.push_back(F2LSolution);
+            temp_cube.ollSolutions.push_back(OLLSolution);
         }
-
-        if (cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(0).at(2) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(1).at(2) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(2).at(2) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(1).at(0) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(2).at(0))
+    }
+    else
+    {
+        makeCubie sourceBackup, sourceCpy;
+        for (size_t i{0}; i < f2lCorners.size(); i++)
         {
-            // second f2l corner...
-            f2lCorners.push_back(2);
-        }
-
-        if (cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(2).at(0) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(1).at(2) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(2).at(2) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(1).at(0) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(2).at(0))
-        {
-            // third f2l corner...
-            f2lCorners.push_back(3);
-        }
-
-        if (cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(2).at(2) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(1).at(0) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(2).at(0) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(1).at(2) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(2).at(2))
-        {
-            // fourth f2l corner...
-            f2lCorners.push_back(4);
-        }
-        // side = ((rand() % (5 - 0 + 1)) + 0);
-        side = rang0to5(rng);
-        block = rang1to4(rng);
-        // -------------------------------------------------- BOTTOM SIDE ---------------------------------------------------------------
-        if (side == bottom)
-        {
-            switch (block)
+            cornerColors.clear();
+            switch (f2lCorners.at(i))
             {
             case 1:
-                if (cubeMain[side].at(0).at(0) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
-                    if (cornerLocMatch)
-                    {
-                        // for optimization purposes....
-                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                        sentinal = -1;
-                        if (!boolEdgeSetter)
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                        if (sentinal == -1)
-                        {
-                            if (edgeSide == left)
-                            {
-                                setalgo(left, "U R UP RP UP FP U F", "f2l");
-                            }
-                            else if (edgeSide == face)
-                            {
-                                setalgo(left, "UP FP U F U R UP RP", "f2l");
-                            }
-                        }
-                        else if (sentinal == 0)
-                        {
-                            setalgo(left, "R UP R2 U2 R UP FP U F", "f2l");
-                        };
-                    }
-                    else
-                    {
-                        temp = rang0to1(rng);
-                        switch (temp)
-                        {
-                        case 0:
-                            setalgo(left, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        case 1:
-                            setalgo(left, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        default:
-                            break;
-                        }
-                    }
-                };
+                /* code */
+                cornerColors.push_back(cubeMain.at(face).at(1).at(1));
+                cornerColors.push_back(cubeMain.at(left).at(1).at(1));
                 break;
             case 2:
-                if (cubeMain[side].at(0).at(2) == bottom_color)
+                /* code */
+                cornerColors.push_back(cubeMain.at(face).at(1).at(1));
+                cornerColors.push_back(cubeMain.at(right).at(1).at(1));
+                break;
+            case 3:
+                /* code */
+                cornerColors.push_back(cubeMain.at(back).at(1).at(1));
+                cornerColors.push_back(cubeMain.at(left).at(1).at(1));
+                break;
+            case 4:
+                /* code */
+                cornerColors.push_back(cubeMain.at(back).at(1).at(1));
+                cornerColors.push_back(cubeMain.at(right).at(1).at(1));
+                break;
+            default:
+                break;
+            }
+            sourceBackup = *this;
+            if (!cornerCoordinateFinder(cornerColors.at(0), cornerColors.at(1), side, block))
+                std::cout << "error finding coordinate...." << endl;
+            // side = rang0to5(rng);
+            // block = rang1to4(rng);
+            // -------------------------------------------------- BOTTOM SIDE ---------------------------------------------------------------
+            if (side == bottom)
+            {
+                switch (block)
                 {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
-                    if (cornerLocMatch)
+                case 1:
+                    if (cubeMain[side].at(0).at(0) == bottom_color)
                     {
-                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                        sentinal = -1;
-                        if (!boolEdgeSetter)
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                        if (sentinal == -1)
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
+                        if (cornerLocMatch)
                         {
+                            // for optimization purposes....
+                            boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                            sentinal = -1;
+                            if (!boolEdgeSetter)
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                            if (sentinal == -1)
+                            {
+                                if (edgeSide == left)
+                                {
+                                    setalgo(left, "U R UP RP UP FP U F", "f2l");
+                                }
+                                else if (edgeSide == face)
+                                {
+                                    setalgo(left, "UP FP U F U R UP RP", "f2l");
+                                }
+                            }
+                            else if (sentinal == 0)
+                            {
+                                setalgo(left, "R UP R2 U2 R UP FP U F", "f2l");
+                            };
+                        }
+                        else
+                        {
+                            switch (rang0to1(rng))
+                            {
+                            case 0:
+                                setalgo(left, "R U RP", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            case 1:
+                                setalgo(left, "FP UP F", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            default:
+                                break;
+                            }
+                        }
+                    };
+                    break;
+                case 2:
+                    if (cubeMain[side].at(0).at(2) == bottom_color)
+                    {
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
+                        if (cornerLocMatch)
+                        {
+                            boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                            sentinal = -1;
+                            if (!boolEdgeSetter)
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                            if (sentinal == -1)
+                            {
+                                if (edgeSide == face)
+                                {
+                                    setalgo(face, "U R UP RP UP FP U F", "f2l");
+                                }
+                                else if (edgeSide == right)
+                                {
+                                    setalgo(face, "UP FP U F U R UP RP", "f2l");
+                                }
+                            }
+                            else if (sentinal == 0)
+                            {
+                                setalgo(face, "R UP R2 U2 R UP FP U F", "f2l");
+                            };
+                        }
+                        else
+                        {
+                            switch (rang0to1(rng))
+                            {
+                            case 0:
+                                setalgo(face, "R U RP", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            case 1:
+                                setalgo(face, "FP UP F", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            default:
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                case 3:
+                    if (cubeMain[side].at(2).at(0) == bottom_color)
+                    {
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 0);
+                        if (cornerLocMatch)
+                        {
+                            boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                            sentinal = -1;
+                            if (!boolEdgeSetter)
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                            if (sentinal == -1)
+                            {
+                                if (edgeSide == back)
+                                {
+                                    setalgo(back, "U R UP RP UP FP U F", "f2l");
+                                }
+                                else if (edgeSide == left)
+                                {
+                                    setalgo(back, "UP FP U F U R UP RP", "f2l");
+                                }
+                            }
+                            else if (sentinal == 0)
+                            {
+                                setalgo(back, "R UP R2 U2 R UP FP U F", "f2l");
+                            };
+                        }
+                        else
+                        {
+                            switch (rang0to1(rng))
+                            {
+                            case 0:
+                                setalgo(back, "R U RP", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            case 1:
+                                setalgo(back, "FP UP F", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            default:
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                case 4:
+                    if (cubeMain[side].at(2).at(2) == bottom_color)
+                    {
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 2);
+                        if (cornerLocMatch)
+                        {
+                            boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                            sentinal = -1;
+                            if (!boolEdgeSetter)
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                            if (sentinal == -1)
+                            {
+                                if (edgeSide == right)
+                                {
+                                    setalgo(right, "U R UP RP UP FP U F", "f2l");
+                                }
+                                else if (edgeSide == back)
+                                {
+                                    setalgo(right, "UP FP U F U R UP RP", "f2l");
+                                }
+                            }
+                            else if (sentinal == 0)
+                            {
+                                setalgo(right, "R UP R2 U2 R UP FP U F", "f2l");
+                            };
+                        }
+                        else
+                        {
+                            switch (rang0to1(rng))
+                            {
+                            case 0:
+                                setalgo(right, "R U RP", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            case 1:
+                                setalgo(right, "FP UP F", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            default:
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    break;
+                }
+            }
+            // -------------------------------------------------- FACE SIDE ---------------------------------------------------------------
+            else if (side == face)
+            {
+                switch (block)
+                {
+                case 1:
+                    if (cubeMain.at(side).at(0).at(0) == bottom_color)
+                    {
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
+                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (cornerLocMatch)
+                        {
+                            // for the condition when corner is on the correct location but side edge is not on the top......
+                            if (!boolEdgeSetter)
+                            {
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinal == 1)
+                                {
+                                    setalgo(left, "U FP U F U FP U2 F", "f2l");
+                                }
+                                else if (sentinal == 0)
+                                {
+                                    setalgo(left, "U FP UP F UP R U RP", "f2l");
+                                }
+                                else if (sentinal == -1)
+                                {
+                                    // the corner setter will set the corner and will pass the control back to this function.....
+                                    cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                }
+                            }
                             if (edgeSide == face)
                             {
-                                setalgo(face, "U R UP RP UP FP U F", "f2l");
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(left, "R UP RP U2 FP UP F", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(left, "UP R UP RP U R U RP", "f2l");
+                                }
                             }
                             else if (edgeSide == right)
                             {
-                                setalgo(face, "UP FP U F U R UP RP", "f2l");
-                            }
-                        }
-                        else if (sentinal == 0)
-                        {
-                            setalgo(face, "R UP R2 U2 R UP FP U F", "f2l");
-                        };
-                    }
-                    else
-                    {
-                        int temp{};
-                        temp = rang0to1(rng);
-
-                        switch (temp)
-                        {
-                        case 0:
-                            setalgo(face, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        case 1:
-                            setalgo(face, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        default:
-                            break;
-                        }
-                    }
-                }
-                break;
-            case 3:
-                if (cubeMain[side].at(2).at(0) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 0);
-                    if (cornerLocMatch)
-                    {
-                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                        sentinal = -1;
-                        if (!boolEdgeSetter)
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                        if (sentinal == -1)
-                        {
-                            if (edgeSide == back)
-                            {
-                                setalgo(back, "U R UP RP UP FP U F", "f2l");
-                            }
-                            else if (edgeSide == left)
-                            {
-                                setalgo(back, "UP FP U F U R UP RP", "f2l");
-                            }
-                        }
-                        else if (sentinal == 0)
-                        {
-                            setalgo(back, "R UP R2 U2 R UP FP U F", "f2l");
-                        };
-                    }
-                    else
-                    {
-                        int temp{};
-                        temp = rang0to1(rng);
-
-                        switch (temp)
-                        {
-                        case 0:
-                            setalgo(back, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        case 1:
-                            setalgo(back, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        default:
-                            break;
-                        }
-                    }
-                }
-                break;
-            case 4:
-                if (cubeMain[side].at(2).at(2) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 2);
-                    if (cornerLocMatch)
-                    {
-                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                        sentinal = -1;
-                        if (!boolEdgeSetter)
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                        if (sentinal == -1)
-                        {
-                            if (edgeSide == right)
-                            {
-                                setalgo(right, "U R UP RP UP FP U F", "f2l");
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(left, "U FP U2 F U FP U2 F", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(left, "R U RP", "f2l");
+                                }
                             }
                             else if (edgeSide == back)
                             {
-                                setalgo(right, "UP FP U F U R UP RP", "f2l");
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(left, "U FP UP F U FP U2 F", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(left, "UP R U RP U R U RP", "f2l");
+                                }
                             }
-                        }
-                        else if (sentinal == 0)
+                            else if (edgeSide == left)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(left, "F RP FP R", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(left, "U FP U2 F UP R U RP", "f2l");
+                                }
+                            }
+                        } // this else is for the condition when the corner or edge is not on the right location....
+                        else
                         {
-                            setalgo(right, "R UP R2 U2 R UP FP U F", "f2l");
-                        };
-                    }
-                    else
-                    {
-                        int temp{};
-                        temp = rang0to1(rng);
-
-                        switch (temp)
-                        {
-                        case 0:
-                            setalgo(right, "R U RP", "f2l");
                             cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        case 1:
-                            setalgo(right, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        default:
-                            break;
                         }
                     }
-                }
-                break;
-            default:
-                break;
-            }
-        }
-        // -------------------------------------------------- FACE SIDE ---------------------------------------------------------------
-        else if (side == face)
-        {
-            switch (block)
-            {
-            case 1:
-                if (cubeMain.at(side).at(0).at(0) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
-                    boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                    if (cornerLocMatch)
+                    break;
+                case 2:
+                    if (cubeMain.at(side).at(0).at(2) == bottom_color)
                     {
-                        // for the condition when corner is on the correct location but side edge is not on the top......
-                        if (!boolEdgeSetter)
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
+                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (cornerLocMatch)
                         {
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            if (sentinal == 1)
+                            // for the condition when corner is on the correct location but side edge is not on the top......
+                            if (!boolEdgeSetter)
                             {
-                                setalgo(left, "U FP U F U FP U2 F", "f2l");
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinal == 1)
+                                {
+                                    setalgo(face, "UP R UP RP UP R U2 RP", "f2l");
+                                }
+                                else if (sentinal == 0)
+                                {
+                                    setalgo(face, "UP R U RP U FP UP F", "f2l");
+                                }
+                                else if (sentinal == -1)
+                                {
+                                    // the corner setter will set the corner and will pass the control back to this function.....
+                                    cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                }
                             }
-                            else if (sentinal == 0)
+                            if (edgeSide == face)
                             {
-                                setalgo(left, "U FP UP F UP R U RP", "f2l");
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(face, "FP U F U2 R U RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(face, "U FP U F UP FP UP F", "f2l");
+                                }
                             }
-                            else if (sentinal == -1)
+                            else if (edgeSide == right)
                             {
-                                // the corner setter will set the corner and will pass the control back to this function.....
-                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(face, "U R UP RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(face, "UP R U2 RP U FP UP F", "f2l");
+                                }
+                            }
+                            else if (edgeSide == back)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(face, "UP R U RP UP R U2 RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(face, "U FP UP F UP FP UP F", "f2l");
+                                }
+                            }
+                            else if (edgeSide == left)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(face, "UP R U2 RP UP R U2 RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(face, "FP UP F", "f2l");
+                                }
                             }
                         }
-                        if (edgeSide == face)
+                        else
                         {
-                            if (topSideColor == cornerColors.at(0))
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        }
+                    }
+                    break;
+                case 3:
+                    if (cubeMain.at(side).at(2).at(0) == bottom_color)
+                    {
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 0);
+                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                        if (cornerLocMatch)
+                        {
+                            // for the condition when corner is on the correct location but side edge is not on the top......
+                            if (!boolEdgeSetter)
                             {
-                                setalgo(left, "R UP RP U2 FP UP F", "f2l");
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                if (sentinal == 1)
+                                {
+                                    setalgo(left, "R UP RP U R U2 RP U R UP RP", "f2l");
+                                }
+                                else if (sentinal == 0)
+                                {
+                                    setalgo(left, "R U RP UP R UP RP U2 FP UP F", "f2l");
+                                }
+                                // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
                             }
-                            else
+                            if (edgeSide == face)
                             {
-                                setalgo(left, "UP R UP RP U R U RP", "f2l");
+                                setalgo(left, "R U RP UP R U RP", "f2l");
+                            }
+                            else if (edgeSide == left)
+                            {
+                                setalgo(left, "FP U F UP FP U F", "f2l");
                             }
                         }
-                        else if (edgeSide == right)
+                        else
                         {
-                            if (topSideColor == cornerColors.at(0))
+                            switch (rang0to1(rng))
                             {
-                                setalgo(left, "U FP U2 F U FP U2 F", "f2l");
-                            }
-                            else
-                            {
+                            case 0:
                                 setalgo(left, "R U RP", "f2l");
-                            }
-                        }
-                        else if (edgeSide == back)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(left, "U FP UP F U FP U2 F", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(left, "UP R U RP U R U RP", "f2l");
-                            }
-                        }
-                        else if (edgeSide == left)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(left, "F RP FP R", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(left, "U FP U2 F UP R U RP", "f2l");
-                            }
-                        }
-                    } // this else is for the condition when the corner or edge is not on the right location....
-                    else
-                    {
-                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                    }
-                }
-                break;
-            case 2:
-                if (cubeMain.at(side).at(0).at(2) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
-                    boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                    if (cornerLocMatch)
-                    {
-                        // for the condition when corner is on the correct location but side edge is not on the top......
-                        if (!boolEdgeSetter)
-                        {
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            if (sentinal == 1)
-                            {
-                                setalgo(face, "UP R UP RP UP R U2 RP", "f2l");
-                            }
-                            else if (sentinal == 0)
-                            {
-                                setalgo(face, "UP R U RP U FP UP F", "f2l");
-                            }
-                            else if (sentinal == -1)
-                            {
-                                // the corner setter will set the corner and will pass the control back to this function.....
-                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            }
-                        }
-                        if (edgeSide == face)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(face, "FP U F U2 R U RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(face, "U FP U F UP FP UP F", "f2l");
-                            }
-                        }
-                        else if (edgeSide == right)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(face, "U R UP RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(face, "UP R U2 RP U FP UP F", "f2l");
-                            }
-                        }
-                        else if (edgeSide == back)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(face, "UP R U RP UP R U2 RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(face, "U FP UP F UP FP UP F", "f2l");
-                            }
-                        }
-                        else if (edgeSide == left)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(face, "UP R U2 RP UP R U2 RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(face, "FP UP F", "f2l");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                    }
-                }
-                break;
-            case 3:
-                if (cubeMain.at(side).at(2).at(0) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 0);
-                    boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                    if (cornerLocMatch)
-                    {
-                        // for the condition when corner is on the correct location but side edge is not on the top......
-                        if (!boolEdgeSetter)
-                        {
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                            if (sentinal == 1)
-                            {
-                                setalgo(left, "R UP RP U R U2 RP U R UP RP", "f2l");
-                            }
-                            else if (sentinal == 0)
-                            {
-                                setalgo(left, "R U RP UP R UP RP U2 FP UP F", "f2l");
-                            }
-                            // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
-                        }
-                        if (edgeSide == face)
-                        {
-                            setalgo(left, "R U RP UP R U RP", "f2l");
-                        }
-                        else if (edgeSide == left)
-                        {
-                            setalgo(left, "FP U F UP FP U F", "f2l");
-                        }
-                    }
-                    else
-                    {
-                        int temp{};
-                        temp = rang0to1(rng);
-
-                        switch (temp)
-                        {
-                        case 0:
-                            setalgo(left, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        case 1:
-                            setalgo(left, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        default:
-                            break;
-                        }
-                    }
-                }
-                break;
-            case 4:
-                if (cubeMain.at(side).at(2).at(2) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 2);
-                    boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                    if (cornerLocMatch)
-                    {
-                        // for the condition when corner is on the correct location but side edge is not on the top......
-                        if (!boolEdgeSetter)
-                        {
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                            if (sentinal == 1)
-                            {
-                                setalgo(face, "R UP RP UP R U RP UP R U2 RP", "f2l");
-                            }
-                            else if (sentinal == 0)
-                            {
-                                setalgo(face, "R UP RP U FP UP F UP FP UP F", "f2l");
-                            }
-                            // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
-                        }
-                        if (edgeSide == face)
-                        {
-                            setalgo(face, "FP UP F U FP UP F", "f2l");
-                        }
-                        else if (edgeSide == right)
-                        {
-                            setalgo(face, "R UP RP U R UP RP", "f2l");
-                        }
-                    }
-                    else
-                    {
-                        int temp{};
-                        temp = rang0to1(rng);
-
-                        switch (temp)
-                        {
-                        case 0:
-                            setalgo(face, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        case 1:
-                            setalgo(face, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        default:
-                            break;
-                        }
-                    }
-                }
-                break;
-            default:
-                break;
-            }
-        }
-        // -------------------------------------------------- RIGHT SIDE ---------------------------------------------------------------
-        else if (side == right)
-        {
-            switch (block)
-            {
-            case 1:
-                if (cubeMain.at(side).at(0).at(0) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
-                    boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                    if (cornerLocMatch)
-                    {
-                        // for the condition when corner is on the correct location but side edge is not on the top......
-                        if (!boolEdgeSetter)
-                        {
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            if (sentinal == 1)
-                            {
-                                setalgo(face, "U FP U F U FP U2 F", "f2l");
-                            }
-                            else if (sentinal == 0)
-                            {
-                                setalgo(face, "U FP UP F UP R U RP", "f2l");
-                            }
-                            else if (sentinal == -1)
-                            {
-                                // the corner setter will set the corner and will pass the control back to this function.....
-                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            }
-                        }
-                        if (edgeSide == right)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(face, "R UP RP U2 FP UP F", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(face, "UP R UP RP U R U RP", "f2l");
-                            }
-                        }
-                        else if (edgeSide == back)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(face, "U FP U2 F U FP U2 F", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(face, "R U RP", "f2l");
-                            }
-                        }
-                        else if (edgeSide == left)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(face, "U FP UP F U FP U2 F", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(face, "UP R U RP U R U RP", "f2l");
-                            }
-                        }
-                        else if (edgeSide == face)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(face, "F RP FP R", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(face, "U FP U2 F UP R U RP", "f2l");
-                            }
-                        }
-                    } // this else is for the condition when the corner or edge is not on the right location....
-                    else
-                    {
-                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                    }
-                }
-                break;
-            case 2:
-                if (cubeMain.at(side).at(0).at(2) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
-                    boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                    if (cornerLocMatch)
-                    {
-                        // for the condition when corner is on the correct location but side edge is not on the top......
-                        if (!boolEdgeSetter)
-                        {
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            if (sentinal == 1)
-                            {
-                                setalgo(right, "UP R UP RP UP R U2 RP", "f2l");
-                            }
-                            else if (sentinal == 0)
-                            {
-                                setalgo(right, "UP R U RP U FP UP F", "f2l");
-                            }
-                            else if (sentinal == -1)
-                            {
-                                // the corner setter will set the corner and will pass the control back to this function.....
-                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            }
-                        }
-                        if (edgeSide == right)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(right, "FP U F U2 R U RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(right, "U FP U F UP FP UP F", "f2l");
-                            }
-                        }
-                        else if (edgeSide == back)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(right, "U R UP RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(right, "UP R U2 RP U FP UP F", "f2l");
-                            }
-                        }
-                        else if (edgeSide == left)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(right, "UP R U RP UP R U2 RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(right, "U FP UP F UP FP UP F", "f2l");
-                            }
-                        }
-                        else if (edgeSide == face)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(right, "UP R U2 RP UP R U2 RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(right, "FP UP F", "f2l");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                    }
-                }
-                break;
-            case 3:
-                if (cubeMain.at(side).at(2).at(0) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 0);
-                    boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                    if (cornerLocMatch)
-                    {
-                        // for the condition when corner is on the correct location but side edge is not on the top......
-                        if (!boolEdgeSetter)
-                        {
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                            if (sentinal == 1)
-                            {
-                                setalgo(face, "R UP RP U R U2 RP U R UP RP", "f2l");
-                            }
-                            else if (sentinal == 0)
-                            {
-                                setalgo(face, "R U RP UP R UP RP U2 FP UP F", "f2l");
-                            }
-                            // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
-                        }
-                        if (edgeSide == right)
-                        {
-                            setalgo(face, "R U RP UP R U RP", "f2l");
-                        }
-                        else if (edgeSide == face)
-                        {
-                            setalgo(face, "FP U F UP FP U F", "f2l");
-                        }
-                    }
-                    else
-                    {
-                        int temp{};
-                        temp = rang0to1(rng);
-
-                        switch (temp)
-                        {
-                        case 0:
-                            setalgo(face, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        case 1:
-                            setalgo(face, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        default:
-                            break;
-                        }
-                    }
-                }
-                break;
-            case 4:
-                if (cubeMain.at(side).at(2).at(2) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 2);
-                    boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                    if (cornerLocMatch)
-                    {
-                        // for the condition when corner is on the correct location but side edge is not on the top......
-                        if (!boolEdgeSetter)
-                        {
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                            if (sentinal == 1)
-                            {
-                                setalgo(right, "R UP RP UP R U RP UP R U2 RP", "f2l");
-                            }
-                            else if (sentinal == 0)
-                            {
-                                setalgo(right, "R UP RP U FP UP F UP FP UP F", "f2l");
-                            }
-                            // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
-                        }
-                        if (edgeSide == right)
-                        {
-                            setalgo(right, "FP UP F U FP UP F", "f2l");
-                        }
-                        else if (edgeSide == back)
-                        {
-                            setalgo(right, "R UP RP U R UP RP", "f2l");
-                        }
-                    }
-                    else
-                    {
-                        int temp{};
-                        temp = rang0to1(rng);
-
-                        switch (temp)
-                        {
-                        case 0:
-                            setalgo(right, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        case 1:
-                            setalgo(right, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        default:
-                            break;
-                        }
-                    }
-                }
-                break;
-            default:
-                break;
-            }
-        }
-        // -------------------------------------------------- BACK SIDE ---------------------------------------------------------------
-        else if (side == back)
-        {
-            switch (block)
-            {
-            case 1:
-                if (cubeMain.at(side).at(0).at(0) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
-                    boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                    if (cornerLocMatch)
-                    {
-                        // for the condition when corner is on the correct location but side edge is not on the top......
-                        if (!boolEdgeSetter)
-                        {
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            if (sentinal == 1)
-                            {
-                                setalgo(right, "U FP U F U FP U2 F", "f2l");
-                            }
-                            else if (sentinal == 0)
-                            {
-                                setalgo(right, "U FP UP F UP R U RP", "f2l");
-                            }
-                            else if (sentinal == -1)
-                            {
-                                // the corner setter will set the corner and will pass the control back to this function.....
-                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            }
-                        }
-                        if (edgeSide == back)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(right, "R UP RP U2 FP UP F", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(right, "UP R UP RP U R U RP", "f2l");
-                            }
-                        }
-                        else if (edgeSide == left)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(right, "U FP U2 F U FP U2 F", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(right, "R U RP", "f2l");
-                            }
-                        }
-                        else if (edgeSide == face)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(right, "U FP UP F U FP U2 F", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(right, "UP R U RP U R U RP", "f2l");
-                            }
-                        }
-                        else if (edgeSide == right)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(right, "F RP FP R", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(right, "U FP U2 F UP R U RP", "f2l");
-                            }
-                        }
-                    } // this else is for the condition when the corner or edge is not on the right location....
-                    else
-                    {
-                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                    }
-                }
-                break;
-            case 2:
-                if (cubeMain.at(side).at(0).at(2) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
-                    boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                    if (cornerLocMatch)
-                    {
-                        // for the condition when corner is on the correct location but side edge is not on the top......
-                        if (!boolEdgeSetter)
-                        {
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            if (sentinal == 1)
-                            {
-                                setalgo(back, "UP R UP RP UP R U2 RP", "f2l");
-                            }
-                            else if (sentinal == 0)
-                            {
-                                setalgo(back, "UP R U RP U FP UP F", "f2l");
-                            }
-                            else if (sentinal == -1)
-                            {
-                                // the corner setter will set the corner and will pass the control back to this function.....
-                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            }
-                        }
-                        if (edgeSide == back)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(back, "FP U F U2 R U RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(back, "U FP U F UP FP UP F", "f2l");
-                            }
-                        }
-                        else if (edgeSide == left)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(back, "U R UP RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(back, "UP R U2 RP U FP UP F", "f2l");
-                            }
-                        }
-                        else if (edgeSide == face)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(back, "UP R U RP UP R U2 RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(back, "U FP UP F UP FP UP F", "f2l");
-                            }
-                        }
-                        else if (edgeSide == right)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(back, "UP R U2 RP UP R U2 RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(back, "FP UP F", "f2l");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                    }
-                }
-                break;
-            case 3:
-                if (cubeMain.at(side).at(2).at(0) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 0);
-                    boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                    if (cornerLocMatch)
-                    {
-                        // for the condition when corner is on the correct location but side edge is not on the top......
-                        if (!boolEdgeSetter)
-                        {
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                            if (sentinal == 1)
-                            {
-                                setalgo(right, "R UP RP U R U2 RP U R UP RP", "f2l");
-                            }
-                            else if (sentinal == 0)
-                            {
-                                setalgo(right, "R U RP UP R UP RP U2 FP UP F", "f2l");
-                            }
-                            // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
-                        }
-                        if (edgeSide == back)
-                        {
-                            setalgo(right, "R U RP UP R U RP", "f2l");
-                        }
-                        else if (edgeSide == right)
-                        {
-                            setalgo(right, "FP U F UP FP U F", "f2l");
-                        }
-                    }
-                    else
-                    {
-                        int temp{};
-                        temp = rang0to1(rng);
-
-                        switch (temp)
-                        {
-                        case 0:
-                            setalgo(right, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        case 1:
-                            setalgo(right, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        default:
-                            break;
-                        }
-                    }
-                }
-                break;
-            case 4:
-                if (cubeMain.at(side).at(2).at(2) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 2);
-                    boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                    if (cornerLocMatch)
-                    {
-                        // for the condition when corner is on the correct location but side edge is not on the top......
-                        if (!boolEdgeSetter)
-                        {
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                            if (sentinal == 1)
-                            {
-                                setalgo(back, "R UP RP UP R U RP UP R U2 RP", "f2l");
-                            }
-                            else if (sentinal == 0)
-                            {
-                                setalgo(back, "R UP RP U FP UP F UP FP UP F", "f2l");
-                            }
-                            // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
-                        }
-                        if (edgeSide == back)
-                        {
-                            setalgo(back, "FP UP F U FP UP F", "f2l");
-                        }
-                        else if (edgeSide == left)
-                        {
-                            setalgo(back, "R UP RP U R UP RP", "f2l");
-                        }
-                    }
-                    else
-                    {
-                        int temp{};
-                        temp = rang0to1(rng);
-
-                        switch (temp)
-                        {
-                        case 0:
-                            setalgo(back, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        case 1:
-                            setalgo(back, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        default:
-                            break;
-                        }
-                    }
-                }
-                break;
-            default:
-                break;
-            }
-        }
-        // -------------------------------------------------- LEFT SIDE ---------------------------------------------------------------
-        else if (side == left)
-        {
-            switch (block)
-            {
-            case 1:
-                if (cubeMain.at(side).at(0).at(0) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
-                    boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                    if (cornerLocMatch)
-                    {
-                        // for the condition when corner is on the correct location but side edge is not on the top......
-                        if (!boolEdgeSetter)
-                        {
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            if (sentinal == 1)
-                            {
-                                setalgo(back, "U FP U F U FP U2 F", "f2l");
-                            }
-                            else if (sentinal == 0)
-                            {
-                                setalgo(back, "U FP UP F UP R U RP", "f2l");
-                            }
-                            else if (sentinal == -1)
-                            {
-                                // the corner setter will set the corner and will pass the control back to this function.....
-                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            }
-                        }
-                        if (edgeSide == left)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(back, "R UP RP U2 FP UP F", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(back, "UP R UP RP U R U RP", "f2l");
-                            }
-                        }
-                        else if (edgeSide == face)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(back, "U FP U2 F U FP U2 F", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(back, "R U RP", "f2l");
-                            }
-                        }
-                        else if (edgeSide == right)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(back, "U FP UP F U FP U2 F", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(back, "UP R U RP U R U RP", "f2l");
-                            }
-                        }
-                        else if (edgeSide == back)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(back, "F RP FP R", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(back, "U FP U2 F UP R U RP", "f2l");
-                            }
-                        }
-                    } // this else is for the condition when the corner or edge is not on the right location....
-                    else
-                    {
-                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                    }
-                }
-                break;
-            case 2:
-                if (cubeMain.at(side).at(0).at(2) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
-                    boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                    if (cornerLocMatch)
-                    {
-                        // for the condition when corner is on the correct location but side edge is not on the top......
-                        if (!boolEdgeSetter)
-                        {
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            if (sentinal == 1)
-                            {
-                                setalgo(left, "UP R UP RP UP R U2 RP", "f2l");
-                            }
-                            else if (sentinal == 0)
-                            {
-                                setalgo(left, "UP R U RP U FP UP F", "f2l");
-                            }
-                            else if (sentinal == -1)
-                            {
-                                // the corner setter will set the corner and will pass the control back to this function.....
-                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            }
-                        }
-                        if (edgeSide == left)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(left, "FP U F U2 R U RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(left, "U FP U F UP FP UP F", "f2l");
-                            }
-                        }
-                        else if (edgeSide == face)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(left, "U R UP RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(left, "UP R U2 RP U FP UP F", "f2l");
-                            }
-                        }
-                        else if (edgeSide == right)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(left, "UP R U RP UP R U2 RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(left, "U FP UP F UP FP UP F", "f2l");
-                            }
-                        }
-                        else if (edgeSide == back)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(left, "UP R U2 RP UP R U2 RP", "f2l");
-                            }
-                            else
-                            {
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            case 1:
                                 setalgo(left, "FP UP F", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            default:
+                                break;
                             }
                         }
                     }
-                    else
+                    break;
+                case 4:
+                    if (cubeMain.at(side).at(2).at(2) == bottom_color)
                     {
-                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 2);
+                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                        if (cornerLocMatch)
+                        {
+                            // for the condition when corner is on the correct location but side edge is not on the top......
+                            if (!boolEdgeSetter)
+                            {
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                if (sentinal == 1)
+                                {
+                                    setalgo(face, "R UP RP UP R U RP UP R U2 RP", "f2l");
+                                }
+                                else if (sentinal == 0)
+                                {
+                                    setalgo(face, "R UP RP U FP UP F UP FP UP F", "f2l");
+                                }
+                                // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
+                            }
+                            if (edgeSide == face)
+                            {
+                                setalgo(face, "FP UP F U FP UP F", "f2l");
+                            }
+                            else if (edgeSide == right)
+                            {
+                                setalgo(face, "R UP RP U R UP RP", "f2l");
+                            }
+                        }
+                        else
+                        {
+                            switch (rang0to1(rng))
+                            {
+                            case 0:
+                                setalgo(face, "R U RP", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            case 1:
+                                setalgo(face, "FP UP F", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            default:
+                                break;
+                            }
+                        }
                     }
+                    break;
+                default:
+                    break;
                 }
-                break;
-            case 3:
-                if (cubeMain.at(side).at(2).at(0) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 0);
-                    boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                    if (cornerLocMatch)
-                    {
-                        // for the condition when corner is on the correct location but side edge is not on the top......
-                        if (!boolEdgeSetter)
-                        {
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                            if (sentinal == 1)
-                            {
-                                setalgo(back, "R UP RP U R U2 RP U R UP RP", "f2l");
-                            }
-                            else if (sentinal == 0)
-                            {
-                                setalgo(back, "R U RP UP R UP RP U2 FP UP F", "f2l");
-                            }
-                            // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
-                        }
-                        if (edgeSide == left)
-                        {
-                            setalgo(back, "R U RP UP R U RP", "f2l");
-                        }
-                        else if (edgeSide == back)
-                        {
-                            setalgo(back, "FP U F UP FP U F", "f2l");
-                        }
-                    }
-                    else
-                    {
-                        int temp{};
-                        temp = rang0to1(rng);
-
-                        switch (temp)
-                        {
-                        case 0:
-                            setalgo(back, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        case 1:
-                            setalgo(back, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        default:
-                            break;
-                        }
-                    }
-                }
-                break;
-            case 4:
-                if (cubeMain.at(side).at(2).at(2) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 2);
-                    boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                    if (cornerLocMatch)
-                    {
-                        // for the condition when corner is on the correct location but side edge is not on the top......
-                        if (!boolEdgeSetter)
-                        {
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                            if (sentinal == 1)
-                            {
-                                setalgo(left, "R UP RP UP R U RP UP R U2 RP", "f2l");
-                            }
-                            else if (sentinal == 0)
-                            {
-                                setalgo(left, "R UP RP U FP UP F UP FP UP F", "f2l");
-                            }
-                            // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
-                        }
-                        if (edgeSide == left)
-                        {
-                            setalgo(left, "FP UP F U FP UP F", "f2l");
-                        }
-                        else if (edgeSide == face)
-                        {
-                            setalgo(left, "R UP RP U R UP RP", "f2l");
-                        }
-                    }
-                    else
-                    {
-                        int temp{};
-                        temp = rang0to1(rng);
-
-                        switch (temp)
-                        {
-                        case 0:
-                            setalgo(left, "R U RP", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        case 1:
-                            setalgo(left, "FP UP F", "f2l");
-                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                            break;
-                        default:
-                            break;
-                        }
-                    }
-                }
-                break;
-            default:
-                break;
             }
-        }
-        // -------------------------------------------------- TOP SIDE ---------------------------------------------------------------
-        else if (side == top)
-        {
-            switch (block)
+            // -------------------------------------------------- RIGHT SIDE ---------------------------------------------------------------
+            else if (side == right)
             {
-            case 1:
-                if (cubeMain.at(side).at(0).at(0) == bottom_color)
+                switch (block)
                 {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
-                    boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                    if (cornerLocMatch)
+                case 1:
+                    if (cubeMain.at(side).at(0).at(0) == bottom_color)
                     {
-                        if (!boolEdgeSetter)
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
+                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (cornerLocMatch)
                         {
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            if (sentinal == 1)
+                            // for the condition when corner is on the correct location but side edge is not on the top......
+                            if (!boolEdgeSetter)
                             {
-                                setalgo(back, "R U RP UP R U RP UP R U RP", "f2l");
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinal == 1)
+                                {
+                                    setalgo(face, "U FP U F U FP U2 F", "f2l");
+                                }
+                                else if (sentinal == 0)
+                                {
+                                    setalgo(face, "U FP UP F UP R U RP", "f2l");
+                                }
+                                else if (sentinal == -1)
+                                {
+                                    // the corner setter will set the corner and will pass the control back to this function.....
+                                    cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                }
                             }
-                            else if (sentinal == 0)
+                            if (edgeSide == right)
                             {
-                                setalgo(back, "R UP RP U FP U F", "f2l");
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(face, "R UP RP U2 FP UP F", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(face, "UP R UP RP U R U RP", "f2l");
+                                }
                             }
-                            else if (sentinal == -1)
+                            else if (edgeSide == back)
                             {
-                                // this is for the condition when the side elements are not in the correct location....
-                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(face, "U FP U2 F U FP U2 F", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(face, "R U RP", "f2l");
+                                }
+                            }
+                            else if (edgeSide == left)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(face, "U FP UP F U FP U2 F", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(face, "UP R U RP U R U RP", "f2l");
+                                }
+                            }
+                            else if (edgeSide == face)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(face, "F RP FP R", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(face, "U FP U2 F UP R U RP", "f2l");
+                                }
+                            }
+                        } // this else is for the condition when the corner or edge is not on the right location....
+                        else
+                        {
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        }
+                    }
+                    break;
+                case 2:
+                    if (cubeMain.at(side).at(0).at(2) == bottom_color)
+                    {
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
+                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (cornerLocMatch)
+                        {
+                            // for the condition when corner is on the correct location but side edge is not on the top......
+                            if (!boolEdgeSetter)
+                            {
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinal == 1)
+                                {
+                                    setalgo(right, "UP R UP RP UP R U2 RP", "f2l");
+                                }
+                                else if (sentinal == 0)
+                                {
+                                    setalgo(right, "UP R U RP U FP UP F", "f2l");
+                                }
+                                else if (sentinal == -1)
+                                {
+                                    // the corner setter will set the corner and will pass the control back to this function.....
+                                    cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                }
+                            }
+                            if (edgeSide == right)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(right, "FP U F U2 R U RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(right, "U FP U F UP FP UP F", "f2l");
+                                }
+                            }
+                            else if (edgeSide == back)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(right, "U R UP RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(right, "UP R U2 RP U FP UP F", "f2l");
+                                }
+                            }
+                            else if (edgeSide == left)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(right, "UP R U RP UP R U2 RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(right, "U FP UP F UP FP UP F", "f2l");
+                                }
+                            }
+                            else if (edgeSide == face)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(right, "UP R U2 RP UP R U2 RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(right, "FP UP F", "f2l");
+                                }
                             }
                         }
-                        if (edgeSide == face)
+                        else
                         {
-                            if (topSideColor == cornerColors.at(0))
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        }
+                    }
+                    break;
+                case 3:
+                    if (cubeMain.at(side).at(2).at(0) == bottom_color)
+                    {
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 0);
+                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                        if (cornerLocMatch)
+                        {
+                            // for the condition when corner is on the correct location but side edge is not on the top......
+                            if (!boolEdgeSetter)
                             {
-                                setalgo(back, "U2 FP UP F UP FP U F", "f2l");
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                if (sentinal == 1)
+                                {
+                                    setalgo(face, "R UP RP U R U2 RP U R UP RP", "f2l");
+                                }
+                                else if (sentinal == 0)
+                                {
+                                    setalgo(face, "R U RP UP R UP RP U2 FP UP F", "f2l");
+                                }
+                                // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
                             }
-                            else
+                            if (edgeSide == right)
                             {
-                                setalgo(back, "U R U2 RP U R UP RP", "f2l");
+                                setalgo(face, "R U RP UP R U RP", "f2l");
+                            }
+                            else if (edgeSide == face)
+                            {
+                                setalgo(face, "FP U F UP FP U F", "f2l");
                             }
                         }
-                        else if (edgeSide == right)
+                        else
                         {
-                            if (topSideColor == cornerColors.at(0))
+                            switch (rang0to1(rng))
                             {
-                                setalgo(back, "UP FP U2 F UP FP U F", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(back, "U2 R U RP U R UP RP", "f2l");
-                            }
-                        }
-                        else if (edgeSide == back)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(back, "FP U2 F U FP UP F", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(back, "R U RP U2 R U RP UP R U RP", "f2l");
-                            }
-                        }
-                        else if (edgeSide == left)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(back, "FP UP F U2 FP UP F U FP UP F", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(back, "R U2 RP UP R U RP", "f2l");
+                            case 0:
+                                setalgo(face, "R U RP", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            case 1:
+                                setalgo(face, "FP UP F", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            default:
+                                break;
                             }
                         }
                     }
-                    else
+                    break;
+                case 4:
+                    if (cubeMain.at(side).at(2).at(2) == bottom_color)
                     {
-                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 2);
+                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                        if (cornerLocMatch)
+                        {
+                            // for the condition when corner is on the correct location but side edge is not on the top......
+                            if (!boolEdgeSetter)
+                            {
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                if (sentinal == 1)
+                                {
+                                    setalgo(right, "R UP RP UP R U RP UP R U2 RP", "f2l");
+                                }
+                                else if (sentinal == 0)
+                                {
+                                    setalgo(right, "R UP RP U FP UP F UP FP UP F", "f2l");
+                                }
+                                // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
+                            }
+                            if (edgeSide == right)
+                            {
+                                setalgo(right, "FP UP F U FP UP F", "f2l");
+                            }
+                            else if (edgeSide == back)
+                            {
+                                setalgo(right, "R UP RP U R UP RP", "f2l");
+                            }
+                        }
+                        else
+                        {
+                            switch (rang0to1(rng))
+                            {
+                            case 0:
+                                setalgo(right, "R U RP", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            case 1:
+                                setalgo(right, "FP UP F", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            default:
+                                break;
+                            }
+                        }
                     }
+                    break;
+                default:
+                    break;
                 }
-                break;
-            case 2:
-                if (cubeMain.at(side).at(0).at(2) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
-                    boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                    if (cornerLocMatch)
-                    {
-                        if (!boolEdgeSetter)
-                        {
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            if (sentinal == 1)
-                            {
-                                setalgo(right, "R U RP UP R U RP UP R U RP", "f2l");
-                            }
-                            else if (sentinal == 0)
-                            {
-                                setalgo(right, "R UP RP U FP U F", "f2l");
-                            }
-                            else if (sentinal == -1)
-                            {
-                                // this is for the condition when the side elements are not in the correct location....
-                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            }
-                        }
-                        if (edgeSide == left)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(right, "U R U2 RP U R UP RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(right, "U2 FP UP F UP FP U F", "f2l");
-                            }
-                        }
-                        else if (edgeSide == face)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(right, "U2 R U RP U R UP RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(right, "UP FP U2 F UP FP U F", "f2l");
-                            }
-                        }
-                        else if (edgeSide == right)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(right, "R U RP U2 R U RP UP R U RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(right, "FP U2 F U FP UP F", "f2l");
-                            }
-                        }
-                        else if (edgeSide == back)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(right, "R U2 RP UP R U RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(right, "FP UP F U2 FP UP F U FP UP F", "f2l");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                    }
-                }
-                break;
-            case 3:
-                if (cubeMain.at(side).at(2).at(0) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 0);
-                    boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                    if (cornerLocMatch)
-                    {
-                        if (!boolEdgeSetter)
-                        {
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            if (sentinal == 1)
-                            {
-                                setalgo(left, "R U RP UP R U RP UP R U RP", "f2l");
-                            }
-                            else if (sentinal == 0)
-                            {
-                                setalgo(left, "R UP RP U FP U F", "f2l");
-                            }
-                            else if (sentinal == -1)
-                            {
-                                // this is for the condition when the side elements are not in the correct location....
-                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            }
-                        }
-                        if (edgeSide == right)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(left, "U R U2 RP U R UP RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(left, "U2 FP UP F UP FP U F", "f2l");
-                            }
-                        }
-                        else if (edgeSide == back)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(left, "U2 R U RP U R UP RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(left, "UP FP U2 F UP FP U F", "f2l");
-                            }
-                        }
-                        else if (edgeSide == left)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(left, "R U RP U2 R U RP UP R U RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(left, "FP U2 F U FP UP F", "f2l");
-                            }
-                        }
-                        else if (edgeSide == face)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(left, "R U2 RP UP R U RP", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(left, "FP UP F U2 FP UP F U FP UP F", "f2l");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                    }
-                }
-                break;
-            case 4:
-                if (cubeMain.at(side).at(2).at(2) == bottom_color)
-                {
-                    cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 2);
-                    boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                    if (cornerLocMatch)
-                    {
-                        if (!boolEdgeSetter)
-                        {
-                            sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            if (sentinal == 1)
-                            {
-                                setalgo(face, "R U RP UP R U RP UP R U RP", "f2l");
-                            }
-                            else if (sentinal == 0)
-                            {
-                                setalgo(face, "R UP RP U FP U F", "f2l");
-                            }
-                            else if (sentinal == -1)
-                            {
-                                // this is for the condition when the side elements are not in the correct location....
-                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            }
-                        }
-                        if (edgeSide == back)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(face, "U2 FP UP F UP FP U F", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(face, "U R U2 RP U R UP RP", "f2l");
-                            }
-                        }
-                        else if (edgeSide == left)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(face, "UP FP U2 F UP FP U F", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(face, "U2 R U RP U R UP RP", "f2l");
-                            }
-                        }
-                        else if (edgeSide == face)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(face, "FP U2 F U FP UP F", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(face, "R U RP U2 R U RP UP R U RP", "f2l");
-                            }
-                        }
-                        else if (edgeSide == right)
-                        {
-                            if (topSideColor == cornerColors.at(0))
-                            {
-                                setalgo(face, "FP UP F U2 FP UP F U FP UP F", "f2l");
-                            }
-                            else
-                            {
-                                setalgo(face, "R U2 RP UP R U RP", "f2l");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
-                    }
-                }
-                break;
-            default:
-                break;
             }
-        }
-        // optimising f2lsolution....
-        solutionOptimizer(F2LSolution);
-        if (F2LSolution.size() > soluionLimit)
-        {
-            terminater = true;
-            break;
+            // -------------------------------------------------- BACK SIDE ---------------------------------------------------------------
+            else if (side == back)
+            {
+                switch (block)
+                {
+                case 1:
+                    if (cubeMain.at(side).at(0).at(0) == bottom_color)
+                    {
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
+                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (cornerLocMatch)
+                        {
+                            // for the condition when corner is on the correct location but side edge is not on the top......
+                            if (!boolEdgeSetter)
+                            {
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinal == 1)
+                                {
+                                    setalgo(right, "U FP U F U FP U2 F", "f2l");
+                                }
+                                else if (sentinal == 0)
+                                {
+                                    setalgo(right, "U FP UP F UP R U RP", "f2l");
+                                }
+                                else if (sentinal == -1)
+                                {
+                                    // the corner setter will set the corner and will pass the control back to this function.....
+                                    cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                }
+                            }
+                            if (edgeSide == back)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(right, "R UP RP U2 FP UP F", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(right, "UP R UP RP U R U RP", "f2l");
+                                }
+                            }
+                            else if (edgeSide == left)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(right, "U FP U2 F U FP U2 F", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(right, "R U RP", "f2l");
+                                }
+                            }
+                            else if (edgeSide == face)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(right, "U FP UP F U FP U2 F", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(right, "UP R U RP U R U RP", "f2l");
+                                }
+                            }
+                            else if (edgeSide == right)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(right, "F RP FP R", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(right, "U FP U2 F UP R U RP", "f2l");
+                                }
+                            }
+                        } // this else is for the condition when the corner or edge is not on the right location....
+                        else
+                        {
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        }
+                    }
+                    break;
+                case 2:
+                    if (cubeMain.at(side).at(0).at(2) == bottom_color)
+                    {
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
+                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (cornerLocMatch)
+                        {
+                            // for the condition when corner is on the correct location but side edge is not on the top......
+                            if (!boolEdgeSetter)
+                            {
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinal == 1)
+                                {
+                                    setalgo(back, "UP R UP RP UP R U2 RP", "f2l");
+                                }
+                                else if (sentinal == 0)
+                                {
+                                    setalgo(back, "UP R U RP U FP UP F", "f2l");
+                                }
+                                else if (sentinal == -1)
+                                {
+                                    // the corner setter will set the corner and will pass the control back to this function.....
+                                    cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                }
+                            }
+                            if (edgeSide == back)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(back, "FP U F U2 R U RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(back, "U FP U F UP FP UP F", "f2l");
+                                }
+                            }
+                            else if (edgeSide == left)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(back, "U R UP RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(back, "UP R U2 RP U FP UP F", "f2l");
+                                }
+                            }
+                            else if (edgeSide == face)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(back, "UP R U RP UP R U2 RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(back, "U FP UP F UP FP UP F", "f2l");
+                                }
+                            }
+                            else if (edgeSide == right)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(back, "UP R U2 RP UP R U2 RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(back, "FP UP F", "f2l");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        }
+                    }
+                    break;
+                case 3:
+                    if (cubeMain.at(side).at(2).at(0) == bottom_color)
+                    {
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 0);
+                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                        if (cornerLocMatch)
+                        {
+                            // for the condition when corner is on the correct location but side edge is not on the top......
+                            if (!boolEdgeSetter)
+                            {
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                if (sentinal == 1)
+                                {
+                                    setalgo(right, "R UP RP U R U2 RP U R UP RP", "f2l");
+                                }
+                                else if (sentinal == 0)
+                                {
+                                    setalgo(right, "R U RP UP R UP RP U2 FP UP F", "f2l");
+                                }
+                                // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
+                            }
+                            if (edgeSide == back)
+                            {
+                                setalgo(right, "R U RP UP R U RP", "f2l");
+                            }
+                            else if (edgeSide == right)
+                            {
+                                setalgo(right, "FP U F UP FP U F", "f2l");
+                            }
+                        }
+                        else
+                        {
+                            switch (rang0to1(rng))
+                            {
+                            case 0:
+                                setalgo(right, "R U RP", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            case 1:
+                                setalgo(right, "FP UP F", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            default:
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                case 4:
+                    if (cubeMain.at(side).at(2).at(2) == bottom_color)
+                    {
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 2);
+                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                        if (cornerLocMatch)
+                        {
+                            // for the condition when corner is on the correct location but side edge is not on the top......
+                            if (!boolEdgeSetter)
+                            {
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                if (sentinal == 1)
+                                {
+                                    setalgo(back, "R UP RP UP R U RP UP R U2 RP", "f2l");
+                                }
+                                else if (sentinal == 0)
+                                {
+                                    setalgo(back, "R UP RP U FP UP F UP FP UP F", "f2l");
+                                }
+                                // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
+                            }
+                            if (edgeSide == back)
+                            {
+                                setalgo(back, "FP UP F U FP UP F", "f2l");
+                            }
+                            else if (edgeSide == left)
+                            {
+                                setalgo(back, "R UP RP U R UP RP", "f2l");
+                            }
+                        }
+                        else
+                        {
+                            switch (rang0to1(rng))
+                            {
+                            case 0:
+                                setalgo(back, "R U RP", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            case 1:
+                                setalgo(back, "FP UP F", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            default:
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    break;
+                }
+            }
+            // -------------------------------------------------- LEFT SIDE ---------------------------------------------------------------
+            else if (side == left)
+            {
+                switch (block)
+                {
+                case 1:
+                    if (cubeMain.at(side).at(0).at(0) == bottom_color)
+                    {
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
+                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (cornerLocMatch)
+                        {
+                            // for the condition when corner is on the correct location but side edge is not on the top......
+                            if (!boolEdgeSetter)
+                            {
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinal == 1)
+                                {
+                                    setalgo(back, "U FP U F U FP U2 F", "f2l");
+                                }
+                                else if (sentinal == 0)
+                                {
+                                    setalgo(back, "U FP UP F UP R U RP", "f2l");
+                                }
+                                else if (sentinal == -1)
+                                {
+                                    // the corner setter will set the corner and will pass the control back to this function.....
+                                    cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                }
+                            }
+                            if (edgeSide == left)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(back, "R UP RP U2 FP UP F", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(back, "UP R UP RP U R U RP", "f2l");
+                                }
+                            }
+                            else if (edgeSide == face)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(back, "U FP U2 F U FP U2 F", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(back, "R U RP", "f2l");
+                                }
+                            }
+                            else if (edgeSide == right)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(back, "U FP UP F U FP U2 F", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(back, "UP R U RP U R U RP", "f2l");
+                                }
+                            }
+                            else if (edgeSide == back)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(back, "F RP FP R", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(back, "U FP U2 F UP R U RP", "f2l");
+                                }
+                            }
+                        } // this else is for the condition when the corner or edge is not on the right location....
+                        else
+                        {
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        }
+                    }
+                    break;
+                case 2:
+                    if (cubeMain.at(side).at(0).at(2) == bottom_color)
+                    {
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
+                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (cornerLocMatch)
+                        {
+                            // for the condition when corner is on the correct location but side edge is not on the top......
+                            if (!boolEdgeSetter)
+                            {
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinal == 1)
+                                {
+                                    setalgo(left, "UP R UP RP UP R U2 RP", "f2l");
+                                }
+                                else if (sentinal == 0)
+                                {
+                                    setalgo(left, "UP R U RP U FP UP F", "f2l");
+                                }
+                                else if (sentinal == -1)
+                                {
+                                    // the corner setter will set the corner and will pass the control back to this function.....
+                                    cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                }
+                            }
+                            if (edgeSide == left)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(left, "FP U F U2 R U RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(left, "U FP U F UP FP UP F", "f2l");
+                                }
+                            }
+                            else if (edgeSide == face)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(left, "U R UP RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(left, "UP R U2 RP U FP UP F", "f2l");
+                                }
+                            }
+                            else if (edgeSide == right)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(left, "UP R U RP UP R U2 RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(left, "U FP UP F UP FP UP F", "f2l");
+                                }
+                            }
+                            else if (edgeSide == back)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(left, "UP R U2 RP UP R U2 RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(left, "FP UP F", "f2l");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        }
+                    }
+                    break;
+                case 3:
+                    if (cubeMain.at(side).at(2).at(0) == bottom_color)
+                    {
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 0);
+                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                        if (cornerLocMatch)
+                        {
+                            // for the condition when corner is on the correct location but side edge is not on the top......
+                            if (!boolEdgeSetter)
+                            {
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                if (sentinal == 1)
+                                {
+                                    setalgo(back, "R UP RP U R U2 RP U R UP RP", "f2l");
+                                }
+                                else if (sentinal == 0)
+                                {
+                                    setalgo(back, "R U RP UP R UP RP U2 FP UP F", "f2l");
+                                }
+                                // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
+                            }
+                            if (edgeSide == left)
+                            {
+                                setalgo(back, "R U RP UP R U RP", "f2l");
+                            }
+                            else if (edgeSide == back)
+                            {
+                                setalgo(back, "FP U F UP FP U F", "f2l");
+                            }
+                        }
+                        else
+                        {
+                            switch (rang0to1(rng))
+                            {
+                            case 0:
+                                setalgo(back, "R U RP", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            case 1:
+                                setalgo(back, "FP UP F", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            default:
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                case 4:
+                    if (cubeMain.at(side).at(2).at(2) == bottom_color)
+                    {
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 2);
+                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                        if (cornerLocMatch)
+                        {
+                            // for the condition when corner is on the correct location but side edge is not on the top......
+                            if (!boolEdgeSetter)
+                            {
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                if (sentinal == 1)
+                                {
+                                    setalgo(left, "R UP RP UP R U RP UP R U2 RP", "f2l");
+                                }
+                                else if (sentinal == 0)
+                                {
+                                    setalgo(left, "R UP RP U FP UP F UP FP UP F", "f2l");
+                                }
+                                // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
+                            }
+                            if (edgeSide == left)
+                            {
+                                setalgo(left, "FP UP F U FP UP F", "f2l");
+                            }
+                            else if (edgeSide == face)
+                            {
+                                setalgo(left, "R UP RP U R UP RP", "f2l");
+                            }
+                        }
+                        else
+                        {
+                            switch (rang0to1(rng))
+                            {
+                            case 0:
+                                setalgo(left, "R U RP", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            case 1:
+                                setalgo(left, "FP UP F", "f2l");
+                                cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                break;
+                            default:
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    break;
+                }
+            }
+            // -------------------------------------------------- TOP SIDE ---------------------------------------------------------------
+            else if (side == top)
+            {
+                switch (block)
+                {
+                case 1:
+                    if (cubeMain.at(side).at(0).at(0) == bottom_color)
+                    {
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
+                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (cornerLocMatch)
+                        {
+                            if (!boolEdgeSetter)
+                            {
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinal == 1)
+                                {
+                                    setalgo(back, "R U RP UP R U RP UP R U RP", "f2l");
+                                }
+                                else if (sentinal == 0)
+                                {
+                                    setalgo(back, "R UP RP U FP U F", "f2l");
+                                }
+                                else if (sentinal == -1)
+                                {
+                                    // this is for the condition when the side elements are not in the correct location....
+                                    cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                }
+                            }
+                            if (edgeSide == face)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(back, "U2 FP UP F UP FP U F", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(back, "U R U2 RP U R UP RP", "f2l");
+                                }
+                            }
+                            else if (edgeSide == right)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(back, "UP FP U2 F UP FP U F", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(back, "U2 R U RP U R UP RP", "f2l");
+                                }
+                            }
+                            else if (edgeSide == back)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(back, "FP U2 F U FP UP F", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(back, "R U RP U2 R U RP UP R U RP", "f2l");
+                                }
+                            }
+                            else if (edgeSide == left)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(back, "FP UP F U2 FP UP F U FP UP F", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(back, "R U2 RP UP R U RP", "f2l");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        }
+                    }
+                    break;
+                case 2:
+                    if (cubeMain.at(side).at(0).at(2) == bottom_color)
+                    {
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
+                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (cornerLocMatch)
+                        {
+                            if (!boolEdgeSetter)
+                            {
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinal == 1)
+                                {
+                                    setalgo(right, "R U RP UP R U RP UP R U RP", "f2l");
+                                }
+                                else if (sentinal == 0)
+                                {
+                                    setalgo(right, "R UP RP U FP U F", "f2l");
+                                }
+                                else if (sentinal == -1)
+                                {
+                                    // this is for the condition when the side elements are not in the correct location....
+                                    cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                }
+                            }
+                            if (edgeSide == left)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(right, "U R U2 RP U R UP RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(right, "U2 FP UP F UP FP U F", "f2l");
+                                }
+                            }
+                            else if (edgeSide == face)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(right, "U2 R U RP U R UP RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(right, "UP FP U2 F UP FP U F", "f2l");
+                                }
+                            }
+                            else if (edgeSide == right)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(right, "R U RP U2 R U RP UP R U RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(right, "FP U2 F U FP UP F", "f2l");
+                                }
+                            }
+                            else if (edgeSide == back)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(right, "R U2 RP UP R U RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(right, "FP UP F U2 FP UP F U FP UP F", "f2l");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        }
+                    }
+                    break;
+                case 3:
+                    if (cubeMain.at(side).at(2).at(0) == bottom_color)
+                    {
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 0);
+                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (cornerLocMatch)
+                        {
+                            if (!boolEdgeSetter)
+                            {
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinal == 1)
+                                {
+                                    setalgo(left, "R U RP UP R U RP UP R U RP", "f2l");
+                                }
+                                else if (sentinal == 0)
+                                {
+                                    setalgo(left, "R UP RP U FP U F", "f2l");
+                                }
+                                else if (sentinal == -1)
+                                {
+                                    // this is for the condition when the side elements are not in the correct location....
+                                    cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                }
+                            }
+                            if (edgeSide == right)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(left, "U R U2 RP U R UP RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(left, "U2 FP UP F UP FP U F", "f2l");
+                                }
+                            }
+                            else if (edgeSide == back)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(left, "U2 R U RP U R UP RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(left, "UP FP U2 F UP FP U F", "f2l");
+                                }
+                            }
+                            else if (edgeSide == left)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(left, "R U RP U2 R U RP UP R U RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(left, "FP U2 F U FP UP F", "f2l");
+                                }
+                            }
+                            else if (edgeSide == face)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(left, "R U2 RP UP R U RP", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(left, "FP UP F U2 FP UP F U FP UP F", "f2l");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        }
+                    }
+                    break;
+                case 4:
+                    if (cubeMain.at(side).at(2).at(2) == bottom_color)
+                    {
+                        cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 2);
+                        boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (cornerLocMatch)
+                        {
+                            if (!boolEdgeSetter)
+                            {
+                                sentinal = sideEdgeFinder(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinal == 1)
+                                {
+                                    setalgo(face, "R U RP UP R U RP UP R U RP", "f2l");
+                                }
+                                else if (sentinal == 0)
+                                {
+                                    setalgo(face, "R UP RP U FP U F", "f2l");
+                                }
+                                else if (sentinal == -1)
+                                {
+                                    // this is for the condition when the side elements are not in the correct location....
+                                    cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                }
+                            }
+                            if (edgeSide == back)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(face, "U2 FP UP F UP FP U F", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(face, "U R U2 RP U R UP RP", "f2l");
+                                }
+                            }
+                            else if (edgeSide == left)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(face, "UP FP U2 F UP FP U F", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(face, "U2 R U RP U R UP RP", "f2l");
+                                }
+                            }
+                            else if (edgeSide == face)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(face, "FP U2 F U FP UP F", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(face, "R U RP U2 R U RP UP R U RP", "f2l");
+                                }
+                            }
+                            else if (edgeSide == right)
+                            {
+                                if (topSideColor == cornerColors.at(0))
+                                {
+                                    setalgo(face, "FP UP F U2 FP UP F U FP UP F", "f2l");
+                                }
+                                else
+                                {
+                                    setalgo(face, "R U2 RP UP R U RP", "f2l");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            cornerSetterOnTop(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                        }
+                    }
+                    break;
+                default:
+                    break;
+                }
+            }
+            sourceCpy = *this;
+            *this = sourceBackup;
+            sourceCpy.f2lSolver(temp_cube);
         }
     }
-    if (terminater == true)
-        return false;
-    return true;
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CALLS THE OLL LOGIC FUNCTION AND CHECKS IT ON WHICH SIDE THE OLL CONDITIONS WILL MATCHES AND SOLVES THE OLL LAYER.
@@ -3650,7 +3688,7 @@ void makeCubie::OLLSolver()
     if (OLLSolution.size() > 0)
         if (OLLSolution.at(0) == "SOLVED")
             return;
-    cout << "error solving Oll layer...." << endl;
+    std::cout << "error solving Oll layer...." << endl;
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION SAVES THE PARTNER SIDE OF THE WHITE CORNER TO THE CORNERCOLORS VECTOR AND CHECKS IF IT IS ON THE RIGHT LOCATION.
@@ -3812,6 +3850,475 @@ bool makeCubie::cornerColorsFinder(const char &bottom_color, const int &side, co
         return true;
     else
         return false;
+}
+/* ----------------------------------------------------------------------------------------------------------------------------------------
+   THIS FUNCTION SAVES THE LOCATION OF THE BOTTOM COLOR CORNER ON THE BASIS OF THE CORESPONDING COLORS PROVIDED...
+   IT SAVES THE SIDE AND BLOCK OF THE CORNER..
+   AND RETURNS TRUE IF IT FINDS THE CORNER..
+   ----------------------------------------------------------------------------------------------------------------------------------------*/
+bool makeCubie::cornerCoordinateFinder(const char &color_1, const char &color_2, int &side, int &block)
+{
+    vector<char> colors{color_1, color_2, cubeMain.at(bottom).at(1).at(1)};
+    int count{0};
+    // first corner..
+    count = 0;
+    for (int i{0}; i < 3; i++)
+    {
+        if (cubeMain[face].at(0).at(2) == colors.at(i) ||
+            cubeMain[top].at(2).at(2) == colors.at(i) ||
+            cubeMain[right].at(0).at(0) == colors.at(i))
+            count++;
+        if (count == 3)
+        {
+            if (cubeMain[face].at(0).at(2) == colors.at(i))
+            {
+                side = face;
+                block = 2;
+            }
+            else if (cubeMain[top].at(2).at(2) == colors.at(i))
+            {
+                side = top;
+                block = 4;
+            }
+            else if (cubeMain[right].at(0).at(0) == colors.at(i))
+            {
+                side = right;
+                block = 1;
+            }
+            return true;
+        }
+    }
+    // second corner..
+    count = 0;
+    for (int i{0}; i < 3; i++)
+    {
+        if (cubeMain[face].at(0).at(0) == colors.at(i) ||
+            cubeMain[top].at(2).at(0) == colors.at(i) ||
+            cubeMain[left].at(0).at(2) == colors.at(i))
+            count++;
+        if (count == 3)
+        {
+            if (cubeMain[face].at(0).at(0) == colors.at(i))
+            {
+                side = face;
+                block = 1;
+            }
+            else if (cubeMain[top].at(2).at(0) == colors.at(i))
+            {
+                side = top;
+                block = 3;
+            }
+            else if (cubeMain[left].at(0).at(2) == colors.at(i))
+            {
+                side = left;
+                block = 2;
+            }
+            return true;
+        }
+    }
+    // third corner..
+    count = 0;
+    for (int i{0}; i < 3; i++)
+    {
+        if (cubeMain[left].at(0).at(0) == colors.at(i) ||
+            cubeMain[top].at(0).at(0) == colors.at(i) ||
+            cubeMain[back].at(0).at(2) == colors.at(i))
+            count++;
+        if (count == 3)
+        {
+            if (cubeMain[left].at(0).at(0) == colors.at(i))
+            {
+                side = left;
+                block = 1;
+            }
+            else if (cubeMain[top].at(0).at(0) == colors.at(i))
+            {
+                side = top;
+                block = 1;
+            }
+            else if (cubeMain[back].at(0).at(2) == colors.at(i))
+            {
+                side = back;
+                block = 2;
+            }
+            return true;
+        }
+    }
+    // fourth corner..
+    count = 0;
+    for (int i{0}; i < 3; i++)
+    {
+        if (cubeMain[back].at(0).at(0) == colors.at(i) ||
+            cubeMain[top].at(0).at(2) == colors.at(i) ||
+            cubeMain[right].at(0).at(2) == colors.at(i))
+            count++;
+        if (count == 3)
+        {
+            if (cubeMain[back].at(0).at(0) == colors.at(i))
+            {
+                side = back;
+                block = 1;
+            }
+            else if (cubeMain[top].at(0).at(2) == colors.at(i))
+            {
+                side = top;
+                block = 2;
+            }
+            else if (cubeMain[right].at(0).at(2) == colors.at(i))
+            {
+                side = right;
+                block = 2;
+            }
+            return true;
+        }
+    }
+    // fifth corner..
+    count = 0;
+    for (int i{0}; i < 3; i++)
+    {
+        if (cubeMain[face].at(2).at(2) == colors.at(i) ||
+            cubeMain[bottom].at(0).at(2) == colors.at(i) ||
+            cubeMain[right].at(2).at(0) == colors.at(i))
+            count++;
+        if (count == 3)
+        {
+            if (cubeMain[face].at(2).at(2) == colors.at(i))
+            {
+                side = face;
+                block = 4;
+            }
+            else if (cubeMain[bottom].at(0).at(2) == colors.at(i))
+            {
+                side = bottom;
+                block = 2;
+            }
+            else if (cubeMain[right].at(2).at(0) == colors.at(i))
+            {
+                side = right;
+                block = 3;
+            }
+            return true;
+        }
+    }
+    // sixth corner..
+    count = 0;
+    for (int i{0}; i < 3; i++)
+    {
+        if (cubeMain[face].at(2).at(0) == colors.at(i) ||
+            cubeMain[bottom].at(0).at(0) == colors.at(i) ||
+            cubeMain[left].at(2).at(2) == colors.at(i))
+            count++;
+        if (count == 3)
+        {
+            if (cubeMain[face].at(2).at(0) == colors.at(i))
+            {
+                side = face;
+                block = 3;
+            }
+            else if (cubeMain[bottom].at(0).at(0) == colors.at(i))
+            {
+                side = bottom;
+                block = 1;
+            }
+            else if (cubeMain[left].at(2).at(2) == colors.at(i))
+            {
+                side = left;
+                block = 4;
+            }
+            return true;
+        }
+    }
+    // seventh corner..
+    count = 0;
+    for (int i{0}; i < 3; i++)
+    {
+        if (cubeMain[left].at(2).at(0) == colors.at(i) ||
+            cubeMain[bottom].at(2).at(0) == colors.at(i) ||
+            cubeMain[back].at(2).at(2) == colors.at(i))
+            count++;
+        if (count == 3)
+        {
+            if (cubeMain[left].at(2).at(0) == colors.at(i))
+            {
+                side = left;
+                block = 3;
+            }
+            else if (cubeMain[bottom].at(2).at(0) == colors.at(i))
+            {
+                side = bottom;
+                block = 3;
+            }
+            else if (cubeMain[back].at(2).at(2) == colors.at(i))
+            {
+                side = back;
+                block = 4;
+            }
+            return true;
+        }
+    }
+    // eighth corner..
+    count = 0;
+    for (int i{0}; i < 3; i++)
+    {
+        if (cubeMain[back].at(2).at(0) == colors.at(i) ||
+            cubeMain[bottom].at(2).at(2) == colors.at(i) ||
+            cubeMain[right].at(2).at(2) == colors.at(i))
+            count++;
+        if (count == 3)
+        {
+            if (cubeMain[back].at(2).at(0) == colors.at(i))
+            {
+                side = back;
+                block = 3;
+            }
+            else if (cubeMain[bottom].at(2).at(2) == colors.at(i))
+            {
+                side = bottom;
+                block = 4;
+            }
+            else if (cubeMain[right].at(2).at(2) == colors.at(i))
+            {
+                side = right;
+                block = 4;
+            }
+            return true;
+        }
+    }
+    return false;
+}
+/* ----------------------------------------------------------------------------------------------------------------------------------------
+   THIS FUNCTION SAVES THE LOCATION OF THE BOTTOM COLOR EDGE ON THE BASIS OF THE CORESPONDING COLOR PROVIDED...
+   IT SAVES THE SIDE AND BLOCK OF THE EDGE..
+   AND RETURNS TRUE IF IT FINDS THE EDGE..
+   ----------------------------------------------------------------------------------------------------------------------------------------*/
+bool makeCubie::edgeCoordinateFinder(const char &color_1, int &side, int &block)
+{
+    int count{0};
+    vector<char> colors{color_1, cubeMain.at(bottom).at(1).at(1)};
+    // BELLOW FOUR ARE TOP SIDE EDGES....
+    count = 0;
+    for (int i{0}; i < 2; i++)
+    {
+        if (cubeMain[top].at(2).at(1) == colors.at(i) || cubeMain[face].at(0).at(1) == colors.at(i))
+            count++;
+        if (count == 2)
+        {
+            if (cubeMain[top].at(2).at(1) == colors.at(i))
+            {
+                side = top;
+                block = 1;
+            }
+            else if (cubeMain[face].at(0).at(1) == colors.at(i))
+            {
+                side = face;
+                block = 1;
+            }
+            return true;
+        }
+    }
+    count = 0;
+    for (int i{0}; i < 2; i++)
+    {
+        if (cubeMain[top].at(1).at(2) == colors.at(i) || cubeMain[right].at(0).at(1) == colors.at(i))
+            count++;
+        if (count == 2)
+        {
+            if (cubeMain[top].at(1).at(2) == colors.at(i))
+            {
+                side = top;
+                block = 2;
+            }
+            else if (cubeMain[right].at(0).at(1) == colors.at(i))
+            {
+                side = right;
+                block = 1;
+            }
+            return true;
+        }
+    }
+    count = 0;
+    for (int i{0}; i < 2; i++)
+    {
+        if (cubeMain[top].at(0).at(1) == colors.at(i) || cubeMain[back].at(0).at(1) == colors.at(i))
+            count++;
+        if (count == 2)
+        {
+            if (cubeMain[top].at(0).at(1) == colors.at(i))
+            {
+                side = top;
+                block = 3;
+            }
+            else if (cubeMain[back].at(0).at(1) == colors.at(i))
+            {
+                side = back;
+                block = 1;
+            }
+            return true;
+        }
+    }
+    count = 0;
+    for (int i{0}; i < 2; i++)
+    {
+        if (cubeMain[top].at(1).at(0) == colors.at(i) || cubeMain[left].at(0).at(1) == colors.at(i))
+            count++;
+        if (count == 2)
+        {
+            if (cubeMain[top].at(1).at(0) == colors.at(i))
+            {
+                side = top;
+                block = 4;
+            }
+            else if (cubeMain[left].at(0).at(1) == colors.at(i))
+            {
+                side = left;
+                block = 1;
+            }
+            return true;
+        }
+    }
+    // BELLOW FOUR ARE BOTTOM SIDE EDGES....
+    count = 0;
+    for (int i{0}; i < 2; i++)
+    {
+        if (cubeMain[bottom].at(0).at(1) == colors.at(i) || cubeMain[face].at(2).at(1) == colors.at(i))
+            count++;
+        if (count == 2)
+        {
+            if (cubeMain[face].at(2).at(1) == colors.at(i))
+            {
+                side = face;
+                block = 3;
+            }
+            return true;
+        }
+    }
+    count = 0;
+    for (int i{0}; i < 2; i++)
+    {
+        if (cubeMain[bottom].at(1).at(2) == colors.at(i) || cubeMain[right].at(2).at(1) == colors.at(i))
+            count++;
+        if (count == 2)
+        {
+            if (cubeMain[right].at(2).at(1) == colors.at(i))
+            {
+                side = right;
+                block = 3;
+            }
+            return true;
+        }
+    }
+    count = 0;
+    for (int i{0}; i < 2; i++)
+    {
+        if (cubeMain[bottom].at(2).at(1) == colors.at(i) || cubeMain[back].at(2).at(1) == colors.at(i))
+            count++;
+        if (count == 2)
+        {
+            if (cubeMain[back].at(2).at(1) == colors.at(i))
+            {
+                side = back;
+                block = 3;
+            }
+            return true;
+        }
+    }
+    count = 0;
+    for (int i{0}; i < 2; i++)
+    {
+        if (cubeMain[bottom].at(1).at(0) == colors.at(i) || cubeMain[left].at(2).at(1) == colors.at(i))
+            count++;
+        if (count == 2)
+        {
+            if (cubeMain[left].at(2).at(1) == colors.at(i))
+            {
+                side = left;
+                block = 3;
+            }
+            return true;
+        }
+    }
+    // BELLOW FOUR ARE MIDDLE SIDE EDGES....
+    count = 0;
+    for (int i{0}; i < 2; i++)
+    {
+        if (cubeMain[face].at(1).at(2) == colors.at(i) || cubeMain[right].at(1).at(0) == colors.at(i))
+            count++;
+        if (count == 2)
+        {
+            if (cubeMain[face].at(1).at(2) == colors.at(i))
+            {
+                side = face;
+                block = 2;
+            }
+            else if (cubeMain[right].at(1).at(0) == colors.at(i))
+            {
+                side = right;
+                block = 4;
+            }
+            return true;
+        }
+    }
+    count = 0;
+    for (int i{0}; i < 2; i++)
+    {
+        if (cubeMain[right].at(1).at(2) == colors.at(i) || cubeMain[back].at(1).at(0) == colors.at(i))
+            count++;
+        if (count == 2)
+        {
+            if (cubeMain[right].at(1).at(2) == colors.at(i))
+            {
+                side = right;
+                block = 2;
+            }
+            else if (cubeMain[back].at(1).at(0) == colors.at(i))
+            {
+                side = back;
+                block = 4;
+            }
+            return true;
+        }
+    }
+    count = 0;
+    for (int i{0}; i < 2; i++)
+    {
+        if (cubeMain[back].at(1).at(2) == colors.at(i) || cubeMain[left].at(1).at(0) == colors.at(i))
+            count++;
+        if (count == 2)
+        {
+            if (cubeMain[back].at(1).at(2) == colors.at(i))
+            {
+                side = back;
+                block = 2;
+            }
+            else if (cubeMain[left].at(1).at(0) == colors.at(i))
+            {
+                side = left;
+                block = 4;
+            }
+            return true;
+        }
+    }
+    count = 0;
+    for (int i{0}; i < 2; i++)
+    {
+        if (cubeMain[left].at(1).at(2) == colors.at(i) || cubeMain[face].at(1).at(0) == colors.at(i))
+            count++;
+        if (count == 2)
+        {
+            if (cubeMain[left].at(1).at(2) == colors.at(i))
+            {
+                side = left;
+                block = 2;
+            }
+            else if (cubeMain[face].at(1).at(0) == colors.at(i))
+            {
+                side = face;
+                block = 4;
+            }
+            return true;
+        }
+    }
+    return false;
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CHECKS IF THE SIDE ELEMENT IS ON THE TOP OF THE CUBE IF IT IS IT RERURNS "TRUE" ELSE IT RETURNS "FALSE".
@@ -4844,7 +5351,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
         switch (colorBlock)
         {
         case 1:
-            if (cubeMain.at(side).at(0).at(0) == 'w')
+            if (cubeMain.at(side).at(0).at(0) == bottom_color)
             {
                 cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
@@ -4917,7 +5424,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
             }
             break;
         case 2:
-            if (cubeMain.at(side).at(0).at(2) == 'w')
+            if (cubeMain.at(side).at(0).at(2) == bottom_color)
             {
                 cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
@@ -4999,7 +5506,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
         switch (colorBlock)
         {
         case 1:
-            if (cubeMain.at(side).at(0).at(0) == 'w')
+            if (cubeMain.at(side).at(0).at(0) == bottom_color)
             {
                 cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
@@ -5072,7 +5579,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
             }
             break;
         case 2:
-            if (cubeMain.at(side).at(0).at(2) == 'w')
+            if (cubeMain.at(side).at(0).at(2) == bottom_color)
             {
                 cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
@@ -5154,7 +5661,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
         switch (colorBlock)
         {
         case 1:
-            if (cubeMain.at(side).at(0).at(0) == 'w')
+            if (cubeMain.at(side).at(0).at(0) == bottom_color)
             {
                 cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
@@ -5227,7 +5734,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
             }
             break;
         case 2:
-            if (cubeMain.at(side).at(0).at(2) == 'w')
+            if (cubeMain.at(side).at(0).at(2) == bottom_color)
             {
                 cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
@@ -5309,7 +5816,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
         switch (colorBlock)
         {
         case 1:
-            if (cubeMain.at(side).at(0).at(0) == 'w')
+            if (cubeMain.at(side).at(0).at(0) == bottom_color)
             {
                 cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
@@ -5382,7 +5889,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
             }
             break;
         case 2:
-            if (cubeMain.at(side).at(0).at(2) == 'w')
+            if (cubeMain.at(side).at(0).at(2) == bottom_color)
             {
                 cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
@@ -5464,7 +5971,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
         switch (colorBlock)
         {
         case 1:
-            if (cubeMain.at(side).at(0).at(0) == 'w')
+            if (cubeMain.at(side).at(0).at(0) == bottom_color)
             {
                 cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 0);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
@@ -5536,7 +6043,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
             }
             break;
         case 2:
-            if (cubeMain.at(side).at(0).at(2) == 'w')
+            if (cubeMain.at(side).at(0).at(2) == bottom_color)
             {
                 cornerLocMatch = cornerColorsFinder(bottom_color, side, 0, 2);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
@@ -5608,7 +6115,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
             }
             break;
         case 3:
-            if (cubeMain.at(side).at(2).at(0) == 'w')
+            if (cubeMain.at(side).at(2).at(0) == bottom_color)
             {
                 cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 0);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
@@ -5680,7 +6187,7 @@ void makeCubie::f2LHelper(makeCubie &temp_cube, const int &side, const int &colo
             }
             break;
         case 4:
-            if (cubeMain.at(side).at(2).at(2) == 'w')
+            if (cubeMain.at(side).at(2).at(2) == bottom_color)
             {
                 cornerLocMatch = cornerColorsFinder(bottom_color, side, 2, 2);
                 boolEdgeSetter = edgeSetterOnTop(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
@@ -5902,48 +6409,96 @@ void makeCubie::setalgo(const int &side, string str_algo, string_view applySolut
 void makeCubie::shortestCubeSolution()
 {
     unsigned int trials{0};
-    int F2LSolutionSize{0}, benchmark{35}, side{0}, limit{27};
+    int F2LSolutionSize{0}, benchmark{35}, side{0}, limit{27}, bestSolutionIndex{0}, bestSolutionSize{0};
     bool solve{false}, isf2lsolve{false};
     vector<string> tempf2lsolution{};
-    makeCubie solveF2L(*this), passF2L(*this), temp_cube(*this);
-    for (int _600times{0}; _600times < 200; _600times++)
+    makeCubie solveF2L(*this), passF2L(*this), passCrs{*this}, temp_cube(*this);
+    vector<int> solutionSides{};
+    vector<vector<string>> ShortCrossSolutions, ShortF2lsolutions, ShortOllSolutions, shortCrossSide, shortF2lSide, shortOllSide;
+
+    for (side = face; side <= bottom; side++)
     {
-        for (side = face; side <= bottom; side++)
+        cubeOrienter(*this, side);
+        temp_cube = *this;
+        temp_cube.crossSolver(passCrs);
+        for (auto crossSolution : passCrs.crossSolutions)
         {
-            cubeOrienter(*this, side);
-            ++trials;
-            cout << "\r" << trials << " Times solved...";
-            isf2lsolve = false;
             temp_cube = *this;
-            temp_cube.crossSolver();
-            for (int _100times{0}; _100times < 200 && !isf2lsolve; _100times++)
+            temp_cube.tempSolution = crossSolution;
+            temp_cube.applySolution("crs");
+
+            solveF2L = passF2L = temp_cube;
+            solveF2L.f2lSolver(passF2L);
+            if (passF2L.f2lsolutions.size() > 0 || passF2L.ollSolutions.size() > 0)
             {
-                solveF2L = passF2L = temp_cube;
-                isf2lsolve = solveF2L.f2lSolver(passF2L, limit);
+                bestSolutionIndex = 0;
+                bestSolutionSize = passF2L.f2lsolutions.at(0).size() + passF2L.ollSolutions.at(0).size();
+                for (size_t i{0}; i < passF2L.f2lsolutions.size(); i++)
+                {
+                    if (bestSolutionSize > (passF2L.f2lsolutions.at(i).size() + passF2L.ollSolutions.at(i).size()))
+                    {
+                        bestSolutionSize = passF2L.f2lsolutions.at(i).size() + passF2L.ollSolutions.at(i).size();
+                        bestSolutionIndex = i;
+                    }
+                }
+                // saving the best solution to shortcrosssolutions, shortf2lsolutions and shortollsolutions
+                ShortCrossSolutions.push_back(crossSolution);
+                ShortF2lsolutions.push_back(passF2L.f2lsolutions.at(bestSolutionIndex));
+                ShortOllSolutions.push_back(passF2L.ollSolutions.at(bestSolutionIndex));
             }
-            if (!isf2lsolve)
-            {
-                cubeReOrienter(*this, side);
-                continue;
-            }
-            solveF2L.OLLSolver();
-            if (solveF2L.PLLChecker(solveF2L))
-                solve = true;
-            cubeReOrienter(*this, side);
-            if (solve == true)
-                break;
+            // clearing the past f2l and oll solutions..
+            passF2L.f2lsolutions.clear();
+            passF2L.ollSolutions.clear();
         }
-        if (solve == true)
-            break;
+        if (ShortCrossSolutions.size() > 0 || ShortF2lsolutions.size() > 0 || ShortOllSolutions.size() > 0)
+        {
+            bestSolutionIndex = 0;
+            bestSolutionSize = ShortCrossSolutions.at(0).size() + ShortF2lsolutions.at(0).size() + ShortOllSolutions.at(0).size();
+            for (size_t i{0}; i < ShortCrossSolutions.size(); i++)
+            {
+                if (bestSolutionSize > (ShortCrossSolutions.at(i).size() + ShortF2lsolutions.at(i).size() + ShortOllSolutions.at(i).size()))
+                {
+                    bestSolutionSize = ShortCrossSolutions.at(i).size() + ShortF2lsolutions.at(i).size() + ShortOllSolutions.at(i).size();
+                    bestSolutionIndex = i;
+                }
+            }
+            // saving the best solution to shortcrosssolutions, shortf2lsolutions and shortollsolutions
+            solutionSides.push_back(side);
+            shortCrossSide.push_back(ShortCrossSolutions.at(bestSolutionIndex));
+            shortF2lSide.push_back(ShortF2lsolutions.at(bestSolutionIndex));
+            shortOllSide.push_back(ShortOllSolutions.at(bestSolutionIndex));
+        }
+        // clearing the past f2l and oll solutions..
+        passF2L.f2lsolutions.clear();
+        passF2L.ollSolutions.clear();
+        passCrs.crossSolutions.clear();
+        ShortCrossSolutions.clear();
+        ShortF2lsolutions.clear();
+        ShortOllSolutions.clear();
+        cubeReOrienter(*this, side);
     }
-    *this = solveF2L;
-    algorithmCorrector(side, temp_cube.CrossSolution);
-    algorithmCorrector(side, solveF2L.F2LSolution);
-    algorithmCorrector(side, solveF2L.OLLSolution);
-    this->CrossSolution = temp_cube.CrossSolution;
-    this->F2LSolution = solveF2L.F2LSolution;
-    this->OLLSolution = solveF2L.OLLSolution;
-    cout << "\n\nCROSS SOLVED BY TAKING \"" << sideColor(side) << "\" SIDE AS BOTTOM..." << endl;
+    for (int i{0}; i < solutionSides.size(); i++)
+    {
+        cout << "\n---------------------------------------------------------------------------------------------" << endl;
+        cout << "BEST SOLUTION ON \"" << sideColor(solutionSides.at(i)) << "\" SIDE ------>" << endl;
+        cout << "Cross solution in " << shortCrossSide.at(i).size() << " moves: ";
+        for (auto step : shortCrossSide.at(i))
+            cout << " " << step;
+        cout << "\nF2L solution in " << shortF2lSide.at(i).size() << " moves: ";
+        for (auto step : shortF2lSide.at(i))
+            cout << " " << step;
+        cout << "\nOLL solution in " << shortOllSide.at(i).size() << " moves: ";
+        for (auto step : shortOllSide.at(i))
+            cout << " " << step;
+        cout << "\n---------------------------------------------------------------------------------------------" << endl;
+    }
+    // *this = solveF2L;
+    // algorithmCorrector(side, temp_cube.CrossSolution);
+    // algorithmCorrector(side, solveF2L.F2LSolution);
+    // algorithmCorrector(side, solveF2L.OLLSolution);
+    // this->CrossSolution = temp_cube.CrossSolution;
+    // this->F2LSolution = solveF2L.F2LSolution;
+    // this->OLLSolution = solveF2L.OLLSolution;
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CODES THE OLL LAYER IN '1' AND '0' CHARACTER.
