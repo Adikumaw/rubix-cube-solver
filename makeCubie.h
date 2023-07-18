@@ -20,10 +20,9 @@ private:
    char topSideColor;
    short edgeSide;
    vector<string> CrossSolution, F2LSolution, OLLSolution, PLLSolution, tempSolution;
-   vector<vector<string>> crossSolutions, f2lsolutions, ollSolutions;
-
+   vector<vector<string>> crossSolutions, f2lSolutions, ollSolutions, pllSolutions;
    // DECLARATION FOR SPEED OPOTIMIZATION....
-   short i, j, l, m;
+   short _i, _j, _row, _col;
    vector<vector<char>> tempVec{
        {'0', '0', '0'},
        {'0', '0', '0'},
@@ -45,6 +44,7 @@ private:
    };
 
 public:
+   static int trials;
    void speedtester();
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       CONSTRUCTORS FOR MAKECUBIE CLASS
@@ -58,47 +58,51 @@ public:
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       SETTERS AND GETTERS METHODS
       ----------------------------------------------------------------------------------------------------------------------------------------*/
-   void setcube();
-   void getcube();
-   void getCrossSolution();
-   void getF2LSolution();
-   void getOLLSolution();
-   int getSolutionSize(string_view solutionName);
+   void set_cube();
+   void get_cube();
+   void get_cross_solution();
+   void get_f2l_solution();
+   void get_oll_solution();
+   void get_pll_solution();
+   int get_solution_size(string_view solutionName);
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       SIDE ROTATION METHOD...
       ----------------------------------------------------------------------------------------------------------------------------------------*/
-   void sideRotate(const int &side, string_view direction);
+   void side_rotate(const int &side, string_view direction);
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       CUBE SOLVING METHODS...
       ----------------------------------------------------------------------------------------------------------------------------------------*/
-   void crossSolver(makeCubie &storeSolution);
-   void f2lSolver(makeCubie &temp_cube);
-   void shortestCubeSolution();
-   void OLLSolver();
+   void cross_solver(makeCubie &storeSolution);
+   void f2l_solver(makeCubie &temp_cube);
+   string shortest_cube_solution();
+   void oll_solver();
+   void pll_solver();
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       THE THREE BELLOW FUNCITON ARE FOR SIDE ROTATION LOGICS OF THE CUBE.
       ----------------------------------------------------------------------------------------------------------------------------------------*/
-   void faceTranspose(const int &side, string_view direction);
-   void sideBarSender(const int &side, string_view sideBarDirection, string_view vectorStoringDirection);
-   void sideBarReceiver(const int &side, string_view sideBarDirection);
+   void face_transpose(const int &side, string_view direction);
+   void side_bar_sender(const int &side, string_view sideBarDirection, string_view vectorStoringDirection);
+   void side_bar_receiver(const int &side, string_view sideBarDirection);
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       HELPER METHODS FOR CUBE SOLVING METHODS.
       ----------------------------------------------------------------------------------------------------------------------------------------*/
-   bool edgeCoordinateFinder(const char &color_1, int &side, int &block);
-   bool cornerCoordinateFinder(const char &color_1, const char &color_2, int &side, int &block);
-   bool cornerColorsFinder(const char &bottom_color, const int &side, const int &row, const int &col);
-   int sideEdgeFinder(makeCubie &temp_cube, const char &color_1, const char &color_2, string_view edgeSetter);
-   bool edgeSetterOnTop(makeCubie &temp_cube, const char &color_1, const char &color_2, string_view edgeSetter);
+   bool get_edge_location(const char &color_1, int &side, int &block);
+   bool get_corner_location(const char &color_1, const char &color_2, int &side, int &block);
+   bool find_corner_colors(const char &bottom_color, const int &side, const int &row, const int &col);
+   int find_edge_in_mid_lyr(makeCubie &temp_cube, const char &color_1, const char &color_2, string_view edgeSetter);
+   bool find_edge_in_top_lyr(makeCubie &temp_cube, const char &color_1, const char &color_2, string_view edgeSetter);
    void f2LHelper(makeCubie &temp_cube, const int &side, const int &colorBlock);
-   void cornerSetterOnTop(makeCubie &temp_cube, const char &color_1, const char &color_2, const char &color_3, string_view F2LHelper);
-   string OLLCoder();
-   bool OLLLogic(const int &side, string_view OLLcode);
-   bool PLLChecker(const makeCubie &source);
-   int crossChecker(const makeCubie &source);
-   vector<char> crossColorOrientation(const makeCubie &source);
-   vector<char> currentorientation(const makeCubie &source);
-   void cubeOrienter(makeCubie &source, const int &side);
-   void cubeReOrienter(makeCubie &source, const int &side);
+   void set_corner_on_top(makeCubie &temp_cube, const char &color_1, const char &color_2, const char &color_3, string_view F2LHelper);
+   string oll_coder();
+   string pll_coder(const vector<char> &orientation);
+   bool pll_logic(const int &side, string_view PLLcode);
+   bool oll_logic(const int &side, string_view OLLcode);
+   bool is_pll_solve_needed(const makeCubie &source);
+   int count_bottom_lyr_edge(const makeCubie &source);
+   vector<char> get_equator_colors_orientation(const makeCubie &source);
+   vector<char> get_cross_colors_orientation(const makeCubie &source);
+   void cube_orienter(makeCubie &source, const int &side);
+   void cube_reorienter(makeCubie &source, const int &side);
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       ALGORITHEM IMPLEMENTATION METHODS.
       ----------------------------------------------------------------------------------------------------------------------------------------*/
