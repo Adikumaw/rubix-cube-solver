@@ -11,32 +11,33 @@ int main()
 {
     makeCubie newCube;
 
-    newCube.set_cube();
+    cin >> newCube;
     // Start the timer
     auto startTime = std::chrono::high_resolution_clock::now();
     // CALLING CROSS_SOLVER..........
     string sideName = newCube.shortest_cube_solution();
-    cout << "\nBEST SOLUTION ON \"" << sideName << "\" SIDE ------>" << endl;
+
+    cout << "\n\n-----------------------------------------------------------------------------------------\n\t\t\t\t BEST SOLUTION ON \"" << sideName << "\" SIDE \t\t\t\t\n-----------------------------------------------------------------------------------------\n"
+         << endl;
+    // SHOWING TOTAL MOVES COUNT.......
     cout << "TOTAL MOVES COUNT : " << newCube.get_solution_size("crs") + newCube.get_solution_size("f2l") + newCube.get_solution_size("oll") + newCube.get_solution_size("pll") << endl;
-    cout << "---------------------------------------------------------------" << endl;
+
+    cout << "-----------------------------------------------------------------------------------------" << endl;
     cout << "CROSS SOLUTION IN " << newCube.get_solution_size("crs") << " MOVES:  ";
     newCube.get_cross_solution();
-    cout << "\n---------------------------------------------------------------" << endl;
     // CALLING F2L_SOLVER..........
-    cout << "---------------------------------------------------------------" << endl;
+    cout << "\n-----------------------------------------------------------------------------------------" << endl;
     cout << "F2L SOLUTION IN " << newCube.get_solution_size("f2l") << " MOVES:  ";
     newCube.get_f2l_solution();
-    cout << "\n---------------------------------------------------------------" << endl;
     // CALLING OLL_SOLVER..........
-    cout << "---------------------------------------------------------------" << endl;
+    cout << "\n-----------------------------------------------------------------------------------------" << endl;
     cout << "OLL SOLUTION IN " << newCube.get_solution_size("oll") << " MOVES:  ";
     newCube.get_oll_solution();
-    cout << "\n---------------------------------------------------------------" << endl;
     // CALLING PLL_SOLVER..........
-    cout << "---------------------------------------------------------------" << endl;
+    cout << "\n-----------------------------------------------------------------------------------------" << endl;
     cout << "PLL SOLUTION IN " << newCube.get_solution_size("pll") << " MOVES:  ";
     newCube.get_pll_solution();
-    cout << "\n---------------------------------------------------------------" << endl;
+    cout << "\n-----------------------------------------------------------------------------------------" << endl;
     // newCube.get_cube();
     // Stop the timer
     auto endTime = std::chrono::high_resolution_clock::now();

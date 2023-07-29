@@ -14,14 +14,14 @@ int makeCubie::trials = 0;
 #define UP side_rotate(side::top, "ACW")
 #define DP side_rotate(side::bottom, "ACW")
 #define BP side_rotate(side::back, "ACW")
-
+// TWICE MOVES.......
 #define F2 side_rotate(side::face, "2CW")
 #define L2 side_rotate(side::left, "2CW")
 #define R2 side_rotate(side::right, "2CW")
 #define U2 side_rotate(side::top, "2CW")
 #define D2 side_rotate(side::bottom, "2CW")
 #define B2 side_rotate(side::back, "2CW")
-
+// MIDDLE LAYER MOVEMENTS.......
 #define M side_rotate(side::mid, "CW")
 #define E side_rotate(side::equator, "CW")
 #define S side_rotate(side::stand, "CW")
@@ -37,7 +37,7 @@ int makeCubie::trials = 0;
 #define ZP side_rotate(side::axisZ, "ACW")
 
 void solution_optimizer(vector<std::string> &solution);
-string side_color(const int &colorAsci);
+string side_name(const int &colorAsci);
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    CONSTRUCTORS FOR MAKECUBIE CLASS
    ----------------------------------------------------------------------------------------------------------------------------------------*/
@@ -94,6 +94,94 @@ makeCubie &makeCubie::operator=(const makeCubie &source)
     this->OLLSolution = source.OLLSolution;
     return *this;
 }
+ostream &operator<<(ostream &os, const makeCubie &cube)
+{
+    for (size_t i{0}; i < cube.cubeMain.size(); i++)
+    {
+        std::cout << "\nTHE ELEMENTS OF \"" << side_name(i) << "\" SIDE ARE:" << endl;
+        for (size_t j{0}; j < cube.cubeMain.at(i).size(); j++)
+        {
+            for (size_t k{0}; k < cube.cubeMain.at(i).at(j).size(); k++)
+            {
+                std::cout << cube.cubeMain.at(i).at(j).at(k) << " ";
+            }
+            std::cout << endl;
+        }
+    }
+    return os;
+}
+istream &operator>>(istream &is, makeCubie &cube)
+{
+    int color{};
+    char ch{};
+    vector<vector<char>> temp_side{{'x', 'x', 'x'},
+                                   {'x', 'x', 'x'},
+                                   {'x', 'x', 'x'}};
+    for (int side{0}; side < 6; side++)
+    {
+        switch (side)
+        {
+        case 0:
+            color = 0;
+            break;
+        case 1:
+            color = 3;
+            break;
+        case 2:
+            color = 1;
+            break;
+        case 3:
+            color = 2;
+            break;
+        case 4:
+            color = 4;
+            break;
+        case 5:
+            color = 5;
+            break;
+        default:
+            break;
+        }
+        std::cout << "ENTER THE COLOR OF \"" << side_name(color) << "\" SIDE OF THE CUBE: " << endl;
+        for (int row{0}; row < 3; row++)
+        {
+            for (int col{0}; col < 3; col++)
+            {
+                cin >> ch;
+                temp_side.at(row).at(col) = ch;
+            }
+        }
+        switch (side)
+        {
+        case 0:
+            cube.cubeMain.at(color) = temp_side;
+            break;
+        case 1:
+            cube.cubeMain.at(color) = temp_side;
+            break;
+        case 2:
+            cube.cubeMain.at(color) = temp_side;
+            break;
+        case 3:
+            cube.cubeMain.at(color) = temp_side;
+            break;
+        case 4:
+            for (int row_1{0}, col_2{0}; row_1 < 3; row_1++, col_2++)
+                for (int col_1{0}, row_2{2}; col_1 < 3; col_1++, row_2--)
+                    cube.cubeMain.at(side).at(row_1).at(col_1) = temp_side.at(row_2).at(col_2);
+            break;
+        case 5:
+            for (int row_1{0}, col_2{2}; row_1 < 3; row_1++, col_2--)
+                for (int col_1{0}, row_2{0}; col_1 < 3; col_1++, row_2++)
+                    cube.cubeMain.at(side).at(row_1).at(col_1) = temp_side.at(row_2).at(col_2);
+            break;
+        default:
+            break;
+        }
+    }
+    cout << endl;
+    return is;
+}
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    SETTER AND GETTER FOR THE RUBIX CUBE
    ----------------------------------------------------------------------------------------------------------------------------------------*/
@@ -102,7 +190,7 @@ void makeCubie::set_cube()
     char ch{};
     for (int l{0}; l < 6; l++)
     {
-        std::cout << "ENTER THE COLOR OF \"" << side_color(l) << "\" SIDE OF THE CUBE: " << endl;
+        std::cout << "ENTER THE COLOR OF \"" << side_name(l) << "\" SIDE OF THE CUBE: " << endl;
         for (int m{0}; m < 3; m++)
         {
             for (int n{0}; n < 3; n++)
@@ -117,7 +205,7 @@ void makeCubie::get_cube()
 {
     for (size_t i{0}; i < cubeMain.size(); i++)
     {
-        std::cout << "\nTHE ELEMENTS OF \"" << side_color(i) << "\" SIDE ARE:" << endl;
+        std::cout << "\nTHE ELEMENTS OF \"" << side_name(i) << "\" SIDE ARE:" << endl;
         for (size_t j{0}; j < cubeMain.at(i).size(); j++)
         {
             for (size_t k{0}; k < cubeMain.at(i).at(j).size(); k++)
@@ -130,41 +218,65 @@ void makeCubie::get_cube()
 };
 void makeCubie::get_cross_solution()
 {
-    for (size_t i{0}; i < CrossSolution.size(); i++)
-    {
-        std::cout << CrossSolution.at(i) << " ";
-    }
+    if (CrossSolution.at(0) == "")
+        std::cout << "SOLVED";
+    else
+        for (size_t i{0}; i < CrossSolution.size(); i++)
+        {
+            std::cout << CrossSolution.at(i) << " ";
+        }
 }
 void makeCubie::get_f2l_solution()
 {
-    for (size_t i{0}; i < F2LSolution.size(); i++)
-    {
-        std::cout << F2LSolution.at(i) << " ";
-    }
+    if (F2LSolution.at(0) == "")
+        std::cout << "SOLVED";
+    else
+        for (size_t i{0}; i < F2LSolution.size(); i++)
+        {
+            std::cout << F2LSolution.at(i) << " ";
+        }
 }
 void makeCubie::get_oll_solution()
 {
-    for (size_t i{0}; i < OLLSolution.size(); i++)
-    {
-        std::cout << OLLSolution.at(i) << " ";
-    }
+    if (OLLSolution.at(0) == "")
+        std::cout << "SOLVED";
+    else
+        for (size_t i{0}; i < OLLSolution.size(); i++)
+        {
+            std::cout << OLLSolution.at(i) << " ";
+        }
 }
 void makeCubie::get_pll_solution()
 {
-    for (size_t i{0}; i < PLLSolution.size(); i++)
-    {
-        std::cout << PLLSolution.at(i) << " ";
-    }
+    if (PLLSolution.at(0) == "")
+        std::cout << "SOLVED";
+    else
+        for (size_t i{0}; i < PLLSolution.size(); i++)
+        {
+            std::cout << PLLSolution.at(i) << " ";
+        }
 }
 int makeCubie::get_solution_size(string_view solutionName)
 {
     if (solutionName == "crs")
+        if (CrossSolution.at(0) == "")
+        return 0;
+    else
         return CrossSolution.size();
     else if (solutionName == "f2l")
+        if (F2LSolution.at(0) == "")
+        return 0;
+    else
         return F2LSolution.size();
     else if (solutionName == "oll")
+        if (OLLSolution.at(0) == "")
+        return 0;
+    else
         return OLLSolution.size();
     else if (solutionName == "pll")
+        if (PLLSolution.at(0) == "")
+        return 0;
+    else
         return PLLSolution.size();
     return -1;
 }
@@ -1987,6 +2099,7 @@ void makeCubie::f2l_solver(makeCubie &temp_cube)
         solution_optimizer(F2LSolution);
         oll_solver();
         pll_solver();
+        correct_last_layer();
         temp_cube.f2lSolutions.push_back(F2LSolution);
         temp_cube.ollSolutions.push_back(OLLSolution);
         temp_cube.pllSolutions.push_back(PLLSolution);
@@ -3622,12 +3735,11 @@ void makeCubie::oll_solver()
         }
         OLLcode = oll_coder();
     }
-    if (OLLSolution.size() > 0)
-        if (OLLSolution.at(0) == "SOLVED")
-            return;
     std::cout << "error solving Oll layer...." << endl;
 }
-
+/* ----------------------------------------------------------------------------------------------------------------------------------------
+   THIS FUNCTION CALLS THE PLL LOGIC FUNCTION AND CHECKS IT ON WHICH SIDE THE PLL CONDITIONS WILL MATCHES AND SOLVES THE PLL LAYER.
+   ----------------------------------------------------------------------------------------------------------------------------------------*/
 void makeCubie::pll_solver()
 {
     PLLSolution.clear();
@@ -3675,11 +3787,15 @@ void makeCubie::pll_solver()
         // changing the orientation...
         std::rotate(orientation.begin(), orientation.end() - 1, orientation.end());
     }
-    if (PLLSolution.size() > 0)
-        if (PLLSolution.at(0) == "SOLVED")
-            return;
     std::cout << "error solving Pll layer...." << endl;
 }
+/* ----------------------------------------------------------------------------------------------------------------------------------------
+   THIS FUNCTION CODES THE PLL LAYER IN 0, 1, 2, 3 IN RESPECT TO THEIR COLOR ORIENTATION CHARACTER.
+   THE FIRST THREE CHAR IS FOR FIRST ROW OF FACE AND
+   THE OTHER THREE CHAR IS FOR FIRST ROW OF RIGHT AND
+   THE OTHER THREE CHAR IS FOR FIRST ROW OF BACK AND
+   THE LAST THREE CHARACHTER IS FOR FIRST ROW OF LEFT
+   ----------------------------------------------------------------------------------------------------------------------------------------*/
 string makeCubie::pll_coder(const vector<char> &orientation)
 {
     string PLLcode{};
@@ -3705,10 +3821,15 @@ string makeCubie::pll_coder(const vector<char> &orientation)
                 PLLcode += to_string(i);
     return PLLcode;
 }
+/* ----------------------------------------------------------------------------------------------------------------------------------------
+   THIS FUNCTION HAVE SOLUTION FOR ALL THE CONDITIONS POSSIBLE IN PLL
+   LAYER AND IT DIRECTLY CALLS THE SETALGO TO APPLY THE CONDITION.
+   IT RETURNS TRUE IF THE CONDITION MATCHES THE CODE AND FALSE WHEN PLLCODE DOSEN'T MATCHES ANY CONDITION
+   ----------------------------------------------------------------------------------------------------------------------------------------*/
 bool makeCubie::pll_logic(const int &side, string_view PLLcode)
 {
     if (PLLcode == "000111222333")
-        PLLSolution.push_back("SOLVED");
+        PLLSolution.push_back("");
     // A-PERMS..
     else if (PLLcode == "001212320133")
         setalgo(side, "R2 B2 R F RP B2 R FP R", "pll");
@@ -6586,7 +6707,7 @@ string makeCubie::shortest_cube_solution()
     this->applySolution("oll");
     this->tempSolution = best_pll_solutions.at(bestSolutionIndex);
     this->applySolution("pll");
-    return side_color(solutionSides.at(bestSolutionIndex));
+    return side_name(solutionSides.at(bestSolutionIndex));
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CODES THE OLL LAYER IN '1' AND '0' CHARACTER.
@@ -6643,7 +6764,7 @@ bool makeCubie::oll_logic(const int &side, string_view OLLcode)
 {
     if (OLLcode == "111111111000000000000")
     {
-        OLLSolution.push_back("SOLVED");
+        OLLSolution.push_back("");
     }
     // DOT CONDITIONS...
     else if (OLLcode == "000010000010111010111")
@@ -6978,9 +7099,9 @@ void makeCubie::applySolution(string_view applySolutionOn)
     tempSolution.clear();
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
-   THSI FUNCITON IS ONLY USED BY THE CUBE_SETTER TO PROVIDE COLOR NAME STRING IN EXCHANGE OF INTEGER VALUE OF THE COLOR
+   THSI FUNCITON PROVIDES COLOR NAME STRING IN EXCHANGE OF INTEGER VALUE OF THE COLOR
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-string side_color(const int &colorAsci)
+string side_name(const int &colorAsci)
 {
     switch (colorAsci)
     {
@@ -7102,7 +7223,10 @@ void solution_optimizer(vector<std::string> &solution)
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 void makeCubie::algorithmCorrector(const int &side, vector<string> &algorithm)
 {
-    if (side == face)
+    if (algorithm.at(0) == "")
+    {
+    }
+    else if (side == face)
     {
         for (size_t i{0}; i < algorithm.size(); i++)
         {
@@ -7287,11 +7411,12 @@ void makeCubie::cube_reorienter(makeCubie &source, const int &side)
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CHECKS IF THE CUBE REQUIRED TO SOLVE THE PLL LAYER...
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-bool makeCubie::is_pll_solve_needed(const makeCubie &source)
+void makeCubie::correct_last_layer()
 {
-    if (source.cubeMain[face].at(0).at(0) == source.cubeMain[face].at(0).at(1) && source.cubeMain[face].at(0).at(1) == source.cubeMain[face].at(0).at(2) && source.cubeMain[right].at(0).at(0) == source.cubeMain[right].at(0).at(1) && source.cubeMain[right].at(0).at(1) == source.cubeMain[right].at(0).at(2) && source.cubeMain[back].at(0).at(0) == source.cubeMain[back].at(0).at(1) && source.cubeMain[back].at(0).at(1) == source.cubeMain[back].at(0).at(2) && source.cubeMain[left].at(0).at(0) == source.cubeMain[left].at(0).at(1) && source.cubeMain[left].at(0).at(1) == source.cubeMain[left].at(0).at(2))
-    {
-        return true;
-    }
-    return false;
+    for (int move{0}; move < 4; move++)
+        if (cubeMain[face].at(0).at(1) != cubeMain[face].at(1).at(1))
+            setalgo(face, "U", "pll");
+        else
+            break;
+    solution_optimizer(PLLSolution);
 }

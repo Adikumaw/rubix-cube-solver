@@ -14,6 +14,9 @@ using namespace std;
 
 class makeCubie
 {
+   friend ostream &operator<<(ostream &os, const makeCubie &cube);
+   friend istream &operator>>(istream &is, makeCubie &cube);
+
 private:
    vector<vector<vector<char>>> cubeMain{};
    vector<char> sideBar, sideBarBackup, cornerColors;
@@ -45,7 +48,6 @@ private:
 
 public:
    static int trials;
-   void speedtester();
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       CONSTRUCTORS FOR MAKECUBIE CLASS
       ----------------------------------------------------------------------------------------------------------------------------------------*/
@@ -77,6 +79,7 @@ public:
    string shortest_cube_solution();
    void oll_solver();
    void pll_solver();
+   void correct_last_layer();
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       THE THREE BELLOW FUNCITON ARE FOR SIDE ROTATION LOGICS OF THE CUBE.
       ----------------------------------------------------------------------------------------------------------------------------------------*/
@@ -97,7 +100,6 @@ public:
    string pll_coder(const vector<char> &orientation);
    bool pll_logic(const int &side, string_view PLLcode);
    bool oll_logic(const int &side, string_view OLLcode);
-   bool is_pll_solve_needed(const makeCubie &source);
    int count_bottom_lyr_edge(const makeCubie &source);
    vector<char> get_equator_colors_orientation(const makeCubie &source);
    vector<char> get_cross_colors_orientation(const makeCubie &source);
