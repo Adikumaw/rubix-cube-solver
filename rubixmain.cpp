@@ -3,14 +3,13 @@
 #include <vector>
 #include <chrono>
 #include <thread>
-#include "makeCubie.h"
+#include "solver.h"
 
 using namespace std;
 
 int main()
 {
-    makeCubie newCube;
-
+    solver newCube;
     cin >> newCube;
     // Start the timer
     auto startTime = std::chrono::high_resolution_clock::now();
