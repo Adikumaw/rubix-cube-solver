@@ -3,43 +3,41 @@
 #include <vector>
 #include <chrono>
 #include <thread>
-#include "makeCubie.h"
+#include "solver.h"
 
 using namespace std;
 
 int main()
 {
-    makeCubie newCube;
-    newCube.setcube();
+    solver newCube;
+    cin >> newCube;
     // Start the timer
     auto startTime = std::chrono::high_resolution_clock::now();
     // CALLING CROSS_SOLVER..........
-    newCube.crossSolver();
-    cout << "---------------------------------------------------------------" << endl;
-    cout << "CROSS SOLUTION:  ";
-    newCube.getCrossSolution();
-    newCube.getcube();
-    cout << "\n---------------------------------------------------------------" << endl;
+    string sideName = newCube.shortest_cube_solution();
+
+    cout << "\n\n-----------------------------------------------------------------------------------------\n\t\t\t\t BEST SOLUTION ON \"" << sideName << "\" SIDE \t\t\t\t\n-----------------------------------------------------------------------------------------\n"
+         << endl;
+    // SHOWING TOTAL MOVES COUNT.......
+    cout << "TOTAL MOVES COUNT : " << newCube.get_solution_size("crs") + newCube.get_solution_size("f2l") + newCube.get_solution_size("oll") + newCube.get_solution_size("pll") << endl;
+
+    cout << "-----------------------------------------------------------------------------------------" << endl;
+    cout << "CROSS SOLUTION IN " << newCube.get_solution_size("crs") << " MOVES:  ";
+    newCube.get_cross_solution();
     // CALLING F2L_SOLVER..........
-    newCube.shortestF2LSolver();
-    cout << "\n---------------------------------------------------------------" << endl;
-    cout << "F2L SOLUTION:  ";
-    newCube.getF2LSolution();
-    cout << "\n---------------------------------------------------------------" << endl;
+    cout << "\n-----------------------------------------------------------------------------------------" << endl;
+    cout << "F2L SOLUTION IN " << newCube.get_solution_size("f2l") << " MOVES:  ";
+    newCube.get_f2l_solution();
     // CALLING OLL_SOLVER..........
-    newCube.OLLSolver();
-    cout << "---------------------------------------------------------------" << endl;
-    cout << "OLL SOLUTION:  ";
-    newCube.getOLLSolution();
-    cout << "\n---------------------------------------------------------------" << endl;
-    // newCube.getcube();
-
-    // faceTranspose(&cubeMain);
-    // using namespace std::this_thread; // sleep_for, sleep_until
-    // chrono::sleep_until(system_clock::now() + seconds(1));
-    // using namespace std::chrono; // nanoseconds, system_clock, seconds
-    // this_thread::sleep_for(chrono::nanoseconds(60000000));
-
+    cout << "\n-----------------------------------------------------------------------------------------" << endl;
+    cout << "OLL SOLUTION IN " << newCube.get_solution_size("oll") << " MOVES:  ";
+    newCube.get_oll_solution();
+    // CALLING PLL_SOLVER..........
+    cout << "\n-----------------------------------------------------------------------------------------" << endl;
+    cout << "PLL SOLUTION IN " << newCube.get_solution_size("pll") << " MOVES:  ";
+    newCube.get_pll_solution();
+    cout << "\n-----------------------------------------------------------------------------------------" << endl;
+    // newCube.get_cube();
     // Stop the timer
     auto endTime = std::chrono::high_resolution_clock::now();
 
