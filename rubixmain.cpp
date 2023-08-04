@@ -1,14 +1,17 @@
 #include <iostream>
 #include <string>
-#include <vector>
 #include <chrono>
 #include <thread>
 #include "solver.h"
+#include "heading.h"
+#include "miscellaneous.h"
 
 using namespace std;
 
 int main()
 {
+    printTitle();
+    printBanner("Aditya Kumawat");
     solver newCube;
     cin >> newCube;
     // Start the timer
@@ -16,25 +19,26 @@ int main()
     // CALLING CROSS_SOLVER..........
     string sideName = newCube.shortest_cube_solution();
 
-    cout << "\n\n-----------------------------------------------------------------------------------------\n\t\t\t\t BEST SOLUTION ON \"" << sideName << "\" SIDE \t\t\t\t\n-----------------------------------------------------------------------------------------\n"
+    cout << "\n\n-----------------------------------------------------------------------------------------\n\t\t\t   BEST SOLUTION ON \"" << BOLD << sideName << DEFAULT << "\" SIDE \t\t\t\n-----------------------------------------------------------------------------------------\n"
          << endl;
     // SHOWING TOTAL MOVES COUNT.......
-    cout << "TOTAL MOVES COUNT : " << newCube.get_solution_size("crs") + newCube.get_solution_size("f2l") + newCube.get_solution_size("oll") + newCube.get_solution_size("pll") << endl;
+    set_font_color("TOTAL MOVES COUNT : ", "green");
+    cout << RED << newCube.get_solution_size("crs") + newCube.get_solution_size("f2l") + newCube.get_solution_size("oll") + newCube.get_solution_size("pll") << DEFAULT << endl;
 
     cout << "-----------------------------------------------------------------------------------------" << endl;
-    cout << "CROSS SOLUTION IN " << newCube.get_solution_size("crs") << " MOVES:  ";
+    set_font_color("CRS SOLUTION IN " + to_string(newCube.get_solution_size("crs")) + " MOVES:  ", "green");
     newCube.get_cross_solution();
     // CALLING F2L_SOLVER..........
     cout << "\n-----------------------------------------------------------------------------------------" << endl;
-    cout << "F2L SOLUTION IN " << newCube.get_solution_size("f2l") << " MOVES:  ";
+    set_font_color("F2L SOLUTION IN " + to_string(newCube.get_solution_size("f2l")) + " MOVES:  ", "green");
     newCube.get_f2l_solution();
     // CALLING OLL_SOLVER..........
     cout << "\n-----------------------------------------------------------------------------------------" << endl;
-    cout << "OLL SOLUTION IN " << newCube.get_solution_size("oll") << " MOVES:  ";
+    set_font_color("OLL SOLUTION IN " + to_string(newCube.get_solution_size("oll")) + " MOVES:  ", "green");
     newCube.get_oll_solution();
     // CALLING PLL_SOLVER..........
     cout << "\n-----------------------------------------------------------------------------------------" << endl;
-    cout << "PLL SOLUTION IN " << newCube.get_solution_size("pll") << " MOVES:  ";
+    set_font_color("PLL SOLUTION IN " + to_string(newCube.get_solution_size("pll")) + " MOVES:  ", "green");
     newCube.get_pll_solution();
     cout << "\n-----------------------------------------------------------------------------------------" << endl;
     // newCube.get_cube();
@@ -45,7 +49,8 @@ int main()
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
 
     // Display the time taken in the terminal window
-    std::cout << "Time taken: " << duration.count() << " milliseconds" << std::endl;
+    set_font_color("Time taken: ", "green");
+    std::cout << RED << duration.count() << DEFAULT << " milliseconds" << std::endl;
     getchar();
     return 0;
 }
