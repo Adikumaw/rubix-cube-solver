@@ -1,5 +1,6 @@
 #ifndef _CUBE_H_
-#define _CUBE_H_
+#define _CUBE_H_ 1
+#pragma once
 
 using namespace std;
 
@@ -53,7 +54,10 @@ public:
        SIDE ROTATION METHOD...
        ----------------------------------------------------------------------------------------------------------------------------------------*/
     void side_rotate(const int &side, string_view direction);
-
+    /* ----------------------------------------------------------------------------------------------------------------------------------------
+       SHOWS CUBE'S CURRENT STATUS...
+       ----------------------------------------------------------------------------------------------------------------------------------------*/
+    void cube_state();
     // CLOCKWISE ROTATIONS....
     void face_rotate_clockwise();
     void right_rotate_clockwise();
