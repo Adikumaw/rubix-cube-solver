@@ -1,4 +1,5 @@
 #include "solver.h"
+#include "colors.h"
 
 void solution_optimizer(vector<std::string> &solution);
 /* ----------------------------------------------------------------------------------------------------------------------------------------
@@ -39,42 +40,59 @@ solver &solver::operator=(const solver &src)
 void solver::get_cross_solution()
 {
     if (CrossSolution.at(0) == "")
-        std::cout << "SOLVED";
+        std::cout << BOLD << "SOLVED" << DEFAULT;
     else
+    {
+        cout << BOLD;
         for (size_t i{0}; i < CrossSolution.size(); i++)
-        {
             std::cout << CrossSolution.at(i) << " ";
-        }
+        cout << DEFAULT;
+    }
 }
 void solver::get_f2l_solution()
 {
+    int linebreak{0};
     if (F2LSolution.at(0) == "")
-        std::cout << "SOLVED";
+        std::cout << BOLD << "SOLVED" << DEFAULT;
     else
+    {
+        cout << BOLD;
         for (size_t i{0}; i < F2LSolution.size(); i++)
         {
+            if ((i % 22) == 0)
+            {
+                linebreak++;
+                if (linebreak == 2)
+                    std::cout << "\n                           ";
+            }
             std::cout << F2LSolution.at(i) << " ";
         }
+        cout << DEFAULT;
+    }
 }
 void solver::get_oll_solution()
 {
     if (OLLSolution.at(0) == "")
-        std::cout << "SOLVED";
+        std::cout << BOLD << "SOLVED" << DEFAULT;
     else
+    {
+        cout << BOLD;
         for (size_t i{0}; i < OLLSolution.size(); i++)
-        {
             std::cout << OLLSolution.at(i) << " ";
-        }
+        cout << DEFAULT;
+    }
 }
 void solver::get_pll_solution()
 {
     if (PLLSolution.at(0) == "")
-        std::cout << "SOLVED";
+        std::cout << BOLD << "SOLVED" << DEFAULT;
     else
+    {
+        cout << BOLD;
         for (size_t i{0}; i < PLLSolution.size(); i++)
-        {
             std::cout << PLLSolution.at(i) << " ";
-        }
+        cout << DEFAULT;
+    }
 }
 int solver::get_solution_size(string_view solutionName)
 {
@@ -1382,7 +1400,7 @@ void solver::f2l_solver(solver &temp_cube)
         temp_cube.ollSolutions.push_back(OLLSolution);
         temp_cube.pllSolutions.push_back(PLLSolution);
         trials++;
-        std::cout << "\r" << trials << " TIMES CUBE SOLVED...";
+        std::cout << "\r" << RED << trials << DEFAULT << " TIMES CUBE SOLVED...";
     }
     else
     {

@@ -1,12 +1,10 @@
 #ifndef _SOLVER_H_
-#define _SOLVER_H_
+#define _SOLVER_H_ 1
+#pragma once
 
 #include "cube.h"
-
-#include <cstdlib>
 #include <algorithm>
 #include <random>
-#include <utility>
 #include <string_view>
 
 using namespace std;
