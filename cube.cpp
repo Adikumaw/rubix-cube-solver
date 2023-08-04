@@ -1,4 +1,6 @@
 #include "cube.h"
+#include "miscellaneous.h"
+#include "colors.h"
 
 int cube::trials = 0;
 
@@ -20,71 +22,85 @@ ostream &operator<<(ostream &os, const cube &cube)
 }
 istream &operator>>(istream &is, cube &cube)
 {
-    int color{};
+    int color{}, side{};
+    string buff{};
     char ch{};
-    vector<vector<char>> temp_side{{'x', 'x', 'x'},
-                                   {'x', 'x', 'x'},
-                                   {'x', 'x', 'x'}};
-    for (int side{0}; side < 6; side++)
+    cube.cube_state();
+    for (int six_times{0}; six_times < 6; six_times++)
     {
-        switch (side)
+        switch (six_times)
         {
         case 0:
-            color = 0;
+            side = 0;
             break;
         case 1:
-            color = 3;
+            side = 3;
             break;
         case 2:
-            color = 1;
+            side = 1;
             break;
         case 3:
-            color = 2;
+            side = 2;
             break;
         case 4:
-            color = 4;
+            side = 4;
             break;
         case 5:
-            color = 5;
+            side = 5;
             break;
         default:
             break;
         }
-        std::cout << "ENTER THE COLOR OF \"" << side_name(color) << "\" SIDE OF THE CUBE: " << endl;
-        for (int row{0}; row < 3; row++)
+        buff = "ENTER THE COLORS OF \"" BOLD + side_name(side) + DEFAULT "\" SIDE OF THE CUBE: \n";
+        std::cout << buff;
+        if (six_times < 4)
         {
-            for (int col{0}; col < 3; col++)
+            for (int row{0}, r{0}; row < 3; row++, r++)
             {
-                cin >> ch;
-                temp_side.at(row).at(col) = ch;
+                cout << "Row_" << r << "-> ";
+                // buff += "Row" + row + ' ';
+                for (int col{0}, r{0}; col < 3; col++, r++)
+                {
+                    cin >> ch;
+                    cube.cubeMain.at(side).at(row).at(col) = ch;
+                    // temp_side.at(row).at(col) = ch;
+                }
+                buff += '\n';
             }
+            clearLines(14);
+            cube.cube_state();
         }
-        switch (side)
+        else if (six_times == 4)
         {
-        case 0:
-            cube.cubeMain.at(color) = temp_side;
-            break;
-        case 1:
-            cube.cubeMain.at(color) = temp_side;
-            break;
-        case 2:
-            cube.cubeMain.at(color) = temp_side;
-            break;
-        case 3:
-            cube.cubeMain.at(color) = temp_side;
-            break;
-        case 4:
-            for (int row_1{0}, col_2{0}; row_1 < 3; row_1++, col_2++)
-                for (int col_1{0}, row_2{2}; col_1 < 3; col_1++, row_2--)
-                    cube.cubeMain.at(side).at(row_1).at(col_1) = temp_side.at(row_2).at(col_2);
-            break;
-        case 5:
-            for (int row_1{0}, col_2{2}; row_1 < 3; row_1++, col_2--)
-                for (int col_1{0}, row_2{0}; col_1 < 3; col_1++, row_2++)
-                    cube.cubeMain.at(side).at(row_1).at(col_1) = temp_side.at(row_2).at(col_2);
-            break;
-        default:
-            break;
+            for (int col{2}, r{0}; col >= 0; col--, r++)
+            {
+                cout << "Row_" << r << "-> ";
+                for (int row{0}; row < 3; row++)
+                {
+                    cin >> ch;
+                    buff += ch + ' ';
+                    cube.cubeMain.at(side).at(row).at(col) = ch;
+                }
+                buff += '\n';
+            }
+            clearLines(14);
+            cube.cube_state();
+        }
+        else if (six_times == 5)
+        {
+            for (int col{0}, r{0}; col < 3; col++, r++)
+            {
+                cout << "Row_" << r << "-> ";
+                for (int row{2}; row >= 0; row--)
+                {
+                    cin >> ch;
+                    buff += ch + ' ';
+                    cube.cubeMain.at(side).at(row).at(col) = ch;
+                }
+                buff += '\n';
+            }
+            clearLines(14);
+            cube.cube_state();
         }
     }
     cout << endl;
@@ -123,6 +139,132 @@ cube::cube(const cube &src)
         }
     }
 }
+/* ----------------------------------------------------------------------------------------------------------------------------------------
+   SHOWS CUBE'S CURRENT STATUS...
+   ----------------------------------------------------------------------------------------------------------------------------------------*/
+void cube::cube_state()
+{
+    cout << "\n   FACE        RIGHT       BACK        LEFT        TOP        BOTTOM" << endl;
+    cout << " __ __ __    __ __ __    __ __ __    __ __ __    __ __ __    __ __ __ \n";
+    // first row of all sides...
+    cout << "|";
+    set_bg_clr(" ", ch_to_clr(cubeMain[face][0][0]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[face][0][1]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[face][0][2]));
+    cout << "|  |";
+    set_bg_clr(" ", ch_to_clr(cubeMain[right][0][0]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[right][0][1]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[right][0][2]));
+    cout << "|  |";
+    set_bg_clr(" ", ch_to_clr(cubeMain[back][0][0]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[back][0][1]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[back][0][2]));
+    cout << "|  |";
+    set_bg_clr(" ", ch_to_clr(cubeMain[left][0][0]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[left][0][1]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[left][0][2]));
+    cout << "|  |";
+    set_bg_clr(" ", ch_to_clr(cubeMain[top][0][0]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[top][0][1]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[top][0][2]));
+    cout << "|  |";
+    set_bg_clr(" ", ch_to_clr(cubeMain[bottom][0][0]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[bottom][0][1]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[bottom][0][2]));
+    cout << "|\n";
+    cout << " __ __ __    __ __ __    __ __ __    __ __ __    __ __ __    __ __ __ \n";
+    // second row of all sides...
+    cout << "|";
+    set_bg_clr(" ", ch_to_clr(cubeMain[face][1][0]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[face][1][1]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[face][1][2]));
+    cout << "|  |";
+    set_bg_clr(" ", ch_to_clr(cubeMain[right][1][0]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[right][1][1]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[right][1][2]));
+    cout << "|  |";
+    set_bg_clr(" ", ch_to_clr(cubeMain[back][1][0]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[back][1][1]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[back][1][2]));
+    cout << "|  |";
+    set_bg_clr(" ", ch_to_clr(cubeMain[left][1][0]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[left][1][1]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[left][1][2]));
+    cout << "|  |";
+    set_bg_clr(" ", ch_to_clr(cubeMain[top][1][0]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[top][1][1]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[top][1][2]));
+    cout << "|  |";
+    set_bg_clr(" ", ch_to_clr(cubeMain[bottom][1][0]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[bottom][1][1]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[bottom][1][2]));
+    cout << "|\n";
+    cout << " __ __ __    __ __ __    __ __ __    __ __ __    __ __ __    __ __ __ \n";
+    // third row of all sides...
+    cout << "|";
+    set_bg_clr(" ", ch_to_clr(cubeMain[face][2][0]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[face][2][1]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[face][2][2]));
+    cout << "|  |";
+    set_bg_clr(" ", ch_to_clr(cubeMain[right][2][0]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[right][2][1]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[right][2][2]));
+    cout << "|  |";
+    set_bg_clr(" ", ch_to_clr(cubeMain[back][2][0]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[back][2][1]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[back][2][2]));
+    cout << "|  |";
+    set_bg_clr(" ", ch_to_clr(cubeMain[left][2][0]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[left][2][1]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[left][2][2]));
+    cout << "|  |";
+    set_bg_clr(" ", ch_to_clr(cubeMain[top][2][0]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[top][2][1]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[top][2][2]));
+    cout << "|  |";
+    set_bg_clr(" ", ch_to_clr(cubeMain[bottom][2][0]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[bottom][2][1]));
+    cout << " ";
+    set_bg_clr(" ", ch_to_clr(cubeMain[bottom][2][2]));
+    cout << "|\n"
+         << endl;
+}
+
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    ROTATION METHODS....
    ----------------------------------------------------------------------------------------------------------------------------------------*/
