@@ -5991,18 +5991,23 @@ string solver::shortest_cube_solution()
             bestSolutionIndex = i;
         }
     }
+    // correcting solution on the basis of user orientation...
     algorithmCorrector(solutionSides.at(bestSolutionIndex), best_crs_solutions.at(bestSolutionIndex));
     algorithmCorrector(solutionSides.at(bestSolutionIndex), best_f2l_solutions.at(bestSolutionIndex));
     algorithmCorrector(solutionSides.at(bestSolutionIndex), best_oll_solutions.at(bestSolutionIndex));
     algorithmCorrector(solutionSides.at(bestSolutionIndex), best_pll_solutions.at(bestSolutionIndex));
-    this->tempSolution = best_crs_solutions.at(bestSolutionIndex);
-    this->applySolution("crs");
-    this->tempSolution = best_f2l_solutions.at(bestSolutionIndex);
-    this->applySolution("f2l");
-    this->tempSolution = best_oll_solutions.at(bestSolutionIndex);
-    this->applySolution("oll");
-    this->tempSolution = best_pll_solutions.at(bestSolutionIndex);
-    this->applySolution("pll");
+    this->CrossSolution = best_crs_solutions.at(bestSolutionIndex);
+    this->F2LSolution = best_f2l_solutions.at(bestSolutionIndex);
+    this->OLLSolution = best_oll_solutions.at(bestSolutionIndex);
+    this->PLLSolution = best_pll_solutions.at(bestSolutionIndex);
+    // this->tempSolution = best_crs_solutions.at(bestSolutionIndex);
+    // this->applySolution("crs");
+    // this->tempSolution = best_f2l_solutions.at(bestSolutionIndex);
+    // this->applySolution("f2l");
+    // this->tempSolution = best_oll_solutions.at(bestSolutionIndex);
+    // this->applySolution("oll");
+    // this->tempSolution = best_pll_solutions.at(bestSolutionIndex);
+    // this->applySolution("pll");
     return side_name(solutionSides.at(bestSolutionIndex));
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
@@ -6489,10 +6494,17 @@ void solution_optimizer(vector<std::string> &solution)
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 void solver::algorithmCorrector(const int &side, vector<string> &algorithm)
 {
-    if (algorithm.at(0) == "")
+    if (algorithm.size() == 0)
     {
+        algorithm.push_back("");
+        return;
     }
-    else if (side == face)
+    else
+    {
+        if (algorithm.at(0) == "")
+            return;
+    }
+    if (side == face)
     {
         for (size_t i{0}; i < algorithm.size(); i++)
         {
