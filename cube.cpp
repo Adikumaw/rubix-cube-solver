@@ -6,18 +6,7 @@ int cube::trials = 0;
 
 ostream &operator<<(ostream &os, const cube &cube)
 {
-    for (size_t i{0}; i < cube.cubeMain.size(); i++)
-    {
-        std::cout << "\nTHE ELEMENTS OF \"" << side_name(i) << "\" SIDE ARE:" << endl;
-        for (size_t j{0}; j < cube.cubeMain.at(i).size(); j++)
-        {
-            for (size_t k{0}; k < cube.cubeMain.at(i).at(j).size(); k++)
-            {
-                std::cout << cube.cubeMain.at(i).at(j).at(k) << " ";
-            }
-            std::cout << endl;
-        }
-    }
+    cube.cube_state();
     return os;
 }
 istream &operator>>(istream &is, cube &cube)
@@ -55,7 +44,7 @@ istream &operator>>(istream &is, cube &cube)
         std::cout << buff;
         if (six_times < 4)
         {
-            for (int row{0}, r{0}; row < 3; row++, r++)
+            for (int row{0}, r{1}; row < 3; row++, r++)
             {
                 cout << "Row_" << r << "-> ";
                 // buff += "Row" + row + ' ';
@@ -72,7 +61,7 @@ istream &operator>>(istream &is, cube &cube)
         }
         else if (six_times == 4)
         {
-            for (int col{2}, r{0}; col >= 0; col--, r++)
+            for (int col{2}, r{1}; col >= 0; col--, r++)
             {
                 cout << "Row_" << r << "-> ";
                 for (int row{0}; row < 3; row++)
@@ -88,7 +77,7 @@ istream &operator>>(istream &is, cube &cube)
         }
         else if (six_times == 5)
         {
-            for (int col{0}, r{0}; col < 3; col++, r++)
+            for (int col{0}, r{1}; col < 3; col++, r++)
             {
                 cout << "Row_" << r << "-> ";
                 for (int row{2}; row >= 0; row--)
@@ -142,7 +131,7 @@ cube::cube(const cube &src)
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    SHOWS CUBE'S CURRENT STATUS...
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-void cube::cube_state()
+void cube::cube_state() const
 {
     cout << "\n   FACE        RIGHT       BACK        LEFT        TOP        BOTTOM" << endl;
     cout << " __ __ __    __ __ __    __ __ __    __ __ __    __ __ __    __ __ __ \n";
