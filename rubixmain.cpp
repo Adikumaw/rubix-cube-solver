@@ -46,7 +46,6 @@ int main()
     // Display the time taken in the terminal window
     set_font_color("Time taken: ", "green");
     std::cout << RED << duration.count() << DEFAULT << " milliseconds" << std::endl;
-    cout << newCube;
     getchar();
     return 0;
 }
