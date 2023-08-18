@@ -22,8 +22,7 @@ int main()
     auto endTime = std::chrono::high_resolution_clock::now();
     // Calculate the duration
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+    // Printing the solution
     newCube.print_solution(duration.count());
-    cin.clear();
-    getchar();
     return 0;
 }
