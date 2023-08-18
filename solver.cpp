@@ -1,5 +1,7 @@
 #include "solver.h"
 #include "colors.h"
+#include <thread>
+#include <chrono>
 
 void solution_optimizer(vector<std::string> &solution);
 /* ----------------------------------------------------------------------------------------------------------------------------------------
@@ -37,22 +39,26 @@ solver &solver::operator=(const solver &src)
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    SETTER AND GETTER FOR THE RUBIX CUBE
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-void solver::get_cross_solution()
+void solver::get_cross_solution(int current_step)
 {
-    if (CrossSolution.at(0) == "")
+    if (CrossSolution.size() == 0)
         std::cout << BOLD << "SOLVED" << DEFAULT;
     else
     {
         cout << BOLD;
         for (size_t i{0}; i < CrossSolution.size(); i++)
-            std::cout << CrossSolution.at(i) << " ";
+            if (i == current_step)
+                std::cout << "[" << CrossSolution.at(i) << "]"
+                          << " ";
+            else
+                std::cout << CrossSolution.at(i) << " ";
         cout << DEFAULT;
     }
 }
-void solver::get_f2l_solution()
+int solver::get_f2l_solution(int current_step)
 {
     int linebreak{0};
-    if (F2LSolution.at(0) == "")
+    if (F2LSolution.size() == 0)
         std::cout << BOLD << "SOLVED" << DEFAULT;
     else
     {
@@ -65,60 +71,162 @@ void solver::get_f2l_solution()
                 if (linebreak == 2)
                     std::cout << "\n                           ";
             }
-            std::cout << F2LSolution.at(i) << " ";
+            if (i == current_step)
+                std::cout << "[" << F2LSolution.at(i) << "]"
+                          << " ";
+            else
+                std::cout << F2LSolution.at(i) << " ";
         }
         cout << DEFAULT;
+        return linebreak - 1;
     }
+    return 0;
 }
-void solver::get_oll_solution()
+void solver::get_oll_solution(int current_step)
 {
-    if (OLLSolution.at(0) == "")
+    if (OLLSolution.size() == 0)
         std::cout << BOLD << "SOLVED" << DEFAULT;
     else
     {
         cout << BOLD;
         for (size_t i{0}; i < OLLSolution.size(); i++)
-            std::cout << OLLSolution.at(i) << " ";
+            if (i == current_step)
+                std::cout << "[" << OLLSolution.at(i) << "]"
+                          << " ";
+            else
+                std::cout << OLLSolution.at(i) << " ";
         cout << DEFAULT;
     }
 }
-void solver::get_pll_solution()
+void solver::get_pll_solution(int current_step)
 {
-    if (PLLSolution.at(0) == "")
+    if (PLLSolution.size() == 0)
         std::cout << BOLD << "SOLVED" << DEFAULT;
     else
     {
         cout << BOLD;
         for (size_t i{0}; i < PLLSolution.size(); i++)
-            std::cout << PLLSolution.at(i) << " ";
+            if (i == current_step)
+                std::cout << "[" << PLLSolution.at(i) << "]"
+                          << " ";
+            else
+                std::cout << PLLSolution.at(i) << " ";
         cout << DEFAULT;
     }
+}
+int solver::get_total_solution_size()
+{
+    return get_solution_size("crs") + get_solution_size("f2l") + get_solution_size("oll") + get_solution_size("pll");
 }
 int solver::get_solution_size(string_view solutionName)
 {
     if (solutionName == "crs")
-        if (CrossSolution.at(0) == "")
+        if (CrossSolution.size() == 0)
             return 0;
         else
             return CrossSolution.size();
     else if (solutionName == "f2l")
-        if (F2LSolution.at(0) == "")
+        if (F2LSolution.size() == 0)
             return 0;
         else
             return F2LSolution.size();
     else if (solutionName == "oll")
-        if (OLLSolution.at(0) == "")
+        if (OLLSolution.size() == 0)
             return 0;
         else
             return OLLSolution.size();
     else if (solutionName == "pll")
-        if (PLLSolution.at(0) == "")
+        if (PLLSolution.size() == 0)
             return 0;
         else
             return PLLSolution.size();
     return -1;
 }
-
+void solver::print_solution(int duration)
+{
+    unsigned int current_step{0};
+    int total_solution_count{get_total_solution_size()}, choice;
+    vector<string> total_steps;
+    total_steps.insert(total_steps.end(), CrossSolution.begin(), CrossSolution.end());
+    total_steps.insert(total_steps.end(), F2LSolution.begin(), F2LSolution.end());
+    total_steps.insert(total_steps.end(), OLLSolution.begin(), OLLSolution.end());
+    total_steps.insert(total_steps.end(), PLLSolution.begin(), PLLSolution.end());
+    // best solution_on banner...
+    string best_solution_banner = "\n\n-----------------------------------------------------------------------------------------\n\t\t\t   BEST SOLUTION ON \"";
+    best_solution_banner += BOLD + side_name(solution_side) + DEFAULT;
+    best_solution_banner += "\" SIDE \t\t\t\n-----------------------------------------------------------------------------------------\n\n";
+    cout << best_solution_banner;
+    // SHOWING TOTAL MOVES COUNT.......
+    set_font_color("TOTAL MOVES COUNT : ", "green");
+    cout << RED << total_solution_count << DEFAULT << endl;
+    // printing solutions in formated way...
+    cout << "-----------------------------------------------------------------------------------------" << endl;
+    set_font_color("CRS SOLUTION IN " + to_string(get_solution_size("crs")) + " MOVES:  ", "green");
+    get_cross_solution(current_step);
+    cout << "\n-----------------------------------------------------------------------------------------" << endl;
+    set_font_color("F2L SOLUTION IN " + to_string(get_solution_size("f2l")) + " MOVES:  ", "green");
+    current_step -= get_solution_size("crs");
+    // taking how many extra lines does f2l solution will take....
+    int f2l_line = get_f2l_solution(current_step);
+    cout << "\n-----------------------------------------------------------------------------------------" << endl;
+    set_font_color("OLL SOLUTION IN " + to_string(get_solution_size("oll")) + " MOVES:  ", "green");
+    current_step -= get_solution_size("f2l");
+    get_oll_solution(current_step);
+    cout << "\n-----------------------------------------------------------------------------------------" << endl;
+    set_font_color("PLL SOLUTION IN " + to_string(get_solution_size("pll")) + " MOVES:  ", "green");
+    current_step -= get_solution_size("oll");
+    get_pll_solution(current_step);
+    cout << "\n-----------------------------------------------------------------------------------------" << endl;
+    // Display the time taken in the terminal window
+    set_font_color("Time taken: ", "green");
+    std::cout << RED << duration << DEFAULT << " milliseconds" << std::endl;
+    // showing options for continue and end....
+    cout << "Press 1 to continue STEPS or 0 to exit: ";
+    cin >> choice;
+    if (choice == 0)
+    {
+        return;
+    }
+    // looping till all the steps finishes
+    for (int i{0}; i < total_solution_count; i++)
+    {
+        current_step = i;
+        // Applying current step to the cube...
+        setalgo(0, total_steps.at(i), "null");
+        clearLines(28 + f2l_line);
+        cube_state();
+        std::cout << RED << trials << DEFAULT << " TIMES CUBE SOLVED...";
+        cout << best_solution_banner;
+        // SHOWING TOTAL MOVES COUNT.......
+        set_font_color("TOTAL MOVES COUNT : ", "green");
+        cout << RED << total_solution_count << DEFAULT << endl;
+        // Printing solutions in formated way...
+        cout << "-----------------------------------------------------------------------------------------" << endl;
+        set_font_color("CRS SOLUTION IN " + to_string(get_solution_size("crs")) + " MOVES:  ", "green");
+        get_cross_solution(current_step);
+        cout << "\n-----------------------------------------------------------------------------------------" << endl;
+        set_font_color("F2L SOLUTION IN " + to_string(get_solution_size("f2l")) + " MOVES:  ", "green");
+        current_step -= get_solution_size("crs");
+        get_f2l_solution(current_step);
+        cout << "\n-----------------------------------------------------------------------------------------" << endl;
+        set_font_color("OLL SOLUTION IN " + to_string(get_solution_size("oll")) + " MOVES:  ", "green");
+        current_step -= get_solution_size("f2l");
+        get_oll_solution(current_step);
+        cout << "\n-----------------------------------------------------------------------------------------" << endl;
+        set_font_color("PLL SOLUTION IN " + to_string(get_solution_size("pll")) + " MOVES:  ", "green");
+        current_step -= get_solution_size("oll");
+        get_pll_solution(current_step);
+        cout << "\n-----------------------------------------------------------------------------------------" << endl;
+        // Display the time taken in the terminal window
+        set_font_color("Time taken: ", "green");
+        std::cout << RED << duration << DEFAULT << " milliseconds" << std::endl;
+        // Display current step...
+        set_font_color("Current step => ", "green");
+        std::cout << RED << total_steps.at(i) << DEFAULT << std::endl;
+        // Holding the program for two seconds...
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+    }
+}
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION SOLVES THE BOTTOM CROSS OF TEH RUBIX CUBE...
    ----------------------------------------------------------------------------------------------------------------------------------------*/
@@ -3125,7 +3233,7 @@ string solver::pll_coder(const vector<char> &orientation)
 bool solver::pll_logic(const int &side, string_view PLLcode)
 {
     if (PLLcode == "000111222333")
-        PLLSolution.push_back("");
+        return true;
     // A-PERMS..
     else if (PLLcode == "001212320133")
         setalgo(side, "R2 B2 R F RP B2 R FP R", "pll");
@@ -5901,9 +6009,9 @@ void solver::setalgo(const int &side, string str_algo, string_view applySolution
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CALLS THE F2LSOLVER ON TEMPRORY CUBE UNTIL IT FINDES THE SHORTEST POSSIBLE F2L SOLUTION.
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-string solver::shortest_cube_solution()
+void solver::shortest_cube_solution()
 {
-    int f2lSolutionsize{0}, side{0}, bestSolutionIndex{0}, bestSolutionSize{0};
+    int side{0}, bestSolutionIndex{0}, bestSolutionSize{0};
     solver solveF2L(*this), passF2L(*this), passCrs{*this}, temp_cube(*this);
     vector<int> solutionSides{};
     vector<vector<string>> crs_solutions_on_one_side, f2l_solutions_on_one_side, oll_solutions_on_one_side, pll_solutions_on_one_side, best_crs_solutions, best_f2l_solutions, best_oll_solutions, best_pll_solutions;
@@ -6000,15 +6108,7 @@ string solver::shortest_cube_solution()
     this->F2LSolution = best_f2l_solutions.at(bestSolutionIndex);
     this->OLLSolution = best_oll_solutions.at(bestSolutionIndex);
     this->PLLSolution = best_pll_solutions.at(bestSolutionIndex);
-    // this->tempSolution = best_crs_solutions.at(bestSolutionIndex);
-    // this->applySolution("crs");
-    // this->tempSolution = best_f2l_solutions.at(bestSolutionIndex);
-    // this->applySolution("f2l");
-    // this->tempSolution = best_oll_solutions.at(bestSolutionIndex);
-    // this->applySolution("oll");
-    // this->tempSolution = best_pll_solutions.at(bestSolutionIndex);
-    // this->applySolution("pll");
-    return side_name(solutionSides.at(bestSolutionIndex));
+    this->solution_side = solutionSides.at(bestSolutionIndex);
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CODES THE OLL LAYER IN '1' AND '0' CHARACTER.
@@ -6065,7 +6165,7 @@ bool solver::oll_logic(const int &side, string_view OLLcode)
 {
     if (OLLcode == "111111111000000000000")
     {
-        OLLSolution.push_back("");
+        return true;
     }
     // DOT CONDITIONS...
     else if (OLLcode == "000010000010111010111")
@@ -6410,7 +6510,7 @@ void solution_optimizer(vector<std::string> &solution)
         if (checks == 0)
             break;
         checks = 0;
-        for (size_t i{0}, j{1}; i < (solution.size() - 1) && solution.size() > 2; i++, j++)
+        for (size_t i{0}, j{1}; i < (solution.size() - 1) && solution.size() >= 2; i++, j++)
         {
             if (solution.at(i) == solution.at(j))
             {
@@ -6496,13 +6596,15 @@ void solver::algorithmCorrector(const int &side, vector<string> &algorithm)
 {
     if (algorithm.size() == 0)
     {
-        algorithm.push_back("");
         return;
     }
     else
     {
         if (algorithm.at(0) == "")
+        {
+            cout << "error";
             return;
+        }
     }
     if (side == face)
     {

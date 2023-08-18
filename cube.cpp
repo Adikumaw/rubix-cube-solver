@@ -11,88 +11,98 @@ ostream &operator<<(ostream &os, const cube &cube)
 }
 istream &operator>>(istream &is, cube &cube)
 {
-    int color{}, side{};
+    bool colors_check{false};
+    int side{}, one_time{0};
     string buff{};
     char ch{};
-    cube.cube_state();
-    for (int six_times{0}; six_times < 6; six_times++)
+    while (1)
     {
-        switch (six_times)
+        cube.check_colors();
+        cube.cube_state();
+        for (int six_times{0}; six_times < 6; six_times++)
         {
-        case 0:
-            side = 0;
-            break;
-        case 1:
-            side = 3;
-            break;
-        case 2:
-            side = 1;
-            break;
-        case 3:
-            side = 2;
-            break;
-        case 4:
-            side = 4;
-            break;
-        case 5:
-            side = 5;
-            break;
-        default:
-            break;
-        }
-        buff = "ENTER THE COLORS OF \"" BOLD + side_name(side) + DEFAULT "\" SIDE OF THE CUBE: \n";
-        std::cout << buff;
-        if (six_times < 4)
-        {
-            for (int row{0}, r{1}; row < 3; row++, r++)
+            switch (six_times)
             {
-                cout << "Row_" << r << "-> ";
-                // buff += "Row" + row + ' ';
-                for (int col{0}, r{0}; col < 3; col++, r++)
-                {
-                    cin >> ch;
-                    cube.cubeMain.at(side).at(row).at(col) = ch;
-                    // temp_side.at(row).at(col) = ch;
-                }
-                buff += '\n';
+            case 0:
+                side = 0;
+                break;
+            case 1:
+                side = 3;
+                break;
+            case 2:
+                side = 1;
+                break;
+            case 3:
+                side = 2;
+                break;
+            case 4:
+                side = 4;
+                break;
+            case 5:
+                side = 5;
+                break;
+            default:
+                break;
             }
-            clearLines(14);
-            cube.cube_state();
-        }
-        else if (six_times == 4)
-        {
-            for (int col{2}, r{1}; col >= 0; col--, r++)
+            buff = "ENTER THE COLORS OF \"" BOLD + side_name(side) + DEFAULT "\" SIDE OF THE CUBE: \n";
+            std::cout << buff;
+            if (six_times < 4)
             {
-                cout << "Row_" << r << "-> ";
-                for (int row{0}; row < 3; row++)
+                for (int row{0}, r{1}; row < 3; row++, r++)
                 {
-                    cin >> ch;
-                    buff += ch + ' ';
-                    cube.cubeMain.at(side).at(row).at(col) = ch;
+                    cout << "Row_" << r << "-> ";
+                    for (int col{0}, r{0}; col < 3; col++, r++)
+                    {
+                        cin >> ch;
+                        cube.cubeMain.at(side).at(row).at(col) = ch;
+                    }
                 }
-                buff += '\n';
+                clearLines(15);
+                cube.check_colors();
+                cube.cube_state();
             }
-            clearLines(14);
-            cube.cube_state();
-        }
-        else if (six_times == 5)
-        {
-            for (int col{0}, r{1}; col < 3; col++, r++)
+            else if (six_times == 4)
             {
-                cout << "Row_" << r << "-> ";
-                for (int row{2}; row >= 0; row--)
+                for (int col{2}, r{1}; col >= 0; col--, r++)
                 {
-                    cin >> ch;
-                    buff += ch + ' ';
-                    cube.cubeMain.at(side).at(row).at(col) = ch;
+                    cout << "Row_" << r << "-> ";
+                    for (int row{0}; row < 3; row++)
+                    {
+                        cin >> ch;
+                        cube.cubeMain.at(side).at(row).at(col) = ch;
+                    }
                 }
-                buff += '\n';
+                clearLines(15);
+                cube.check_colors();
+                cube.cube_state();
             }
-            clearLines(14);
-            cube.cube_state();
+            else if (six_times == 5)
+            {
+                for (int col{0}, r{1}; col < 3; col++, r++)
+                {
+                    cout << "Row_" << r << "-> ";
+                    for (int row{2}; row >= 0; row--)
+                    {
+                        cin >> ch;
+                        cube.cubeMain.at(side).at(row).at(col) = ch;
+                    }
+                }
+                clearLines(15);
+                colors_check = cube.check_colors();
+                cube.cube_state();
+            }
         }
+        if (colors_check == false)
+        {
+            clearLines(11);
+            if (one_time == 0)
+                cout << RED << "Wrong input! please try again..." << DEFAULT << endl;
+            one_time++;
+            cube.default_cube();
+        }
+        else
+            break;
     }
-    cout << endl;
     return is;
 }
 
@@ -253,7 +263,71 @@ void cube::cube_state() const
     cout << "|\n"
          << endl;
 }
-
+/* ----------------------------------------------------------------------------------------------------------------------------------------
+   checks color correctness...
+   ----------------------------------------------------------------------------------------------------------------------------------------*/
+bool cube::check_colors()
+{
+    vector<int> colors(6, 0);
+    vector<char> colors_ch{'b', 'w', 'o', 'g', 'r', 'y'};
+    vector<string> color_asci{BLUE, WHITE, BLACK, GREEN, RED, YELLOW};
+    for (short l{0}; l < 6; l++)
+    {
+        for (short m{0}; m < 3; m++)
+        {
+            for (short n{0}; n < 3; n++)
+            {
+                switch (cubeMain.at(l).at(m).at(n))
+                {
+                case 'b':
+                    colors[0]++;
+                    break;
+                case 'w':
+                    colors[1]++;
+                    break;
+                case 'o':
+                    colors[2]++;
+                    break;
+                case 'g':
+                    colors[3]++;
+                    break;
+                case 'r':
+                    colors[4]++;
+                    break;
+                case 'y':
+                    colors[5]++;
+                    break;
+                };
+            }
+        }
+    }
+    // printing the colors count ...
+    for (int i{0}; i < colors.size(); i++)
+    {
+        cout << "[" << color_asci[i] << colors_ch[i] << ":" << colors.at(i) << DEFAULT << "]"
+             << "  ";
+    }
+    cout << endl;
+    // checking if the colors are 9 and assigning 'x' if not...
+    if (colors.at(0) != 9 || colors.at(1) != 9 || colors.at(2) != 9 || colors.at(3) != 9 || colors.at(4) != 9 || colors.at(5) != 9)
+    {
+        return false;
+    }
+    return true;
+}
+void cube::default_cube()
+{
+    for (short l{0}; l < 6; l++)
+    {
+        for (short m{0}; m < 3; m++)
+        {
+            for (short n{0}; n < 3; n++)
+            {
+                cubeMain.at(l).at(m).at(n) = 'x';
+            }
+        }
+    }
+}
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    ROTATION METHODS....
    ----------------------------------------------------------------------------------------------------------------------------------------*/

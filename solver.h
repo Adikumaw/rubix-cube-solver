@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <random>
 #include <string_view>
+#include "miscellaneous.h"
 
 using namespace std;
 
@@ -14,7 +15,7 @@ class solver : public cube
 private:
    vector<char> cornerColors;
    char topSideColor;
-   short edgeSide;
+   short edgeSide, solution_side;
    vector<string> CrossSolution, F2LSolution, OLLSolution, PLLSolution, tempSolution;
    vector<vector<string>> crossSolutions, f2lSolutions, ollSolutions, pllSolutions;
 
@@ -31,18 +32,20 @@ OPERATOR OVERLOADING
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       SETTERS AND GETTERS METHODS
       ----------------------------------------------------------------------------------------------------------------------------------------*/
-   void get_cross_solution();
-   void get_f2l_solution();
-   void get_oll_solution();
-   void get_pll_solution();
+   void get_cross_solution(int current_step);
+   int get_f2l_solution(int current_step);
+   void get_oll_solution(int current_step);
+   void get_pll_solution(int current_step);
+   int get_total_solution_size();
    int get_solution_size(string_view solutionName);
+   void print_solution(int duration);
 
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       CUBE SOLVING METHODS...
       ----------------------------------------------------------------------------------------------------------------------------------------*/
    void cross_solver(solver &storeSolution);
    void f2l_solver(solver &temp_cube);
-   string shortest_cube_solution();
+   void shortest_cube_solution();
    void oll_solver();
    void pll_solver();
    void correct_last_layer();
