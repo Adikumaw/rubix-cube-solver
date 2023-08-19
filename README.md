@@ -1,5 +1,5 @@
 # Rubik's Cube Solver *(by aditya kumawat)*
-`` _solver any scramble in seconds_ ``
+`` _solve any scramble in seconds_ ``
 
 ![Static Badge](https://img.shields.io/badge/C%2B%2B-language-blue)
 ## Introduction
@@ -52,7 +52,7 @@ The C.F.O.P method (Cross, F2L, OLL, PLL) is a popular and widely used solving t
 
 ## Acknowledgments
 
-Special thanks to the RUWIX community for their valuable insights and contributions to the C.F.O.P method. This program would not have been possible without the collective efforts of cubers worldwide.
+Special thanks to the [RUWIX]([url](https://ruwix.com/)) community for their valuable insights and contributions to the C.F.O.P method. This program would not have been possible without the collective efforts of cubers worldwide.
 ## Contact
 
 If you have any questions, suggestions, or encounter any issues with the program, feel free to contact me at kumawataditya105@gmail.com.
