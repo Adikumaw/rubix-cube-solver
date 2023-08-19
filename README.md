@@ -16,6 +16,9 @@ Welcome to my Rubik's Cube Solver program! This C.F.O.P (Cross, F2L, OLL, PLL) b
   ```
    git clone https://github.com/Adikumaw/rubix-cube-solver.git
   ```
+### video guid for the installation
+https://github.com/Adikumaw/rubix-cube-solver/assets/92208854/ad1c92ea-0dfa-43b7-aecd-30aacb12b60f
+
 ## How to Use
 1. Compile the rubiks_cube_solver.c file using your preferred C compiler:
 ```
@@ -34,6 +37,10 @@ ENTER THE COLORS OF "FACE" SIDE OF THE CUBE:
     ...
 ```
 4. Sit back and watch the magic happen! The solver will quickly analyze the configuration and display the optimal solution, along with the visualization of each step.
+
+### Check this video tutorial to know how it works...
+https://github.com/Adikumaw/rubix-cube-solver/assets/92208854/d5439d2c-d5a7-4c32-bf5a-bc98b07f15c7
+
 ## Notations
 
 In order to effectively use the Rubik's Cube solver program, it's important to understand the notations used to describe the different moves and rotations of the cube. The following symbols represent the basic movements:
