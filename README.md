@@ -34,6 +34,35 @@ ENTER THE COLORS OF "FACE" SIDE OF THE CUBE:
     ...
 ```
 4. Sit back and watch the magic happen! The solver will quickly analyze the configuration and display the optimal solution, along with the visualization of each step.
+## Notations
+
+In order to effectively use the Rubik's Cube solver program, it's important to understand the notations used to describe the different moves and rotations of the cube. The following symbols represent the basic movements:
+
+    F: Front face clockwise
+    FP: Front face counterclockwise
+    B: Back face clockwise
+    BP: Back face counterclockwise
+    U: Upper face clockwise
+    UP: Upper face counterclockwise
+    D: Down face clockwise
+    DP: Down face counterclockwise
+    L: Left face clockwise
+    LP: Left face counterclockwise
+    R: Right face clockwise
+    RP: Right face counterclockwise
+
+Each of these movements can be performed by appending an apostrophe to its symbol for the counterclockwise direction.
+Example
+
+To illustrate, let's say you want to rotate the front face clockwise and then the upper face counterclockwise. You would use the following sequence of notations:
+
+    F - Rotate the front face clockwise.
+    UP - Rotate the upper face counterclockwise.
+
+These notations allow you to describe the steps needed to solve the Rubik's Cube using the solver program.
+
+For a more comprehensive guide on Rubik's Cube notations and advanced techniques, you can refer to https://ruwix.com/the-rubiks-cube/notation/.
+
 ## Features
 -    Fast Solver: The program utilizes advanced algorithms and optimizations to achieve a blazingly fast solve time of just 2 seconds. It showcases the efficiency of the C.F.O.P method.
 -    Interactive Interface: The solver comes with an interactive command-line interface that guides you through the solving process. It displays step-by-step solutions and provides real-time feedback.
@@ -52,7 +81,7 @@ The C.F.O.P method (Cross, F2L, OLL, PLL) is a popular and widely used solving t
 
 ## Acknowledgments
 
-Special thanks to the [RUWIX]([url](https://ruwix.com/)) community for their valuable insights and contributions to the C.F.O.P method. This program would not have been possible without the collective efforts of cubers worldwide.
+Special thanks to the [RUWIX](https://ruwix.com/) community for their valuable insights and contributions to the C.F.O.P method. This program would not have been possible without the collective efforts of cubers worldwide.
 ## Contact
 
 If you have any questions, suggestions, or encounter any issues with the program, feel free to contact me at kumawataditya105@gmail.com.
