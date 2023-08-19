@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include <chrono>
-#include <thread>
 #include "solver.h"
 #include "heading.h"
 #include "miscellaneous.h"
