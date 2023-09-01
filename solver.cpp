@@ -15,8 +15,7 @@ OPERATOR OVERLOADING
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 solver &solver::operator=(const solver &src)
 {
-    // FOR THE CONDITION WHEN SAME CLASS ARE ASSIGNED;
-    if (this == &src)
+    if (this == &src) // FOR THE CONDITION WHEN SAME CLASS ARE ASSIGNED;
         return *this;
 
     for (short l{0}; l < 6; l++)
@@ -25,45 +24,45 @@ solver &solver::operator=(const solver &src)
         {
             for (short n{0}; n < 3; n++)
             {
-                this->cubeMain.at(l).at(m).at(n) = src.cubeMain.at(l).at(m).at(n);
+                this->cubeMain[l][m][n] = src.cubeMain[l][m][n];
             }
         }
     }
-    this->F2LSolution = src.F2LSolution;
-    this->CrossSolution = src.CrossSolution;
-    this->OLLSolution = src.OLLSolution;
-    this->PLLSolution = src.PLLSolution;
+    this->f2lSolution = src.f2lSolution;
+    this->crossSolution = src.crossSolution;
+    this->ollSolution = src.ollSolution;
+    this->pllSolution = src.pllSolution;
     return *this;
 }
 
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    SETTER AND GETTER FOR THE RUBIX CUBE
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-void solver::get_cross_solution(int current_step)
+void solver::get_cross_solution(int currentStep)
 {
-    if (CrossSolution.size() == 0)
+    if (crossSolution.size() == 0)
         std::cout << BOLD << "SOLVED" << DEFAULT;
     else
     {
         cout << BOLD;
-        for (size_t i{0}; i < CrossSolution.size(); i++)
-            if (i == current_step)
-                std::cout << "[" << CrossSolution.at(i) << "]"
+        for (size_t i{0}; i < crossSolution.size(); i++)
+            if (i == currentStep)
+                std::cout << "[" << crossSolution.at(i) << "]"
                           << " ";
             else
-                std::cout << CrossSolution.at(i) << " ";
+                std::cout << crossSolution.at(i) << " ";
         cout << DEFAULT;
     }
 }
-int solver::get_f2l_solution(int current_step)
+int solver::get_f2l_solution(int currentStep)
 {
     int linebreak{0};
-    if (F2LSolution.size() == 0)
+    if (f2lSolution.size() == 0)
         std::cout << BOLD << "SOLVED" << DEFAULT;
     else
     {
         cout << BOLD;
-        for (size_t i{0}; i < F2LSolution.size(); i++)
+        for (size_t i{0}; i < f2lSolution.size(); i++)
         {
             if ((i % 22) == 0)
             {
@@ -71,46 +70,46 @@ int solver::get_f2l_solution(int current_step)
                 if (linebreak == 2)
                     std::cout << "\n                           ";
             }
-            if (i == current_step)
-                std::cout << "[" << F2LSolution.at(i) << "]"
+            if (i == currentStep)
+                std::cout << "[" << f2lSolution.at(i) << "]"
                           << " ";
             else
-                std::cout << F2LSolution.at(i) << " ";
+                std::cout << f2lSolution.at(i) << " ";
         }
         cout << DEFAULT;
         return linebreak - 1;
     }
     return 0;
 }
-void solver::get_oll_solution(int current_step)
+void solver::get_oll_solution(int currentStep)
 {
-    if (OLLSolution.size() == 0)
+    if (ollSolution.size() == 0)
         std::cout << BOLD << "SOLVED" << DEFAULT;
     else
     {
         cout << BOLD;
-        for (size_t i{0}; i < OLLSolution.size(); i++)
-            if (i == current_step)
-                std::cout << "[" << OLLSolution.at(i) << "]"
+        for (size_t i{0}; i < ollSolution.size(); i++)
+            if (i == currentStep)
+                std::cout << "[" << ollSolution.at(i) << "]"
                           << " ";
             else
-                std::cout << OLLSolution.at(i) << " ";
+                std::cout << ollSolution.at(i) << " ";
         cout << DEFAULT;
     }
 }
-void solver::get_pll_solution(int current_step)
+void solver::get_pll_solution(int currentStep)
 {
-    if (PLLSolution.size() == 0)
+    if (pllSolution.size() == 0)
         std::cout << BOLD << "SOLVED" << DEFAULT;
     else
     {
         cout << BOLD;
-        for (size_t i{0}; i < PLLSolution.size(); i++)
-            if (i == current_step)
-                std::cout << "[" << PLLSolution.at(i) << "]"
+        for (size_t i{0}; i < pllSolution.size(); i++)
+            if (i == currentStep)
+                std::cout << "[" << pllSolution.at(i) << "]"
                           << " ";
             else
-                std::cout << PLLSolution.at(i) << " ";
+                std::cout << pllSolution.at(i) << " ";
         cout << DEFAULT;
     }
 }
@@ -121,61 +120,61 @@ int solver::get_total_solution_size()
 int solver::get_solution_size(string_view solutionName)
 {
     if (solutionName == "crs")
-        if (CrossSolution.size() == 0)
+        if (crossSolution.size() == 0)
             return 0;
         else
-            return CrossSolution.size();
+            return crossSolution.size();
     else if (solutionName == "f2l")
-        if (F2LSolution.size() == 0)
+        if (f2lSolution.size() == 0)
             return 0;
         else
-            return F2LSolution.size();
+            return f2lSolution.size();
     else if (solutionName == "oll")
-        if (OLLSolution.size() == 0)
+        if (ollSolution.size() == 0)
             return 0;
         else
-            return OLLSolution.size();
+            return ollSolution.size();
     else if (solutionName == "pll")
-        if (PLLSolution.size() == 0)
+        if (pllSolution.size() == 0)
             return 0;
         else
-            return PLLSolution.size();
+            return pllSolution.size();
     return -1;
 }
 void solver::print_solution(int duration)
 {
-    unsigned int current_step{0};
-    int total_solution_count{get_total_solution_size()}, choice;
-    vector<string> total_steps;
-    total_steps.insert(total_steps.end(), CrossSolution.begin(), CrossSolution.end());
-    total_steps.insert(total_steps.end(), F2LSolution.begin(), F2LSolution.end());
-    total_steps.insert(total_steps.end(), OLLSolution.begin(), OLLSolution.end());
-    total_steps.insert(total_steps.end(), PLLSolution.begin(), PLLSolution.end());
+    string bestSolutionBanner;
+    unsigned int currentStep{0};
+    int intTotalSolution{get_total_solution_size()}, choice;
+    vector<string> totalSteps;
+    totalSteps.insert(totalSteps.end(), crossSolution.begin(), crossSolution.end());
+    totalSteps.insert(totalSteps.end(), f2lSolution.begin(), f2lSolution.end());
+    totalSteps.insert(totalSteps.end(), ollSolution.begin(), ollSolution.end());
+    totalSteps.insert(totalSteps.end(), pllSolution.begin(), pllSolution.end());
     // best solution_on banner...
-    string best_solution_banner = "\n\n-----------------------------------------------------------------------------------------\n\t\t\t   BEST SOLUTION ON \"";
-    best_solution_banner += BOLD + side_name(solution_side) + DEFAULT;
-    best_solution_banner += "\" SIDE \t\t\t\n-----------------------------------------------------------------------------------------\n\n";
-    cout << best_solution_banner;
-    // SHOWING TOTAL MOVES COUNT.......
+    bestSolutionBanner = "\n\n-----------------------------------------------------------------------------------------\n\t\t\t   BEST SOLUTION ON \"";
+    bestSolutionBanner += BOLD + side_name(solutionSide) + DEFAULT;
+    bestSolutionBanner += "\" SIDE \t\t\t\n-----------------------------------------------------------------------------------------\n\n";
+    cout << bestSolutionBanner; // printing best solution banner
+    // SHOWING TOTAL MOVES COUNT
     set_font_color("TOTAL MOVES COUNT : ", "green");
-    cout << RED << total_solution_count << DEFAULT << endl;
-    // printing solutions in formated way...
+    cout << RED << intTotalSolution << DEFAULT << endl;
+    // printing solutions in formated way
     cout << "-----------------------------------------------------------------------------------------" << endl;
     set_font_color("CRS SOLUTION IN " + to_string(get_solution_size("crs")) + " MOVES:  ", "green");
-    get_cross_solution(current_step);
+    get_cross_solution(currentStep);
     cout << "\n-----------------------------------------------------------------------------------------" << endl;
     set_font_color("F2L SOLUTION IN " + to_string(get_solution_size("f2l")) + " MOVES:  ", "green");
-    current_step -= get_solution_size("crs");
-    // taking how many extra lines does f2l solution will take....
-    int f2l_line = get_f2l_solution(current_step);
+    currentStep -= get_solution_size("crs");
+    int f2lLine = get_f2l_solution(currentStep); // taking how many extra lines does f2l solution will take
     cout << "\n-----------------------------------------------------------------------------------------" << endl;
     set_font_color("OLL SOLUTION IN " + to_string(get_solution_size("oll")) + " MOVES:  ", "green");
-    current_step -= get_solution_size("f2l");
-    get_oll_solution(current_step);
+    currentStep -= get_solution_size("f2l");
+    get_oll_solution(currentStep);
     cout << "\n-----------------------------------------------------------------------------------------" << endl;
     set_font_color("PLL SOLUTION IN " + to_string(get_solution_size("pll")) + " MOVES:  ", "green");
-    current_step -= get_solution_size("oll");
-    get_pll_solution(current_step);
+    currentStep -= get_solution_size("oll");
+    get_pll_solution(currentStep);
     cout << "\n-----------------------------------------------------------------------------------------" << endl;
     // Display the time taken in the terminal window
     set_font_color("Time taken: ", "green");
@@ -187,44 +186,44 @@ void solver::print_solution(int duration)
     {
         return;
     }
-    // looping till all the steps finishes
-    for (int i{0}; i < total_solution_count; i++)
+
+    for (int i{0}; i < intTotalSolution; i++) // looping till all the steps finishes
     {
-        current_step = i;
+        currentStep = i;
         // Applying current step to the cube...
-        setalgo(0, total_steps.at(i), "null");
-        clearLines(28 + f2l_line);
+        setalgo(0, totalSteps.at(i), "null");
+        clearLines(28 + f2lLine);
         cube_state();
         std::cout << RED << trials << DEFAULT << " TIMES CUBE SOLVED...";
-        cout << best_solution_banner;
+        cout << bestSolutionBanner;
         // SHOWING TOTAL MOVES COUNT.......
         set_font_color("TOTAL MOVES COUNT : ", "green");
-        cout << RED << total_solution_count << DEFAULT << endl;
+        cout << RED << intTotalSolution << DEFAULT << endl;
         // Printing solutions in formated way...
         cout << "-----------------------------------------------------------------------------------------" << endl;
         set_font_color("CRS SOLUTION IN " + to_string(get_solution_size("crs")) + " MOVES:  ", "green");
-        get_cross_solution(current_step);
+        get_cross_solution(currentStep);
         cout << "\n-----------------------------------------------------------------------------------------" << endl;
         set_font_color("F2L SOLUTION IN " + to_string(get_solution_size("f2l")) + " MOVES:  ", "green");
-        current_step -= get_solution_size("crs");
-        get_f2l_solution(current_step);
+        currentStep -= get_solution_size("crs");
+        get_f2l_solution(currentStep);
         cout << "\n-----------------------------------------------------------------------------------------" << endl;
         set_font_color("OLL SOLUTION IN " + to_string(get_solution_size("oll")) + " MOVES:  ", "green");
-        current_step -= get_solution_size("f2l");
-        get_oll_solution(current_step);
+        currentStep -= get_solution_size("f2l");
+        get_oll_solution(currentStep);
         cout << "\n-----------------------------------------------------------------------------------------" << endl;
         set_font_color("PLL SOLUTION IN " + to_string(get_solution_size("pll")) + " MOVES:  ", "green");
-        current_step -= get_solution_size("oll");
-        get_pll_solution(current_step);
+        currentStep -= get_solution_size("oll");
+        get_pll_solution(currentStep);
         cout << "\n-----------------------------------------------------------------------------------------" << endl;
         // Display the time taken in the terminal window
         set_font_color("Time taken: ", "green");
         std::cout << RED << duration << DEFAULT << " milliseconds" << std::endl;
         // Display current step...
         set_font_color("Current step => ", "green");
-        std::cout << RED << total_steps.at(i) << DEFAULT << std::endl;
-        // Holding the program for two seconds...
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+        std::cout << RED << totalSteps.at(i) << DEFAULT << std::endl;
+
+        std::this_thread::sleep_for(std::chrono::seconds(2)); // Holding the program for two seconds...
     }
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
@@ -234,7 +233,7 @@ void solver::cross_solver(solver &storeSolution)
 {
     int block{0}, side{0}, crossColorCount{0}, count{0}, twocorrect{0}, limit{0};
     bool solve{false}, tenTimeSolve{false};
-    const char bottom_color{cubeMain.at(bottom).at(1).at(1)};
+    const char bottomColor{cubeMain[bottom][1][1]};
     char edgeColor{};
     vector<char> mainOrientation{}, currentOrientation{};
     vector<int> crsEdges{};
@@ -250,7 +249,7 @@ void solver::cross_solver(solver &storeSolution)
         {
             count = 0;
             for (int j{0}; j < 4; j++)
-                if (currentOrientation.at(j) == mainOrientation.at(j))
+                if (currentOrientation[j] == mainOrientation[j])
                     count++;
             if (count == 4 || count == 2)
                 break;
@@ -260,16 +259,16 @@ void solver::cross_solver(solver &storeSolution)
         }
         if (count == 4)
         {
-            // Optimising F2Lsolution....
-            solution_optimizer(CrossSolution);
-            storeSolution.crossSolutions.push_back(CrossSolution);
+            // Optimising f2lSolution....
+            solution_optimizer(crossSolution);
+            storeSolution.crossSolutions.push_back(crossSolution);
             return;
         }
         else
         {
             int icside{};
             for (icside = 0; icside < 4; icside++)
-                if (currentOrientation.at(icside) != mainOrientation.at(icside))
+                if (currentOrientation[icside] != mainOrientation[icside])
                     break;
             switch (icside)
             {
@@ -310,7 +309,7 @@ void solver::cross_solver(solver &storeSolution)
                 {
                     count = 0;
                     for (int j{0}; j < 4; j++)
-                        if (currentOrientation.at(j) == mainOrientation.at(j))
+                        if (currentOrientation[j] == mainOrientation[j])
                             count++;
                     if (count == 4)
                         break;
@@ -323,27 +322,27 @@ void solver::cross_solver(solver &storeSolution)
                 {
                 case 0:
                     setalgo(side, "F DP FP D F", "null");
-                    CrossSolution.pop_back();
-                    CrossSolution.pop_back();
-                    CrossSolution.pop_back();
-                    CrossSolution.pop_back();
-                    CrossSolution.pop_back();
+                    crossSolution.pop_back();
+                    crossSolution.pop_back();
+                    crossSolution.pop_back();
+                    crossSolution.pop_back();
+                    crossSolution.pop_back();
                     break;
                 case 1:
                     setalgo(side, "FP D F DP FP", "null");
-                    CrossSolution.pop_back();
-                    CrossSolution.pop_back();
-                    CrossSolution.pop_back();
-                    CrossSolution.pop_back();
-                    CrossSolution.pop_back();
+                    crossSolution.pop_back();
+                    crossSolution.pop_back();
+                    crossSolution.pop_back();
+                    crossSolution.pop_back();
+                    crossSolution.pop_back();
                     break;
                 case 2:
                     setalgo(side, "FP D2 F D2 FP", "null");
-                    CrossSolution.pop_back();
-                    CrossSolution.pop_back();
-                    CrossSolution.pop_back();
-                    CrossSolution.pop_back();
-                    CrossSolution.pop_back();
+                    crossSolution.pop_back();
+                    crossSolution.pop_back();
+                    crossSolution.pop_back();
+                    crossSolution.pop_back();
+                    crossSolution.pop_back();
                     break;
                 default:
                     break;
@@ -351,39 +350,39 @@ void solver::cross_solver(solver &storeSolution)
             }
         }
     }
-    if (mainOrientation.at(0) != currentOrientation.at(0) && mainOrientation.at(0) != currentOrientation.at(1) && mainOrientation.at(0) != currentOrientation.at(2) && mainOrientation.at(0) != currentOrientation.at(3))
+    if (mainOrientation[0] != currentOrientation[0] && mainOrientation[0] != currentOrientation[1] && mainOrientation[0] != currentOrientation[2] && mainOrientation[0] != currentOrientation[3])
         crsEdges.push_back(1);
     // second f2l corner...
-    if (mainOrientation.at(1) != currentOrientation.at(0) && mainOrientation.at(1) != currentOrientation.at(1) && mainOrientation.at(1) != currentOrientation.at(2) && mainOrientation.at(1) != currentOrientation.at(3))
+    if (mainOrientation[1] != currentOrientation[0] && mainOrientation[1] != currentOrientation[1] && mainOrientation[1] != currentOrientation[2] && mainOrientation[1] != currentOrientation[3])
         crsEdges.push_back(2);
     // third f2l corner...
-    if (mainOrientation.at(2) != currentOrientation.at(0) && mainOrientation.at(2) != currentOrientation.at(1) && mainOrientation.at(2) != currentOrientation.at(2) && mainOrientation.at(2) != currentOrientation.at(3))
+    if (mainOrientation[2] != currentOrientation[0] && mainOrientation[2] != currentOrientation[1] && mainOrientation[2] != currentOrientation[2] && mainOrientation[2] != currentOrientation[3])
         crsEdges.push_back(3);
     // fourth f2l corner...
-    if (mainOrientation.at(3) != currentOrientation.at(0) && mainOrientation.at(3) != currentOrientation.at(1) && mainOrientation.at(3) != currentOrientation.at(2) && mainOrientation.at(3) != currentOrientation.at(3))
+    if (mainOrientation[3] != currentOrientation[0] && mainOrientation[3] != currentOrientation[1] && mainOrientation[3] != currentOrientation[2] && mainOrientation[3] != currentOrientation[3])
         crsEdges.push_back(4);
 
     solver sourceBackup, sourceCpy;
     for (size_t i{0}; i < crsEdges.size(); i++)
     {
         // cornerColors.clear();
-        switch (crsEdges.at(i))
+        switch (crsEdges[i])
         {
         case 1:
             /* code */
-            edgeColor = mainOrientation.at(0);
+            edgeColor = mainOrientation[0];
             break;
         case 2:
             /* code */
-            edgeColor = mainOrientation.at(1);
+            edgeColor = mainOrientation[1];
             break;
         case 3:
             /* code */
-            edgeColor = mainOrientation.at(2);
+            edgeColor = mainOrientation[2];
             break;
         case 4:
             /* code */
-            edgeColor = mainOrientation.at(3);
+            edgeColor = mainOrientation[3];
             break;
         default:
             break;
@@ -400,7 +399,7 @@ void solver::cross_solver(solver &storeSolution)
                 {
                 // this case is for checking the top side edge....
                 case 1:
-                    if (cubeMain[side].at(0).at(1) == bottom_color)
+                    if (cubeMain[side][0][1] == bottomColor)
                     {
                         switch (crossColorCount)
                         {
@@ -434,7 +433,7 @@ void solver::cross_solver(solver &storeSolution)
                             {
                                 count = 0;
                                 for (int j{0}; j < 4; j++)
-                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                    if (currentOrientation[j] == mainOrientation[j])
                                         count++;
                                 if (count >= 2)
                                     break;
@@ -472,7 +471,7 @@ void solver::cross_solver(solver &storeSolution)
                                         {
                                             count = 0;
                                             for (int j{0}; j < 4; j++)
-                                                if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                if (currentOrientation[j] == mainOrientation[j])
                                                     count++;
                                             if (count >= limit)
                                                 break;
@@ -488,14 +487,14 @@ void solver::cross_solver(solver &storeSolution)
                                             setalgo(side, "F", "null");
                                         else
                                             setalgo(side, "FP", "null");
-                                        CrossSolution.pop_back();
+                                        crossSolution.pop_back();
                                     }
                                     if (twotimes == 0)
                                         setalgo(side, "R FP", "null");
                                     else
                                         setalgo(side, "LP F", "null");
-                                    CrossSolution.pop_back();
-                                    CrossSolution.pop_back();
+                                    crossSolution.pop_back();
+                                    crossSolution.pop_back();
                                     setalgo(side, "D", "crs");
                                 }
                                 // this is for breaking the two times loop .....
@@ -509,7 +508,7 @@ void solver::cross_solver(solver &storeSolution)
                             {
                                 count = 0;
                                 for (int j{0}; j < 4; j++)
-                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                    if (currentOrientation[j] == mainOrientation[j])
                                         count++;
                                 if (count >= 3)
                                     break;
@@ -536,13 +535,13 @@ void solver::cross_solver(solver &storeSolution)
                                             {
                                                 // reverting to get even shorter solution....
                                                 setalgo(side, "F R FP", "null");
-                                                CrossSolution.pop_back();
-                                                CrossSolution.pop_back();
-                                                CrossSolution.pop_back();
+                                                crossSolution.pop_back();
+                                                crossSolution.pop_back();
+                                                crossSolution.pop_back();
                                                 // for removing last two D operatrions...
                                                 setalgo(side, "D2", "null");
-                                                CrossSolution.pop_back();
-                                                CrossSolution.pop_back();
+                                                crossSolution.pop_back();
+                                                crossSolution.pop_back();
                                                 break;
                                             }
                                             // using count as a signal to what to do next....
@@ -554,9 +553,9 @@ void solver::cross_solver(solver &storeSolution)
                                             setalgo(side, "F R FP", "null");
                                         else
                                             setalgo(side, "FP LP F", "null");
-                                        CrossSolution.pop_back();
-                                        CrossSolution.pop_back();
-                                        CrossSolution.pop_back();
+                                        crossSolution.pop_back();
+                                        crossSolution.pop_back();
+                                        crossSolution.pop_back();
                                         setalgo(side, "D", "crs");
                                     }
                                     if (count == -1)
@@ -595,7 +594,7 @@ void solver::cross_solver(solver &storeSolution)
                                             {
                                                 count = 0;
                                                 for (int j{0}; j < 4; j++)
-                                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                    if (currentOrientation[j] == mainOrientation[j])
                                                         count++;
                                                 if (count >= 3)
                                                     break;
@@ -611,14 +610,14 @@ void solver::cross_solver(solver &storeSolution)
                                                 setalgo(side, "F", "null");
                                             else
                                                 setalgo(side, "FP", "null");
-                                            CrossSolution.pop_back();
+                                            crossSolution.pop_back();
                                         }
                                         if (twotimes == 0)
                                             setalgo(side, "R FP", "null");
                                         else
                                             setalgo(side, "LP F", "null");
-                                        CrossSolution.pop_back();
-                                        CrossSolution.pop_back();
+                                        crossSolution.pop_back();
+                                        crossSolution.pop_back();
                                         setalgo(side, "D", "crs");
                                     }
                                     // this is for breaking the two times loop .....
@@ -646,7 +645,7 @@ void solver::cross_solver(solver &storeSolution)
                                             {
                                                 count = 0;
                                                 for (int j{0}; j < 4; j++)
-                                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                    if (currentOrientation[j] == mainOrientation[j])
                                                         count++;
                                                 if (count >= 2)
                                                     break;
@@ -660,8 +659,8 @@ void solver::cross_solver(solver &storeSolution)
                                             setalgo(side, "R FP", "null");
                                         else
                                             setalgo(side, "LP F", "null");
-                                        CrossSolution.pop_back();
-                                        CrossSolution.pop_back();
+                                        crossSolution.pop_back();
+                                        crossSolution.pop_back();
                                         setalgo(side, "D", "crs");
                                     }
                                     // this is for breaking the two times loop .....
@@ -677,7 +676,7 @@ void solver::cross_solver(solver &storeSolution)
                     break;
                     // this is for checking the right side edge....
                 case 2:
-                    if (cubeMain[side].at(1).at(2) == bottom_color)
+                    if (cubeMain[side][1][2] == bottomColor)
                     {
                         switch (crossColorCount)
                         {
@@ -692,7 +691,7 @@ void solver::cross_solver(solver &storeSolution)
                             {
                                 count = 0;
                                 for (int j{0}; j < 4; j++)
-                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                    if (currentOrientation[j] == mainOrientation[j])
                                         count++;
                                 if (count >= 2)
                                     break;
@@ -713,7 +712,7 @@ void solver::cross_solver(solver &storeSolution)
                                     {
                                         count = 0;
                                         for (int j{0}; j < 4; j++)
-                                            if (currentOrientation.at(j) == mainOrientation.at(j))
+                                            if (currentOrientation[j] == mainOrientation[j])
                                                 count++;
                                         if (count >= limit)
                                             break;
@@ -724,7 +723,7 @@ void solver::cross_solver(solver &storeSolution)
                                 }
                                 // reverting the previour solution....
                                 setalgo(side, "R", "null");
-                                CrossSolution.pop_back();
+                                crossSolution.pop_back();
                                 setalgo(side, "D", "crs");
                             }
                             break;
@@ -734,7 +733,7 @@ void solver::cross_solver(solver &storeSolution)
                             {
                                 count = 0;
                                 for (int j{0}; j < 4; j++)
-                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                    if (currentOrientation[j] == mainOrientation[j])
                                         count++;
                                 if (count >= 3)
                                     break;
@@ -755,7 +754,7 @@ void solver::cross_solver(solver &storeSolution)
                                     }
                                     // reverting the previour solution....
                                     setalgo(side, "R", "null");
-                                    CrossSolution.pop_back();
+                                    crossSolution.pop_back();
                                     setalgo(side, "D", "crs");
                                 }
                             }
@@ -774,7 +773,7 @@ void solver::cross_solver(solver &storeSolution)
                                         {
                                             count = 0;
                                             for (int j{0}; j < 4; j++)
-                                                if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                if (currentOrientation[j] == mainOrientation[j])
                                                     count++;
                                             if (count >= 3)
                                                 break;
@@ -785,7 +784,7 @@ void solver::cross_solver(solver &storeSolution)
                                     }
                                     // reverting the previour solution....
                                     setalgo(side, "R", "null");
-                                    CrossSolution.pop_back();
+                                    crossSolution.pop_back();
                                     setalgo(side, "D", "crs");
                                 }
                             }
@@ -804,7 +803,7 @@ void solver::cross_solver(solver &storeSolution)
                                         {
                                             count = 0;
                                             for (int j{0}; j < 4; j++)
-                                                if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                if (currentOrientation[j] == mainOrientation[j])
                                                     count++;
                                             if (count >= 2)
                                                 break;
@@ -815,7 +814,7 @@ void solver::cross_solver(solver &storeSolution)
                                     }
                                     // reverting the previour solution....
                                     setalgo(side, "R", "null");
-                                    CrossSolution.pop_back();
+                                    crossSolution.pop_back();
                                     setalgo(side, "D", "crs");
                                 }
                             }
@@ -827,7 +826,7 @@ void solver::cross_solver(solver &storeSolution)
                     break;
                     // this case is for checking the bottom side edge....
                 case 3:
-                    if (cubeMain[side].at(2).at(1) == bottom_color)
+                    if (cubeMain[side][2][1] == bottomColor)
                     {
                         switch (crossColorCount)
                         {
@@ -861,7 +860,7 @@ void solver::cross_solver(solver &storeSolution)
                             {
                                 count = 0;
                                 for (int j{0}; j < 4; j++)
-                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                    if (currentOrientation[j] == mainOrientation[j])
                                         count++;
                                 // there is a flow in the below code and should be corrected...
                                 if (count >= 2)
@@ -899,7 +898,7 @@ void solver::cross_solver(solver &storeSolution)
                                     {
                                         count = 0;
                                         for (int j{0}; j < 4; j++)
-                                            if (currentOrientation.at(j) == mainOrientation.at(j))
+                                            if (currentOrientation[j] == mainOrientation[j])
                                                 count++;
                                         if (count >= limit)
                                             break;
@@ -913,25 +912,25 @@ void solver::cross_solver(solver &storeSolution)
                                 {
                                 case 0:
                                     setalgo(side, "R DP F", "null");
-                                    CrossSolution.pop_back();
-                                    CrossSolution.pop_back();
-                                    CrossSolution.pop_back();
+                                    crossSolution.pop_back();
+                                    crossSolution.pop_back();
+                                    crossSolution.pop_back();
                                     break;
                                 case 1:
                                     setalgo(side, "R F", "null");
-                                    CrossSolution.pop_back();
-                                    CrossSolution.pop_back();
+                                    crossSolution.pop_back();
+                                    crossSolution.pop_back();
                                     break;
                                 case 2:
                                     setalgo(side, "LP DP FP", "null");
-                                    CrossSolution.pop_back();
-                                    CrossSolution.pop_back();
-                                    CrossSolution.pop_back();
+                                    crossSolution.pop_back();
+                                    crossSolution.pop_back();
+                                    crossSolution.pop_back();
                                     break;
                                 case 3:
                                     setalgo(side, "LP FP", "null");
-                                    CrossSolution.pop_back();
-                                    CrossSolution.pop_back();
+                                    crossSolution.pop_back();
+                                    crossSolution.pop_back();
                                     break;
                                 default:
                                     break;
@@ -945,7 +944,7 @@ void solver::cross_solver(solver &storeSolution)
                             {
                                 count = 0;
                                 for (int j{0}; j < 4; j++)
-                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                    if (currentOrientation[j] == mainOrientation[j])
                                         count++;
                                 if (count >= 3)
                                     break;
@@ -1005,7 +1004,7 @@ void solver::cross_solver(solver &storeSolution)
                                         {
                                             count = 0;
                                             for (int j{0}; j < 4; j++)
-                                                if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                if (currentOrientation[j] == mainOrientation[j])
                                                     count++;
                                             if (count >= 3)
                                                 break;
@@ -1019,19 +1018,19 @@ void solver::cross_solver(solver &storeSolution)
                                     {
                                     case 0:
                                         setalgo(side, "R F", "null");
-                                        CrossSolution.pop_back();
-                                        CrossSolution.pop_back();
+                                        crossSolution.pop_back();
+                                        crossSolution.pop_back();
                                         break;
                                     case 1:
                                         setalgo(side, "LP DP FP", "null");
-                                        CrossSolution.pop_back();
-                                        CrossSolution.pop_back();
-                                        CrossSolution.pop_back();
+                                        crossSolution.pop_back();
+                                        crossSolution.pop_back();
+                                        crossSolution.pop_back();
                                         break;
                                     case 2:
                                         setalgo(side, "LP FP", "null");
-                                        CrossSolution.pop_back();
-                                        CrossSolution.pop_back();
+                                        crossSolution.pop_back();
+                                        crossSolution.pop_back();
                                         break;
                                     default:
                                         break;
@@ -1070,7 +1069,7 @@ void solver::cross_solver(solver &storeSolution)
                     break;
                     // this is for checking the right side edge....
                 case 4:
-                    if (cubeMain[side].at(1).at(0) == bottom_color)
+                    if (cubeMain[side][1][0] == bottomColor)
                     {
                         switch (crossColorCount)
                         {
@@ -1086,7 +1085,7 @@ void solver::cross_solver(solver &storeSolution)
                             {
                                 count = 0;
                                 for (int j{0}; j < 4; j++)
-                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                    if (currentOrientation[j] == mainOrientation[j])
                                         count++;
                                 if (count >= 2)
                                     break;
@@ -1107,7 +1106,7 @@ void solver::cross_solver(solver &storeSolution)
                                     {
                                         count = 0;
                                         for (int j{0}; j < 4; j++)
-                                            if (currentOrientation.at(j) == mainOrientation.at(j))
+                                            if (currentOrientation[j] == mainOrientation[j])
                                                 count++;
                                         if (count >= limit)
                                             break;
@@ -1118,7 +1117,7 @@ void solver::cross_solver(solver &storeSolution)
                                 }
                                 // reverting the previour solution....
                                 setalgo(side, "LP", "null");
-                                CrossSolution.pop_back();
+                                crossSolution.pop_back();
                                 setalgo(side, "D", "crs");
                             }
                             break;
@@ -1129,7 +1128,7 @@ void solver::cross_solver(solver &storeSolution)
                             {
                                 count = 0;
                                 for (int j{0}; j < 4; j++)
-                                    if (currentOrientation.at(j) == mainOrientation.at(j))
+                                    if (currentOrientation[j] == mainOrientation[j])
                                         count++;
                                 if (count >= 3)
                                     break;
@@ -1151,7 +1150,7 @@ void solver::cross_solver(solver &storeSolution)
                                     }
                                     // reverting the previour solution....
                                     setalgo(side, "LP", "null");
-                                    CrossSolution.pop_back();
+                                    crossSolution.pop_back();
                                     setalgo(side, "D", "crs");
                                 }
                             }
@@ -1170,7 +1169,7 @@ void solver::cross_solver(solver &storeSolution)
                                         {
                                             count = 0;
                                             for (int j{0}; j < 4; j++)
-                                                if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                if (currentOrientation[j] == mainOrientation[j])
                                                     count++;
                                             if (count >= 3)
                                                 break;
@@ -1181,7 +1180,7 @@ void solver::cross_solver(solver &storeSolution)
                                     }
                                     // reverting the previour solution....
                                     setalgo(side, "LP", "null");
-                                    CrossSolution.pop_back();
+                                    crossSolution.pop_back();
                                     setalgo(side, "D", "crs");
                                 }
                             }
@@ -1200,7 +1199,7 @@ void solver::cross_solver(solver &storeSolution)
                                         {
                                             count = 0;
                                             for (int j{0}; j < 4; j++)
-                                                if (currentOrientation.at(j) == mainOrientation.at(j))
+                                                if (currentOrientation[j] == mainOrientation[j])
                                                     count++;
                                             if (count >= 2)
                                                 break;
@@ -1211,7 +1210,7 @@ void solver::cross_solver(solver &storeSolution)
                                     }
                                     // reverting the previour solution....
                                     setalgo(side, "LP", "null");
-                                    CrossSolution.pop_back();
+                                    crossSolution.pop_back();
                                     setalgo(side, "D", "crs");
                                 }
                             }
@@ -1232,22 +1231,22 @@ void solver::cross_solver(solver &storeSolution)
                 {
                 case 1:
                     // this is for checking the face side edge....
-                    if (cubeMain[side].at(2).at(1) == bottom_color)
+                    if (cubeMain[side][2][1] == bottomColor)
                         side_2 = face;
                     break;
                 case 2:
                     // this is for checking the right side edge....
-                    if (cubeMain[side].at(1).at(2) == bottom_color)
+                    if (cubeMain[side][1][2] == bottomColor)
                         side_2 = right;
                     break;
                 case 3:
                     // this is for checking the back side edge....
-                    if (cubeMain[side].at(0).at(1) == bottom_color)
+                    if (cubeMain[side][0][1] == bottomColor)
                         side_2 = back;
                     break;
                 case 4:
                     // this is for checking the left side edge....
-                    if (cubeMain[side].at(1).at(0) == bottom_color)
+                    if (cubeMain[side][1][0] == bottomColor)
                         side_2 = left;
                     break;
                 default:
@@ -1269,7 +1268,7 @@ void solver::cross_solver(solver &storeSolution)
                         {
                             count = 0;
                             for (int j{0}; j < 4; j++)
-                                if (currentOrientation.at(j) == mainOrientation.at(j))
+                                if (currentOrientation[j] == mainOrientation[j])
                                     count++;
                             if (count >= 2)
                                 break;
@@ -1290,7 +1289,7 @@ void solver::cross_solver(solver &storeSolution)
                                 {
                                     count = 0;
                                     for (int j{0}; j < 4; j++)
-                                        if (currentOrientation.at(j) == mainOrientation.at(j))
+                                        if (currentOrientation[j] == mainOrientation[j])
                                             count++;
                                     if (count >= limit)
                                         break;
@@ -1301,7 +1300,7 @@ void solver::cross_solver(solver &storeSolution)
                             }
                             // reverting the previour solution....
                             setalgo(side_2, "F2", "null");
-                            CrossSolution.pop_back();
+                            crossSolution.pop_back();
                             setalgo(side_2, "D", "crs");
                         }
                         break;
@@ -1312,7 +1311,7 @@ void solver::cross_solver(solver &storeSolution)
                         {
                             count = 0;
                             for (int j{0}; j < 4; j++)
-                                if (currentOrientation.at(j) == mainOrientation.at(j))
+                                if (currentOrientation[j] == mainOrientation[j])
                                     count++;
                             // there is a flow in the below code and should be corrected...
                             if (count >= 3)
@@ -1335,7 +1334,7 @@ void solver::cross_solver(solver &storeSolution)
                                 }
                                 // reverting the previour solution....
                                 setalgo(side_2, "F2", "null");
-                                CrossSolution.pop_back();
+                                crossSolution.pop_back();
                                 setalgo(side_2, "D", "crs");
                             }
                         }
@@ -1354,7 +1353,7 @@ void solver::cross_solver(solver &storeSolution)
                                     {
                                         count = 0;
                                         for (int j{0}; j < 4; j++)
-                                            if (currentOrientation.at(j) == mainOrientation.at(j))
+                                            if (currentOrientation[j] == mainOrientation[j])
                                                 count++;
                                         if (count >= 3)
                                             break;
@@ -1365,7 +1364,7 @@ void solver::cross_solver(solver &storeSolution)
                                 }
                                 // reverting the previour solution....
                                 setalgo(side_2, "F2", "null");
-                                CrossSolution.pop_back();
+                                crossSolution.pop_back();
                                 setalgo(side_2, "D", "crs");
                             }
                         }
@@ -1384,7 +1383,7 @@ void solver::cross_solver(solver &storeSolution)
                                     {
                                         count = 0;
                                         for (int j{0}; j < 4; j++)
-                                            if (currentOrientation.at(j) == mainOrientation.at(j))
+                                            if (currentOrientation[j] == mainOrientation[j])
                                                 count++;
                                         if (count >= 2)
                                             break;
@@ -1395,7 +1394,7 @@ void solver::cross_solver(solver &storeSolution)
                                 }
                                 // reverting the previour solution....
                                 setalgo(side_2, "F2", "null");
-                                CrossSolution.pop_back();
+                                crossSolution.pop_back();
                                 setalgo(side_2, "D", "crs");
                             }
                         }
@@ -1415,7 +1414,7 @@ void solver::cross_solver(solver &storeSolution)
         }
     }
     // *this = ;
-    // this->CrossSolution = .CrossSolution;
+    // this->crossSolution = .crossSolution;
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION COUNTS THE NUMBER OF BASE EDGES CURENTLY LOCATED AT THE BOTTOM...
@@ -1423,13 +1422,13 @@ void solver::cross_solver(solver &storeSolution)
 int solver::count_bottom_lyr_edge(const solver &src)
 {
     int colorCount{0};
-    if (src.cubeMain[bottom].at(0).at(1) == src.cubeMain[bottom].at(1).at(1))
+    if (src.cubeMain[bottom][0][1] == src.cubeMain[bottom][1][1])
         colorCount++;
-    if (src.cubeMain[bottom].at(1).at(0) == src.cubeMain[bottom].at(1).at(1))
+    if (src.cubeMain[bottom][1][0] == src.cubeMain[bottom][1][1])
         colorCount++;
-    if (src.cubeMain[bottom].at(1).at(2) == src.cubeMain[bottom].at(1).at(1))
+    if (src.cubeMain[bottom][1][2] == src.cubeMain[bottom][1][1])
         colorCount++;
-    if (src.cubeMain[bottom].at(2).at(1) == src.cubeMain[bottom].at(1).at(1))
+    if (src.cubeMain[bottom][2][1] == src.cubeMain[bottom][1][1])
         colorCount++;
     return colorCount;
 }
@@ -1440,10 +1439,10 @@ int solver::count_bottom_lyr_edge(const solver &src)
 vector<char> solver::get_equator_colors_orientation(const solver &source)
 {
     vector<char> crossColorOrientation{};
-    crossColorOrientation.push_back(source.cubeMain[face].at(1).at(1));
-    crossColorOrientation.push_back(source.cubeMain[right].at(1).at(1));
-    crossColorOrientation.push_back(source.cubeMain[back].at(1).at(1));
-    crossColorOrientation.push_back(source.cubeMain[left].at(1).at(1));
+    crossColorOrientation.push_back(source.cubeMain[face][1][1]);
+    crossColorOrientation.push_back(source.cubeMain[right][1][1]);
+    crossColorOrientation.push_back(source.cubeMain[back][1][1]);
+    crossColorOrientation.push_back(source.cubeMain[left][1][1]);
     return std::move(crossColorOrientation);
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
@@ -1453,20 +1452,20 @@ vector<char> solver::get_equator_colors_orientation(const solver &source)
 vector<char> solver::get_cross_colors_orientation(const solver &source)
 {
     vector<char> baseCross{};
-    if (source.cubeMain[bottom].at(0).at(1) == source.cubeMain[bottom].at(1).at(1))
-        baseCross.push_back(source.cubeMain[face].at(2).at(1));
+    if (source.cubeMain[bottom][0][1] == source.cubeMain[bottom][1][1])
+        baseCross.push_back(source.cubeMain[face][2][1]);
     else
         baseCross.push_back('\0');
-    if (source.cubeMain[bottom].at(1).at(2) == source.cubeMain[bottom].at(1).at(1))
-        baseCross.push_back(source.cubeMain[right].at(2).at(1));
+    if (source.cubeMain[bottom][1][2] == source.cubeMain[bottom][1][1])
+        baseCross.push_back(source.cubeMain[right][2][1]);
     else
         baseCross.push_back('\0');
-    if (source.cubeMain[bottom].at(2).at(1) == source.cubeMain[bottom].at(1).at(1))
-        baseCross.push_back(source.cubeMain[back].at(2).at(1));
+    if (source.cubeMain[bottom][2][1] == source.cubeMain[bottom][1][1])
+        baseCross.push_back(source.cubeMain[back][2][1]);
     else
         baseCross.push_back('\0');
-    if (source.cubeMain[bottom].at(1).at(0) == source.cubeMain[bottom].at(1).at(1))
-        baseCross.push_back(source.cubeMain[left].at(2).at(1));
+    if (source.cubeMain[bottom][1][0] == source.cubeMain[bottom][1][1])
+        baseCross.push_back(source.cubeMain[left][2][1]);
     else
         baseCross.push_back('\0');
     return move(baseCross);
@@ -1479,90 +1478,83 @@ void solver::f2l_solver(solver &temp_cube)
 {
     std::mt19937 rng(std::random_device{}());
     std::uniform_int_distribution<int> rang0to1(0, 1);
-    int side{}, sentinal{}, block{};
-    const char bottom_color{cubeMain.at(bottom).at(1).at(1)};
-    vector<int> f2lCorners{};
+    int side{}, sentinel{}, block{};
+    const char bottomColor{cubeMain[bottom][1][1]};
+    vector<int> incorrectF2lCorners{};
     bool cornerLocMatch{false}, boolEdgeSetter{false};
 
     // first f2l corner...
-    if (cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(0).at(0) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(1).at(0) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(2).at(0) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(1).at(2) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(2).at(2))
-        f2lCorners.push_back(1);
+    if (cubeMain[bottom][1][1] != cubeMain[bottom][0][0] || cubeMain[face][1][1] != cubeMain[face][1][0] || cubeMain[face][1][1] != cubeMain[face][2][0] || cubeMain[left][1][1] != cubeMain[left][1][2] || cubeMain[left][1][1] != cubeMain[left][2][2])
+        incorrectF2lCorners.push_back(1);
     // second f2l corner...
-    if (cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(0).at(2) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(1).at(2) || cubeMain.at(face).at(1).at(1) != cubeMain.at(face).at(2).at(2) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(1).at(0) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(2).at(0))
-        f2lCorners.push_back(2);
+    if (cubeMain[bottom][1][1] != cubeMain[bottom][0][2] || cubeMain[face][1][1] != cubeMain[face][1][2] || cubeMain[face][1][1] != cubeMain[face][2][2] || cubeMain[right][1][1] != cubeMain[right][1][0] || cubeMain[right][1][1] != cubeMain[right][2][0])
+        incorrectF2lCorners.push_back(2);
     // third f2l corner...
-    if (cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(2).at(0) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(1).at(2) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(2).at(2) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(1).at(0) || cubeMain.at(left).at(1).at(1) != cubeMain.at(left).at(2).at(0))
-        f2lCorners.push_back(3);
+    if (cubeMain[bottom][1][1] != cubeMain[bottom][2][0] || cubeMain[back][1][1] != cubeMain[back][1][2] || cubeMain[back][1][1] != cubeMain[back][2][2] || cubeMain[left][1][1] != cubeMain[left][1][0] || cubeMain[left][1][1] != cubeMain[left][2][0])
+        incorrectF2lCorners.push_back(3);
     // fourth f2l corner...
-    if (cubeMain.at(bottom).at(1).at(1) != cubeMain.at(bottom).at(2).at(2) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(1).at(0) || cubeMain.at(back).at(1).at(1) != cubeMain.at(back).at(2).at(0) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(1).at(2) || cubeMain.at(right).at(1).at(1) != cubeMain.at(right).at(2).at(2))
-        f2lCorners.push_back(4);
-    // IF WILL WORK IF THE CUBE IS SOLVED....
-    if (f2lCorners.size() == 0)
+    if (cubeMain[bottom][1][1] != cubeMain[bottom][2][2] || cubeMain[back][1][1] != cubeMain[back][1][0] || cubeMain[back][1][1] != cubeMain[back][2][0] || cubeMain[right][1][1] != cubeMain[right][1][2] || cubeMain[right][1][1] != cubeMain[right][2][2])
+        incorrectF2lCorners.push_back(4);
+
+    if (incorrectF2lCorners.size() == 0) // IT WILL WORK IF THE CUBE IS SOLVED....
     {
-        // Optimising F2Lsolution....
-        solution_optimizer(F2LSolution);
+        solution_optimizer(f2lSolution); // Optimising f2lSolution....
         oll_solver();
         pll_solver();
         correct_last_layer();
-        temp_cube.f2lSolutions.push_back(F2LSolution);
-        temp_cube.ollSolutions.push_back(OLLSolution);
-        temp_cube.pllSolutions.push_back(PLLSolution);
+        temp_cube.f2lSolutions.push_back(f2lSolution);
+        temp_cube.ollSolutions.push_back(ollSolution);
+        temp_cube.pllSolutions.push_back(pllSolution);
         trials++;
         std::cout << "\r" << RED << trials << DEFAULT << " TIMES CUBE SOLVED...";
     }
     else
     {
         solver sourceBackup, sourceCpy;
-        for (size_t i{0}; i < f2lCorners.size(); i++)
+        for (size_t i{0}; i < incorrectF2lCorners.size(); i++)
         {
             cornerColors.clear();
-            switch (f2lCorners.at(i))
+            switch (incorrectF2lCorners.at(i))
             {
             case 1:
-                /* code */
-                cornerColors.push_back(cubeMain.at(face).at(1).at(1));
-                cornerColors.push_back(cubeMain.at(left).at(1).at(1));
+                cornerColors.push_back(cubeMain[face][1][1]);
+                cornerColors.push_back(cubeMain[left][1][1]);
                 break;
             case 2:
-                /* code */
-                cornerColors.push_back(cubeMain.at(face).at(1).at(1));
-                cornerColors.push_back(cubeMain.at(right).at(1).at(1));
+                cornerColors.push_back(cubeMain[face][1][1]);
+                cornerColors.push_back(cubeMain[right][1][1]);
                 break;
             case 3:
-                /* code */
-                cornerColors.push_back(cubeMain.at(back).at(1).at(1));
-                cornerColors.push_back(cubeMain.at(left).at(1).at(1));
+                cornerColors.push_back(cubeMain[back][1][1]);
+                cornerColors.push_back(cubeMain[left][1][1]);
                 break;
             case 4:
-                /* code */
-                cornerColors.push_back(cubeMain.at(back).at(1).at(1));
-                cornerColors.push_back(cubeMain.at(right).at(1).at(1));
+                cornerColors.push_back(cubeMain[back][1][1]);
+                cornerColors.push_back(cubeMain[right][1][1]);
                 break;
             default:
                 break;
             }
             sourceBackup = *this;
             if (!get_corner_location(cornerColors.at(0), cornerColors.at(1), side, block))
-                std::cout << "error finding coordinate...." << endl;
-            // side = rang0to5(rng);
-            // block = rang1to4(rng);
+                cerr << "error finding coordinate...." << endl;
             // -------------------------------------------------- BOTTOM SIDE ---------------------------------------------------------------
             if (side == bottom)
             {
                 switch (block)
                 {
                 case 1:
-                    if (cubeMain[side].at(0).at(0) == bottom_color)
+                    if (cubeMain[side][0][0] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 0, 0);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
                         if (cornerLocMatch)
                         {
                             // for optimization purposes....
                             boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                            sentinal = -1;
+                            sentinel = -1;
                             if (!boolEdgeSetter)
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                            if (sentinal == -1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                            if (sentinel == -1)
                             {
                                 if (edgeSide == left)
                                 {
@@ -1573,7 +1565,7 @@ void solver::f2l_solver(solver &temp_cube)
                                     setalgo(left, "UP FP U F U R UP RP", "f2l");
                                 }
                             }
-                            else if (sentinal == 0)
+                            else if (sentinel == 0)
                             {
                                 setalgo(left, "R UP R2 U2 R UP FP U F", "f2l");
                             };
@@ -1584,11 +1576,11 @@ void solver::f2l_solver(solver &temp_cube)
                             {
                             case 0:
                                 setalgo(left, "R U RP", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             case 1:
                                 setalgo(left, "FP UP F", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             default:
                                 break;
@@ -1597,16 +1589,16 @@ void solver::f2l_solver(solver &temp_cube)
                     };
                     break;
                 case 2:
-                    if (cubeMain[side].at(0).at(2) == bottom_color)
+                    if (cubeMain[side][0][2] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 0, 2);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
                         if (cornerLocMatch)
                         {
                             boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                            sentinal = -1;
+                            sentinel = -1;
                             if (!boolEdgeSetter)
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                            if (sentinal == -1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                            if (sentinel == -1)
                             {
                                 if (edgeSide == face)
                                 {
@@ -1617,7 +1609,7 @@ void solver::f2l_solver(solver &temp_cube)
                                     setalgo(face, "UP FP U F U R UP RP", "f2l");
                                 }
                             }
-                            else if (sentinal == 0)
+                            else if (sentinel == 0)
                             {
                                 setalgo(face, "R UP R2 U2 R UP FP U F", "f2l");
                             };
@@ -1628,11 +1620,11 @@ void solver::f2l_solver(solver &temp_cube)
                             {
                             case 0:
                                 setalgo(face, "R U RP", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             case 1:
                                 setalgo(face, "FP UP F", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             default:
                                 break;
@@ -1641,16 +1633,16 @@ void solver::f2l_solver(solver &temp_cube)
                     }
                     break;
                 case 3:
-                    if (cubeMain[side].at(2).at(0) == bottom_color)
+                    if (cubeMain[side][2][0] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 2, 0);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 2, 0);
                         if (cornerLocMatch)
                         {
                             boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                            sentinal = -1;
+                            sentinel = -1;
                             if (!boolEdgeSetter)
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                            if (sentinal == -1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                            if (sentinel == -1)
                             {
                                 if (edgeSide == back)
                                 {
@@ -1661,7 +1653,7 @@ void solver::f2l_solver(solver &temp_cube)
                                     setalgo(back, "UP FP U F U R UP RP", "f2l");
                                 }
                             }
-                            else if (sentinal == 0)
+                            else if (sentinel == 0)
                             {
                                 setalgo(back, "R UP R2 U2 R UP FP U F", "f2l");
                             };
@@ -1672,11 +1664,11 @@ void solver::f2l_solver(solver &temp_cube)
                             {
                             case 0:
                                 setalgo(back, "R U RP", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             case 1:
                                 setalgo(back, "FP UP F", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             default:
                                 break;
@@ -1685,16 +1677,16 @@ void solver::f2l_solver(solver &temp_cube)
                     }
                     break;
                 case 4:
-                    if (cubeMain[side].at(2).at(2) == bottom_color)
+                    if (cubeMain[side][2][2] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 2, 2);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 2, 2);
                         if (cornerLocMatch)
                         {
                             boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                            sentinal = -1;
+                            sentinel = -1;
                             if (!boolEdgeSetter)
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                            if (sentinal == -1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                            if (sentinel == -1)
                             {
                                 if (edgeSide == right)
                                 {
@@ -1705,7 +1697,7 @@ void solver::f2l_solver(solver &temp_cube)
                                     setalgo(right, "UP FP U F U R UP RP", "f2l");
                                 }
                             }
-                            else if (sentinal == 0)
+                            else if (sentinel == 0)
                             {
                                 setalgo(right, "R UP R2 U2 R UP FP U F", "f2l");
                             };
@@ -1716,11 +1708,11 @@ void solver::f2l_solver(solver &temp_cube)
                             {
                             case 0:
                                 setalgo(right, "R U RP", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             case 1:
                                 setalgo(right, "FP UP F", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             default:
                                 break;
@@ -1738,28 +1730,28 @@ void solver::f2l_solver(solver &temp_cube)
                 switch (block)
                 {
                 case 1:
-                    if (cubeMain.at(side).at(0).at(0) == bottom_color)
+                    if (cubeMain[side][0][0] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 0, 0);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
                         boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                if (sentinal == 1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinel == 1)
                                 {
                                     setalgo(left, "U FP U F U FP U2 F", "f2l");
                                 }
-                                else if (sentinal == 0)
+                                else if (sentinel == 0)
                                 {
                                     setalgo(left, "U FP UP F UP R U RP", "f2l");
                                 }
-                                else if (sentinal == -1)
+                                else if (sentinel == -1)
                                 {
                                     // the corner setter will set the corner and will pass the control back to this function.....
-                                    set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                     find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 }
                             }
@@ -1810,33 +1802,33 @@ void solver::f2l_solver(solver &temp_cube)
                         } // this else is for the condition when the corner or edge is not on the right location....
                         else
                         {
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                         }
                     }
                     break;
                 case 2:
-                    if (cubeMain.at(side).at(0).at(2) == bottom_color)
+                    if (cubeMain[side][0][2] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 0, 2);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
                         boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                if (sentinal == 1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinel == 1)
                                 {
                                     setalgo(face, "UP R UP RP UP R U2 RP", "f2l");
                                 }
-                                else if (sentinal == 0)
+                                else if (sentinel == 0)
                                 {
                                     setalgo(face, "UP R U RP U FP UP F", "f2l");
                                 }
-                                else if (sentinal == -1)
+                                else if (sentinel == -1)
                                 {
                                     // the corner setter will set the corner and will pass the control back to this function.....
-                                    set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                     find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 }
                             }
@@ -1887,26 +1879,26 @@ void solver::f2l_solver(solver &temp_cube)
                         }
                         else
                         {
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                         }
                     }
                     break;
                 case 3:
-                    if (cubeMain.at(side).at(2).at(0) == bottom_color)
+                    if (cubeMain[side][2][0] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 2, 0);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 2, 0);
                         boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                                if (sentinal == 1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                if (sentinel == 1)
                                 {
                                     setalgo(left, "R UP RP U R U2 RP U R UP RP", "f2l");
                                 }
-                                else if (sentinal == 0)
+                                else if (sentinel == 0)
                                 {
                                     setalgo(left, "R U RP UP R UP RP U2 FP UP F", "f2l");
                                 }
@@ -1927,11 +1919,11 @@ void solver::f2l_solver(solver &temp_cube)
                             {
                             case 0:
                                 setalgo(left, "R U RP", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             case 1:
                                 setalgo(left, "FP UP F", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             default:
                                 break;
@@ -1940,21 +1932,21 @@ void solver::f2l_solver(solver &temp_cube)
                     }
                     break;
                 case 4:
-                    if (cubeMain.at(side).at(2).at(2) == bottom_color)
+                    if (cubeMain[side][2][2] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 2, 2);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 2, 2);
                         boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                                if (sentinal == 1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                if (sentinel == 1)
                                 {
                                     setalgo(face, "R UP RP UP R U RP UP R U2 RP", "f2l");
                                 }
-                                else if (sentinal == 0)
+                                else if (sentinel == 0)
                                 {
                                     setalgo(face, "R UP RP U FP UP F UP FP UP F", "f2l");
                                 }
@@ -1975,11 +1967,11 @@ void solver::f2l_solver(solver &temp_cube)
                             {
                             case 0:
                                 setalgo(face, "R U RP", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             case 1:
                                 setalgo(face, "FP UP F", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             default:
                                 break;
@@ -1997,28 +1989,28 @@ void solver::f2l_solver(solver &temp_cube)
                 switch (block)
                 {
                 case 1:
-                    if (cubeMain.at(side).at(0).at(0) == bottom_color)
+                    if (cubeMain[side][0][0] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 0, 0);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
                         boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                if (sentinal == 1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinel == 1)
                                 {
                                     setalgo(face, "U FP U F U FP U2 F", "f2l");
                                 }
-                                else if (sentinal == 0)
+                                else if (sentinel == 0)
                                 {
                                     setalgo(face, "U FP UP F UP R U RP", "f2l");
                                 }
-                                else if (sentinal == -1)
+                                else if (sentinel == -1)
                                 {
                                     // the corner setter will set the corner and will pass the control back to this function.....
-                                    set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                     find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 }
                             }
@@ -2069,33 +2061,33 @@ void solver::f2l_solver(solver &temp_cube)
                         } // this else is for the condition when the corner or edge is not on the right location....
                         else
                         {
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                         }
                     }
                     break;
                 case 2:
-                    if (cubeMain.at(side).at(0).at(2) == bottom_color)
+                    if (cubeMain[side][0][2] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 0, 2);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
                         boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                if (sentinal == 1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinel == 1)
                                 {
                                     setalgo(right, "UP R UP RP UP R U2 RP", "f2l");
                                 }
-                                else if (sentinal == 0)
+                                else if (sentinel == 0)
                                 {
                                     setalgo(right, "UP R U RP U FP UP F", "f2l");
                                 }
-                                else if (sentinal == -1)
+                                else if (sentinel == -1)
                                 {
                                     // the corner setter will set the corner and will pass the control back to this function.....
-                                    set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                     find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 }
                             }
@@ -2146,26 +2138,26 @@ void solver::f2l_solver(solver &temp_cube)
                         }
                         else
                         {
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                         }
                     }
                     break;
                 case 3:
-                    if (cubeMain.at(side).at(2).at(0) == bottom_color)
+                    if (cubeMain[side][2][0] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 2, 0);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 2, 0);
                         boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                                if (sentinal == 1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                if (sentinel == 1)
                                 {
                                     setalgo(face, "R UP RP U R U2 RP U R UP RP", "f2l");
                                 }
-                                else if (sentinal == 0)
+                                else if (sentinel == 0)
                                 {
                                     setalgo(face, "R U RP UP R UP RP U2 FP UP F", "f2l");
                                 }
@@ -2186,11 +2178,11 @@ void solver::f2l_solver(solver &temp_cube)
                             {
                             case 0:
                                 setalgo(face, "R U RP", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             case 1:
                                 setalgo(face, "FP UP F", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             default:
                                 break;
@@ -2199,21 +2191,21 @@ void solver::f2l_solver(solver &temp_cube)
                     }
                     break;
                 case 4:
-                    if (cubeMain.at(side).at(2).at(2) == bottom_color)
+                    if (cubeMain[side][2][2] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 2, 2);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 2, 2);
                         boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                                if (sentinal == 1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                if (sentinel == 1)
                                 {
                                     setalgo(right, "R UP RP UP R U RP UP R U2 RP", "f2l");
                                 }
-                                else if (sentinal == 0)
+                                else if (sentinel == 0)
                                 {
                                     setalgo(right, "R UP RP U FP UP F UP FP UP F", "f2l");
                                 }
@@ -2234,11 +2226,11 @@ void solver::f2l_solver(solver &temp_cube)
                             {
                             case 0:
                                 setalgo(right, "R U RP", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             case 1:
                                 setalgo(right, "FP UP F", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             default:
                                 break;
@@ -2256,28 +2248,28 @@ void solver::f2l_solver(solver &temp_cube)
                 switch (block)
                 {
                 case 1:
-                    if (cubeMain.at(side).at(0).at(0) == bottom_color)
+                    if (cubeMain[side][0][0] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 0, 0);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
                         boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                if (sentinal == 1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinel == 1)
                                 {
                                     setalgo(right, "U FP U F U FP U2 F", "f2l");
                                 }
-                                else if (sentinal == 0)
+                                else if (sentinel == 0)
                                 {
                                     setalgo(right, "U FP UP F UP R U RP", "f2l");
                                 }
-                                else if (sentinal == -1)
+                                else if (sentinel == -1)
                                 {
                                     // the corner setter will set the corner and will pass the control back to this function.....
-                                    set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                     find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 }
                             }
@@ -2328,33 +2320,33 @@ void solver::f2l_solver(solver &temp_cube)
                         } // this else is for the condition when the corner or edge is not on the right location....
                         else
                         {
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                         }
                     }
                     break;
                 case 2:
-                    if (cubeMain.at(side).at(0).at(2) == bottom_color)
+                    if (cubeMain[side][0][2] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 0, 2);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
                         boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                if (sentinal == 1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinel == 1)
                                 {
                                     setalgo(back, "UP R UP RP UP R U2 RP", "f2l");
                                 }
-                                else if (sentinal == 0)
+                                else if (sentinel == 0)
                                 {
                                     setalgo(back, "UP R U RP U FP UP F", "f2l");
                                 }
-                                else if (sentinal == -1)
+                                else if (sentinel == -1)
                                 {
                                     // the corner setter will set the corner and will pass the control back to this function.....
-                                    set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                     find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 }
                             }
@@ -2405,26 +2397,26 @@ void solver::f2l_solver(solver &temp_cube)
                         }
                         else
                         {
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                         }
                     }
                     break;
                 case 3:
-                    if (cubeMain.at(side).at(2).at(0) == bottom_color)
+                    if (cubeMain[side][2][0] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 2, 0);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 2, 0);
                         boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                                if (sentinal == 1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                if (sentinel == 1)
                                 {
                                     setalgo(right, "R UP RP U R U2 RP U R UP RP", "f2l");
                                 }
-                                else if (sentinal == 0)
+                                else if (sentinel == 0)
                                 {
                                     setalgo(right, "R U RP UP R UP RP U2 FP UP F", "f2l");
                                 }
@@ -2445,11 +2437,11 @@ void solver::f2l_solver(solver &temp_cube)
                             {
                             case 0:
                                 setalgo(right, "R U RP", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             case 1:
                                 setalgo(right, "FP UP F", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             default:
                                 break;
@@ -2458,21 +2450,21 @@ void solver::f2l_solver(solver &temp_cube)
                     }
                     break;
                 case 4:
-                    if (cubeMain.at(side).at(2).at(2) == bottom_color)
+                    if (cubeMain[side][2][2] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 2, 2);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 2, 2);
                         boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                                if (sentinal == 1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                if (sentinel == 1)
                                 {
                                     setalgo(back, "R UP RP UP R U RP UP R U2 RP", "f2l");
                                 }
-                                else if (sentinal == 0)
+                                else if (sentinel == 0)
                                 {
                                     setalgo(back, "R UP RP U FP UP F UP FP UP F", "f2l");
                                 }
@@ -2493,11 +2485,11 @@ void solver::f2l_solver(solver &temp_cube)
                             {
                             case 0:
                                 setalgo(back, "R U RP", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             case 1:
                                 setalgo(back, "FP UP F", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             default:
                                 break;
@@ -2515,28 +2507,28 @@ void solver::f2l_solver(solver &temp_cube)
                 switch (block)
                 {
                 case 1:
-                    if (cubeMain.at(side).at(0).at(0) == bottom_color)
+                    if (cubeMain[side][0][0] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 0, 0);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
                         boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                if (sentinal == 1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinel == 1)
                                 {
                                     setalgo(back, "U FP U F U FP U2 F", "f2l");
                                 }
-                                else if (sentinal == 0)
+                                else if (sentinel == 0)
                                 {
                                     setalgo(back, "U FP UP F UP R U RP", "f2l");
                                 }
-                                else if (sentinal == -1)
+                                else if (sentinel == -1)
                                 {
                                     // the corner setter will set the corner and will pass the control back to this function.....
-                                    set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                     find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 }
                             }
@@ -2587,33 +2579,33 @@ void solver::f2l_solver(solver &temp_cube)
                         } // this else is for the condition when the corner or edge is not on the right location....
                         else
                         {
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                         }
                     }
                     break;
                 case 2:
-                    if (cubeMain.at(side).at(0).at(2) == bottom_color)
+                    if (cubeMain[side][0][2] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 0, 2);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
                         boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                if (sentinal == 1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinel == 1)
                                 {
                                     setalgo(left, "UP R UP RP UP R U2 RP", "f2l");
                                 }
-                                else if (sentinal == 0)
+                                else if (sentinel == 0)
                                 {
                                     setalgo(left, "UP R U RP U FP UP F", "f2l");
                                 }
-                                else if (sentinal == -1)
+                                else if (sentinel == -1)
                                 {
                                     // the corner setter will set the corner and will pass the control back to this function.....
-                                    set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                     find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 }
                             }
@@ -2664,26 +2656,26 @@ void solver::f2l_solver(solver &temp_cube)
                         }
                         else
                         {
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                         }
                     }
                     break;
                 case 3:
-                    if (cubeMain.at(side).at(2).at(0) == bottom_color)
+                    if (cubeMain[side][2][0] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 2, 0);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 2, 0);
                         boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                                if (sentinal == 1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                if (sentinel == 1)
                                 {
                                     setalgo(back, "R UP RP U R U2 RP U R UP RP", "f2l");
                                 }
-                                else if (sentinal == 0)
+                                else if (sentinel == 0)
                                 {
                                     setalgo(back, "R U RP UP R UP RP U2 FP UP F", "f2l");
                                 }
@@ -2704,11 +2696,11 @@ void solver::f2l_solver(solver &temp_cube)
                             {
                             case 0:
                                 setalgo(back, "R U RP", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             case 1:
                                 setalgo(back, "FP UP F", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             default:
                                 break;
@@ -2717,21 +2709,21 @@ void solver::f2l_solver(solver &temp_cube)
                     }
                     break;
                 case 4:
-                    if (cubeMain.at(side).at(2).at(2) == bottom_color)
+                    if (cubeMain[side][2][2] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 2, 2);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 2, 2);
                         boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
-                                if (sentinal == 1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                if (sentinel == 1)
                                 {
                                     setalgo(left, "R UP RP UP R U RP UP R U2 RP", "f2l");
                                 }
-                                else if (sentinal == 0)
+                                else if (sentinel == 0)
                                 {
                                     setalgo(left, "R UP RP U FP UP F UP FP UP F", "f2l");
                                 }
@@ -2752,11 +2744,11 @@ void solver::f2l_solver(solver &temp_cube)
                             {
                             case 0:
                                 setalgo(left, "R U RP", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             case 1:
                                 setalgo(left, "FP UP F", "f2l");
-                                set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                                 break;
                             default:
                                 break;
@@ -2774,27 +2766,27 @@ void solver::f2l_solver(solver &temp_cube)
                 switch (block)
                 {
                 case 1:
-                    if (cubeMain.at(side).at(0).at(0) == bottom_color)
+                    if (cubeMain[side][0][0] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 0, 0);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
                         boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         if (cornerLocMatch)
                         {
                             if (!boolEdgeSetter)
                             {
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                if (sentinal == 1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinel == 1)
                                 {
                                     setalgo(back, "R U RP UP R U RP UP R U RP", "f2l");
                                 }
-                                else if (sentinal == 0)
+                                else if (sentinel == 0)
                                 {
                                     setalgo(back, "R UP RP U FP U F", "f2l");
                                 }
-                                else if (sentinal == -1)
+                                else if (sentinel == -1)
                                 {
                                     // this is for the condition when the side elements are not in the correct location....
-                                    set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                     find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 }
                             }
@@ -2845,32 +2837,32 @@ void solver::f2l_solver(solver &temp_cube)
                         }
                         else
                         {
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                         }
                     }
                     break;
                 case 2:
-                    if (cubeMain.at(side).at(0).at(2) == bottom_color)
+                    if (cubeMain[side][0][2] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 0, 2);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
                         boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         if (cornerLocMatch)
                         {
                             if (!boolEdgeSetter)
                             {
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                if (sentinal == 1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinel == 1)
                                 {
                                     setalgo(right, "R U RP UP R U RP UP R U RP", "f2l");
                                 }
-                                else if (sentinal == 0)
+                                else if (sentinel == 0)
                                 {
                                     setalgo(right, "R UP RP U FP U F", "f2l");
                                 }
-                                else if (sentinal == -1)
+                                else if (sentinel == -1)
                                 {
                                     // this is for the condition when the side elements are not in the correct location....
-                                    set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                     find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 }
                             }
@@ -2921,32 +2913,32 @@ void solver::f2l_solver(solver &temp_cube)
                         }
                         else
                         {
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                         }
                     }
                     break;
                 case 3:
-                    if (cubeMain.at(side).at(2).at(0) == bottom_color)
+                    if (cubeMain[side][2][0] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 2, 0);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 2, 0);
                         boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         if (cornerLocMatch)
                         {
                             if (!boolEdgeSetter)
                             {
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                if (sentinal == 1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinel == 1)
                                 {
                                     setalgo(left, "R U RP UP R U RP UP R U RP", "f2l");
                                 }
-                                else if (sentinal == 0)
+                                else if (sentinel == 0)
                                 {
                                     setalgo(left, "R UP RP U FP U F", "f2l");
                                 }
-                                else if (sentinal == -1)
+                                else if (sentinel == -1)
                                 {
                                     // this is for the condition when the side elements are not in the correct location....
-                                    set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                     find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 }
                             }
@@ -2997,32 +2989,32 @@ void solver::f2l_solver(solver &temp_cube)
                         }
                         else
                         {
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                         }
                     }
                     break;
                 case 4:
-                    if (cubeMain.at(side).at(2).at(2) == bottom_color)
+                    if (cubeMain[side][2][2] == bottomColor)
                     {
-                        cornerLocMatch = find_corner_colors(bottom_color, side, 2, 2);
+                        cornerLocMatch = find_corner_colors(bottomColor, side, 2, 2);
                         boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         if (cornerLocMatch)
                         {
                             if (!boolEdgeSetter)
                             {
-                                sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                if (sentinal == 1)
+                                sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                if (sentinel == 1)
                                 {
                                     setalgo(face, "R U RP UP R U RP UP R U RP", "f2l");
                                 }
-                                else if (sentinal == 0)
+                                else if (sentinel == 0)
                                 {
                                     setalgo(face, "R UP RP U FP U F", "f2l");
                                 }
-                                else if (sentinal == -1)
+                                else if (sentinel == -1)
                                 {
                                     // this is for the condition when the side elements are not in the correct location....
-                                    set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                     find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                                 }
                             }
@@ -3073,7 +3065,7 @@ void solver::f2l_solver(solver &temp_cube)
                         }
                         else
                         {
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
                         }
                     }
                     break;
@@ -3092,7 +3084,7 @@ void solver::f2l_solver(solver &temp_cube)
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 void solver::oll_solver()
 {
-    OLLSolution.clear();
+    ollSolution.clear();
     bool solve{false};
     string OLLcode{};
     OLLcode = oll_coder();
@@ -3134,19 +3126,19 @@ void solver::oll_solver()
         }
         if (solve == true)
         {
-            solution_optimizer(OLLSolution);
+            solution_optimizer(ollSolution);
             return;
         }
         OLLcode = oll_coder();
     }
-    std::cout << "error solving Oll layer...." << endl;
+    cerr << "error solving Oll layer...." << endl;
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CALLS THE PLL LOGIC FUNCTION AND CHECKS IT ON WHICH SIDE THE PLL CONDITIONS WILL MATCHES AND SOLVES THE PLL LAYER.
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 void solver::pll_solver()
 {
-    PLLSolution.clear();
+    pllSolution.clear();
     bool solve{false};
     string PLLcode{};
     vector<char> orientation = get_equator_colors_orientation(*this);
@@ -3183,7 +3175,7 @@ void solver::pll_solver()
             }
             if (solve == true)
             {
-                solution_optimizer(PLLSolution);
+                solution_optimizer(pllSolution);
                 return;
             }
             PLLcode = pll_coder(orientation);
@@ -3191,7 +3183,7 @@ void solver::pll_solver()
         // changing the orientation...
         std::rotate(orientation.begin(), orientation.end() - 1, orientation.end());
     }
-    std::cout << "error solving Pll layer...." << endl;
+    cerr << "error solving Pll layer...." << endl;
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CODES THE PLL LAYER IN 0, 1, 2, 3 IN RESPECT TO THEIR COLOR ORIENTATION CHARACTER.
@@ -3204,22 +3196,22 @@ string solver::pll_coder(const vector<char> &orientation)
 {
     string PLLcode{};
     // CODING FIRST ROW OF FACE SIDE OF THE CUBE.....
-    for (auto vecOfchar : cubeMain[face].at(0))
+    for (auto vecOfchar : cubeMain[face][0])
         for (int i{0}; i < orientation.size(); i++)
             if (orientation.at(i) == vecOfchar)
                 PLLcode += to_string(i);
     // CODING FIRST ROW OF RIGHT SIDE OF THE CUBE.....
-    for (auto vecOfchar : cubeMain[right].at(0))
+    for (auto vecOfchar : cubeMain[right][0])
         for (int i{0}; i < orientation.size(); i++)
             if (orientation.at(i) == vecOfchar)
                 PLLcode += to_string(i);
     // CODING FIRST ROW OF BACK SIDE OF THE CUBE.....
-    for (auto vecOfchar : cubeMain[back].at(0))
+    for (auto vecOfchar : cubeMain[back][0])
         for (int i{0}; i < orientation.size(); i++)
             if (orientation.at(i) == vecOfchar)
                 PLLcode += to_string(i);
     // CODING FIRST ROW OF LEFT SIDE OF THE CUBE.....
-    for (auto vecOfchar : cubeMain[left].at(0))
+    for (auto vecOfchar : cubeMain[left][0])
         for (int i{0}; i < orientation.size(); i++)
             if (orientation.at(i) == vecOfchar)
                 PLLcode += to_string(i);
@@ -3301,7 +3293,7 @@ bool solver::pll_logic(const int &side, string_view PLLcode)
         * FACE BACK
         * LEFT AND RIGHT
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-bool solver::find_corner_colors(const char &bottom_color, const int &side, const int &row, const int &col)
+bool solver::find_corner_colors(const char &bottomColor, const int &side, const int &row, const int &col)
 {
     cornerColors.clear();
     vector<int> sideloc;
@@ -3312,14 +3304,14 @@ bool solver::find_corner_colors(const char &bottom_color, const int &side, const
         sideloc.push_back(face);
         sideloc.push_back(top);
         sideloc.push_back(right);
-        if (cubeMain[top].at(2).at(2) != bottom_color)
-            cornerColors.push_back(cubeMain[top].at(2).at(2));
+        if (cubeMain[top][2][2] != bottomColor)
+            cornerColors.push_back(cubeMain[top][2][2]);
         ;
-        if (cubeMain[face].at(0).at(2) != bottom_color)
-            cornerColors.push_back(cubeMain[face].at(0).at(2));
+        if (cubeMain[face][0][2] != bottomColor)
+            cornerColors.push_back(cubeMain[face][0][2]);
         ;
-        if (cubeMain[right].at(0).at(0) != bottom_color)
-            cornerColors.push_back(cubeMain[right].at(0).at(0));
+        if (cubeMain[right][0][0] != bottomColor)
+            cornerColors.push_back(cubeMain[right][0][0]);
         ;
     }
     else if ((side == face && row == 0 && col == 0) ||
@@ -3329,14 +3321,14 @@ bool solver::find_corner_colors(const char &bottom_color, const int &side, const
         sideloc.push_back(face);
         sideloc.push_back(top);
         sideloc.push_back(left);
-        if (cubeMain[top].at(2).at(0) != bottom_color)
-            cornerColors.push_back(cubeMain[top].at(2).at(0));
+        if (cubeMain[top][2][0] != bottomColor)
+            cornerColors.push_back(cubeMain[top][2][0]);
         ;
-        if (cubeMain[face].at(0).at(0) != bottom_color)
-            cornerColors.push_back(cubeMain[face].at(0).at(0));
+        if (cubeMain[face][0][0] != bottomColor)
+            cornerColors.push_back(cubeMain[face][0][0]);
         ;
-        if (cubeMain[left].at(0).at(2) != bottom_color)
-            cornerColors.push_back(cubeMain[left].at(0).at(2));
+        if (cubeMain[left][0][2] != bottomColor)
+            cornerColors.push_back(cubeMain[left][0][2]);
         ;
     }
     else if ((side == left && row == 0 && col == 0) ||
@@ -3346,14 +3338,14 @@ bool solver::find_corner_colors(const char &bottom_color, const int &side, const
         sideloc.push_back(back);
         sideloc.push_back(top);
         sideloc.push_back(left);
-        if (cubeMain[top].at(0).at(0) != bottom_color)
-            cornerColors.push_back(cubeMain[top].at(0).at(0));
+        if (cubeMain[top][0][0] != bottomColor)
+            cornerColors.push_back(cubeMain[top][0][0]);
         ;
-        if (cubeMain[back].at(0).at(2) != bottom_color)
-            cornerColors.push_back(cubeMain[back].at(0).at(2));
+        if (cubeMain[back][0][2] != bottomColor)
+            cornerColors.push_back(cubeMain[back][0][2]);
         ;
-        if (cubeMain[left].at(0).at(0) != bottom_color)
-            cornerColors.push_back(cubeMain[left].at(0).at(0));
+        if (cubeMain[left][0][0] != bottomColor)
+            cornerColors.push_back(cubeMain[left][0][0]);
         ;
     }
     else if ((side == back && row == 0 && col == 0) ||
@@ -3363,14 +3355,14 @@ bool solver::find_corner_colors(const char &bottom_color, const int &side, const
         sideloc.push_back(back);
         sideloc.push_back(top);
         sideloc.push_back(right);
-        if (cubeMain[top].at(0).at(2) != bottom_color)
-            cornerColors.push_back(cubeMain[top].at(0).at(2));
+        if (cubeMain[top][0][2] != bottomColor)
+            cornerColors.push_back(cubeMain[top][0][2]);
         ;
-        if (cubeMain[back].at(0).at(0) != bottom_color)
-            cornerColors.push_back(cubeMain[back].at(0).at(0));
+        if (cubeMain[back][0][0] != bottomColor)
+            cornerColors.push_back(cubeMain[back][0][0]);
         ;
-        if (cubeMain[right].at(0).at(2) != bottom_color)
-            cornerColors.push_back(cubeMain[right].at(0).at(2));
+        if (cubeMain[right][0][2] != bottomColor)
+            cornerColors.push_back(cubeMain[right][0][2]);
         ;
     }
     // bottom corners...
@@ -3381,14 +3373,14 @@ bool solver::find_corner_colors(const char &bottom_color, const int &side, const
         sideloc.push_back(face);
         sideloc.push_back(bottom);
         sideloc.push_back(right);
-        if (cubeMain[bottom].at(0).at(2) != bottom_color)
-            cornerColors.push_back(cubeMain[bottom].at(0).at(2));
+        if (cubeMain[bottom][0][2] != bottomColor)
+            cornerColors.push_back(cubeMain[bottom][0][2]);
         ;
-        if (cubeMain[face].at(2).at(2) != bottom_color)
-            cornerColors.push_back(cubeMain[face].at(2).at(2));
+        if (cubeMain[face][2][2] != bottomColor)
+            cornerColors.push_back(cubeMain[face][2][2]);
         ;
-        if (cubeMain[right].at(2).at(0) != bottom_color)
-            cornerColors.push_back(cubeMain[right].at(2).at(0));
+        if (cubeMain[right][2][0] != bottomColor)
+            cornerColors.push_back(cubeMain[right][2][0]);
         ;
     }
     else if ((side == face && row == 2 && col == 0) ||
@@ -3398,14 +3390,14 @@ bool solver::find_corner_colors(const char &bottom_color, const int &side, const
         sideloc.push_back(face);
         sideloc.push_back(bottom);
         sideloc.push_back(left);
-        if (cubeMain[bottom].at(0).at(0) != bottom_color)
-            cornerColors.push_back(cubeMain[bottom].at(0).at(0));
+        if (cubeMain[bottom][0][0] != bottomColor)
+            cornerColors.push_back(cubeMain[bottom][0][0]);
         ;
-        if (cubeMain[face].at(2).at(0) != bottom_color)
-            cornerColors.push_back(cubeMain[face].at(2).at(0));
+        if (cubeMain[face][2][0] != bottomColor)
+            cornerColors.push_back(cubeMain[face][2][0]);
         ;
-        if (cubeMain[left].at(2).at(2) != bottom_color)
-            cornerColors.push_back(cubeMain[left].at(2).at(2));
+        if (cubeMain[left][2][2] != bottomColor)
+            cornerColors.push_back(cubeMain[left][2][2]);
         ;
     }
     else if ((side == left && row == 2 && col == 0) ||
@@ -3415,14 +3407,14 @@ bool solver::find_corner_colors(const char &bottom_color, const int &side, const
         sideloc.push_back(left);
         sideloc.push_back(bottom);
         sideloc.push_back(back);
-        if (cubeMain[bottom].at(2).at(0) != bottom_color)
-            cornerColors.push_back(cubeMain[bottom].at(2).at(0));
+        if (cubeMain[bottom][2][0] != bottomColor)
+            cornerColors.push_back(cubeMain[bottom][2][0]);
         ;
-        if (cubeMain[back].at(2).at(2) != bottom_color)
-            cornerColors.push_back(cubeMain[back].at(2).at(2));
+        if (cubeMain[back][2][2] != bottomColor)
+            cornerColors.push_back(cubeMain[back][2][2]);
         ;
-        if (cubeMain[left].at(2).at(0) != bottom_color)
-            cornerColors.push_back(cubeMain[left].at(2).at(0));
+        if (cubeMain[left][2][0] != bottomColor)
+            cornerColors.push_back(cubeMain[left][2][0]);
         ;
     }
     else if ((side == back && row == 2 && col == 0) ||
@@ -3432,21 +3424,21 @@ bool solver::find_corner_colors(const char &bottom_color, const int &side, const
         sideloc.push_back(back);
         sideloc.push_back(bottom);
         sideloc.push_back(right);
-        if (cubeMain[bottom].at(2).at(2) != bottom_color)
-            cornerColors.push_back(cubeMain[bottom].at(2).at(2));
+        if (cubeMain[bottom][2][2] != bottomColor)
+            cornerColors.push_back(cubeMain[bottom][2][2]);
         ;
-        if (cubeMain[back].at(2).at(0) != bottom_color)
-            cornerColors.push_back(cubeMain[back].at(2).at(0));
+        if (cubeMain[back][2][0] != bottomColor)
+            cornerColors.push_back(cubeMain[back][2][0]);
         ;
-        if (cubeMain[right].at(2).at(2) != bottom_color)
-            cornerColors.push_back(cubeMain[right].at(2).at(2));
+        if (cubeMain[right][2][2] != bottomColor)
+            cornerColors.push_back(cubeMain[right][2][2]);
         ;
     }
     // the bellow code checks the corner is on the right location or not......
     int x{0};
     for (int i{0}; i < 3; i++)
     {
-        if (cubeMain.at(sideloc.at(i)).at(1).at(1) == cornerColors.at(0) || cubeMain.at(sideloc.at(i)).at(1).at(1) == cornerColors.at(1))
+        if (cubeMain[sideloc.at(i)][1][1] == cornerColors.at(0) || cubeMain[sideloc.at(i)][1][1] == cornerColors.at(1))
             x++;
     }
     if (x == 2)
@@ -3461,29 +3453,29 @@ bool solver::find_corner_colors(const char &bottom_color, const int &side, const
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 bool solver::get_corner_location(const char &color_1, const char &color_2, int &side, int &block)
 {
-    vector<char> colors{color_1, color_2, cubeMain.at(bottom).at(1).at(1)};
+    vector<char> colors{color_1, color_2, cubeMain[bottom][1][1]};
     int count{0};
     // first corner..
     count = 0;
     for (int i{0}; i < 3; i++)
     {
-        if (cubeMain[face].at(0).at(2) == colors.at(i) ||
-            cubeMain[top].at(2).at(2) == colors.at(i) ||
-            cubeMain[right].at(0).at(0) == colors.at(i))
+        if (cubeMain[face][0][2] == colors[i] ||
+            cubeMain[top][2][2] == colors[i] ||
+            cubeMain[right][0][0] == colors[i])
             count++;
         if (count == 3)
         {
-            if (cubeMain[face].at(0).at(2) == colors.at(i))
+            if (cubeMain[face][0][2] == colors[i])
             {
                 side = face;
                 block = 2;
             }
-            else if (cubeMain[top].at(2).at(2) == colors.at(i))
+            else if (cubeMain[top][2][2] == colors[i])
             {
                 side = top;
                 block = 4;
             }
-            else if (cubeMain[right].at(0).at(0) == colors.at(i))
+            else if (cubeMain[right][0][0] == colors[i])
             {
                 side = right;
                 block = 1;
@@ -3495,23 +3487,23 @@ bool solver::get_corner_location(const char &color_1, const char &color_2, int &
     count = 0;
     for (int i{0}; i < 3; i++)
     {
-        if (cubeMain[face].at(0).at(0) == colors.at(i) ||
-            cubeMain[top].at(2).at(0) == colors.at(i) ||
-            cubeMain[left].at(0).at(2) == colors.at(i))
+        if (cubeMain[face][0][0] == colors[i] ||
+            cubeMain[top][2][0] == colors[i] ||
+            cubeMain[left][0][2] == colors[i])
             count++;
         if (count == 3)
         {
-            if (cubeMain[face].at(0).at(0) == colors.at(i))
+            if (cubeMain[face][0][0] == colors[i])
             {
                 side = face;
                 block = 1;
             }
-            else if (cubeMain[top].at(2).at(0) == colors.at(i))
+            else if (cubeMain[top][2][0] == colors[i])
             {
                 side = top;
                 block = 3;
             }
-            else if (cubeMain[left].at(0).at(2) == colors.at(i))
+            else if (cubeMain[left][0][2] == colors[i])
             {
                 side = left;
                 block = 2;
@@ -3523,23 +3515,23 @@ bool solver::get_corner_location(const char &color_1, const char &color_2, int &
     count = 0;
     for (int i{0}; i < 3; i++)
     {
-        if (cubeMain[left].at(0).at(0) == colors.at(i) ||
-            cubeMain[top].at(0).at(0) == colors.at(i) ||
-            cubeMain[back].at(0).at(2) == colors.at(i))
+        if (cubeMain[left][0][0] == colors[i] ||
+            cubeMain[top][0][0] == colors[i] ||
+            cubeMain[back][0][2] == colors[i])
             count++;
         if (count == 3)
         {
-            if (cubeMain[left].at(0).at(0) == colors.at(i))
+            if (cubeMain[left][0][0] == colors[i])
             {
                 side = left;
                 block = 1;
             }
-            else if (cubeMain[top].at(0).at(0) == colors.at(i))
+            else if (cubeMain[top][0][0] == colors[i])
             {
                 side = top;
                 block = 1;
             }
-            else if (cubeMain[back].at(0).at(2) == colors.at(i))
+            else if (cubeMain[back][0][2] == colors[i])
             {
                 side = back;
                 block = 2;
@@ -3551,23 +3543,23 @@ bool solver::get_corner_location(const char &color_1, const char &color_2, int &
     count = 0;
     for (int i{0}; i < 3; i++)
     {
-        if (cubeMain[back].at(0).at(0) == colors.at(i) ||
-            cubeMain[top].at(0).at(2) == colors.at(i) ||
-            cubeMain[right].at(0).at(2) == colors.at(i))
+        if (cubeMain[back][0][0] == colors[i] ||
+            cubeMain[top][0][2] == colors[i] ||
+            cubeMain[right][0][2] == colors[i])
             count++;
         if (count == 3)
         {
-            if (cubeMain[back].at(0).at(0) == colors.at(i))
+            if (cubeMain[back][0][0] == colors[i])
             {
                 side = back;
                 block = 1;
             }
-            else if (cubeMain[top].at(0).at(2) == colors.at(i))
+            else if (cubeMain[top][0][2] == colors[i])
             {
                 side = top;
                 block = 2;
             }
-            else if (cubeMain[right].at(0).at(2) == colors.at(i))
+            else if (cubeMain[right][0][2] == colors[i])
             {
                 side = right;
                 block = 2;
@@ -3579,23 +3571,23 @@ bool solver::get_corner_location(const char &color_1, const char &color_2, int &
     count = 0;
     for (int i{0}; i < 3; i++)
     {
-        if (cubeMain[face].at(2).at(2) == colors.at(i) ||
-            cubeMain[bottom].at(0).at(2) == colors.at(i) ||
-            cubeMain[right].at(2).at(0) == colors.at(i))
+        if (cubeMain[face][2][2] == colors[i] ||
+            cubeMain[bottom][0][2] == colors[i] ||
+            cubeMain[right][2][0] == colors[i])
             count++;
         if (count == 3)
         {
-            if (cubeMain[face].at(2).at(2) == colors.at(i))
+            if (cubeMain[face][2][2] == colors[i])
             {
                 side = face;
                 block = 4;
             }
-            else if (cubeMain[bottom].at(0).at(2) == colors.at(i))
+            else if (cubeMain[bottom][0][2] == colors[i])
             {
                 side = bottom;
                 block = 2;
             }
-            else if (cubeMain[right].at(2).at(0) == colors.at(i))
+            else if (cubeMain[right][2][0] == colors[i])
             {
                 side = right;
                 block = 3;
@@ -3607,23 +3599,23 @@ bool solver::get_corner_location(const char &color_1, const char &color_2, int &
     count = 0;
     for (int i{0}; i < 3; i++)
     {
-        if (cubeMain[face].at(2).at(0) == colors.at(i) ||
-            cubeMain[bottom].at(0).at(0) == colors.at(i) ||
-            cubeMain[left].at(2).at(2) == colors.at(i))
+        if (cubeMain[face][2][0] == colors[i] ||
+            cubeMain[bottom][0][0] == colors[i] ||
+            cubeMain[left][2][2] == colors[i])
             count++;
         if (count == 3)
         {
-            if (cubeMain[face].at(2).at(0) == colors.at(i))
+            if (cubeMain[face][2][0] == colors[i])
             {
                 side = face;
                 block = 3;
             }
-            else if (cubeMain[bottom].at(0).at(0) == colors.at(i))
+            else if (cubeMain[bottom][0][0] == colors[i])
             {
                 side = bottom;
                 block = 1;
             }
-            else if (cubeMain[left].at(2).at(2) == colors.at(i))
+            else if (cubeMain[left][2][2] == colors[i])
             {
                 side = left;
                 block = 4;
@@ -3635,23 +3627,23 @@ bool solver::get_corner_location(const char &color_1, const char &color_2, int &
     count = 0;
     for (int i{0}; i < 3; i++)
     {
-        if (cubeMain[left].at(2).at(0) == colors.at(i) ||
-            cubeMain[bottom].at(2).at(0) == colors.at(i) ||
-            cubeMain[back].at(2).at(2) == colors.at(i))
+        if (cubeMain[left][2][0] == colors[i] ||
+            cubeMain[bottom][2][0] == colors[i] ||
+            cubeMain[back][2][2] == colors[i])
             count++;
         if (count == 3)
         {
-            if (cubeMain[left].at(2).at(0) == colors.at(i))
+            if (cubeMain[left][2][0] == colors[i])
             {
                 side = left;
                 block = 3;
             }
-            else if (cubeMain[bottom].at(2).at(0) == colors.at(i))
+            else if (cubeMain[bottom][2][0] == colors[i])
             {
                 side = bottom;
                 block = 3;
             }
-            else if (cubeMain[back].at(2).at(2) == colors.at(i))
+            else if (cubeMain[back][2][2] == colors[i])
             {
                 side = back;
                 block = 4;
@@ -3663,23 +3655,23 @@ bool solver::get_corner_location(const char &color_1, const char &color_2, int &
     count = 0;
     for (int i{0}; i < 3; i++)
     {
-        if (cubeMain[back].at(2).at(0) == colors.at(i) ||
-            cubeMain[bottom].at(2).at(2) == colors.at(i) ||
-            cubeMain[right].at(2).at(2) == colors.at(i))
+        if (cubeMain[back][2][0] == colors[i] ||
+            cubeMain[bottom][2][2] == colors[i] ||
+            cubeMain[right][2][2] == colors[i])
             count++;
         if (count == 3)
         {
-            if (cubeMain[back].at(2).at(0) == colors.at(i))
+            if (cubeMain[back][2][0] == colors[i])
             {
                 side = back;
                 block = 3;
             }
-            else if (cubeMain[bottom].at(2).at(2) == colors.at(i))
+            else if (cubeMain[bottom][2][2] == colors[i])
             {
                 side = bottom;
                 block = 4;
             }
-            else if (cubeMain[right].at(2).at(2) == colors.at(i))
+            else if (cubeMain[right][2][2] == colors[i])
             {
                 side = right;
                 block = 4;
@@ -3697,21 +3689,21 @@ bool solver::get_corner_location(const char &color_1, const char &color_2, int &
 bool solver::get_edge_location(const char &color_1, int &side, int &block)
 {
     int count{0};
-    vector<char> colors{color_1, cubeMain.at(bottom).at(1).at(1)};
+    vector<char> colors{color_1, cubeMain[bottom][1][1]};
     // BELLOW FOUR ARE TOP SIDE EDGES....
     count = 0;
     for (int i{0}; i < 2; i++)
     {
-        if (cubeMain[top].at(2).at(1) == colors.at(i) || cubeMain[face].at(0).at(1) == colors.at(i))
+        if (cubeMain[top][2][1] == colors[i] || cubeMain[face][0][1] == colors[i])
             count++;
         if (count == 2)
         {
-            if (cubeMain[top].at(2).at(1) == colors.at(i))
+            if (cubeMain[top][2][1] == colors[i])
             {
                 side = top;
                 block = 1;
             }
-            else if (cubeMain[face].at(0).at(1) == colors.at(i))
+            else if (cubeMain[face][0][1] == colors[i])
             {
                 side = face;
                 block = 1;
@@ -3722,16 +3714,16 @@ bool solver::get_edge_location(const char &color_1, int &side, int &block)
     count = 0;
     for (int i{0}; i < 2; i++)
     {
-        if (cubeMain[top].at(1).at(2) == colors.at(i) || cubeMain[right].at(0).at(1) == colors.at(i))
+        if (cubeMain[top][1][2] == colors[i] || cubeMain[right][0][1] == colors[i])
             count++;
         if (count == 2)
         {
-            if (cubeMain[top].at(1).at(2) == colors.at(i))
+            if (cubeMain[top][1][2] == colors[i])
             {
                 side = top;
                 block = 2;
             }
-            else if (cubeMain[right].at(0).at(1) == colors.at(i))
+            else if (cubeMain[right][0][1] == colors[i])
             {
                 side = right;
                 block = 1;
@@ -3742,16 +3734,16 @@ bool solver::get_edge_location(const char &color_1, int &side, int &block)
     count = 0;
     for (int i{0}; i < 2; i++)
     {
-        if (cubeMain[top].at(0).at(1) == colors.at(i) || cubeMain[back].at(0).at(1) == colors.at(i))
+        if (cubeMain[top][0][1] == colors[i] || cubeMain[back][0][1] == colors[i])
             count++;
         if (count == 2)
         {
-            if (cubeMain[top].at(0).at(1) == colors.at(i))
+            if (cubeMain[top][0][1] == colors[i])
             {
                 side = top;
                 block = 3;
             }
-            else if (cubeMain[back].at(0).at(1) == colors.at(i))
+            else if (cubeMain[back][0][1] == colors[i])
             {
                 side = back;
                 block = 1;
@@ -3762,16 +3754,16 @@ bool solver::get_edge_location(const char &color_1, int &side, int &block)
     count = 0;
     for (int i{0}; i < 2; i++)
     {
-        if (cubeMain[top].at(1).at(0) == colors.at(i) || cubeMain[left].at(0).at(1) == colors.at(i))
+        if (cubeMain[top][1][0] == colors[i] || cubeMain[left][0][1] == colors[i])
             count++;
         if (count == 2)
         {
-            if (cubeMain[top].at(1).at(0) == colors.at(i))
+            if (cubeMain[top][1][0] == colors[i])
             {
                 side = top;
                 block = 4;
             }
-            else if (cubeMain[left].at(0).at(1) == colors.at(i))
+            else if (cubeMain[left][0][1] == colors[i])
             {
                 side = left;
                 block = 1;
@@ -3783,11 +3775,11 @@ bool solver::get_edge_location(const char &color_1, int &side, int &block)
     count = 0;
     for (int i{0}; i < 2; i++)
     {
-        if (cubeMain[bottom].at(0).at(1) == colors.at(i) || cubeMain[face].at(2).at(1) == colors.at(i))
+        if (cubeMain[bottom][0][1] == colors[i] || cubeMain[face][2][1] == colors[i])
             count++;
         if (count == 2)
         {
-            if (cubeMain[face].at(2).at(1) == colors.at(i))
+            if (cubeMain[face][2][1] == colors[i])
             {
                 side = face;
                 block = 3;
@@ -3798,11 +3790,11 @@ bool solver::get_edge_location(const char &color_1, int &side, int &block)
     count = 0;
     for (int i{0}; i < 2; i++)
     {
-        if (cubeMain[bottom].at(1).at(2) == colors.at(i) || cubeMain[right].at(2).at(1) == colors.at(i))
+        if (cubeMain[bottom][1][2] == colors[i] || cubeMain[right][2][1] == colors[i])
             count++;
         if (count == 2)
         {
-            if (cubeMain[right].at(2).at(1) == colors.at(i))
+            if (cubeMain[right][2][1] == colors[i])
             {
                 side = right;
                 block = 3;
@@ -3813,11 +3805,11 @@ bool solver::get_edge_location(const char &color_1, int &side, int &block)
     count = 0;
     for (int i{0}; i < 2; i++)
     {
-        if (cubeMain[bottom].at(2).at(1) == colors.at(i) || cubeMain[back].at(2).at(1) == colors.at(i))
+        if (cubeMain[bottom][2][1] == colors[i] || cubeMain[back][2][1] == colors[i])
             count++;
         if (count == 2)
         {
-            if (cubeMain[back].at(2).at(1) == colors.at(i))
+            if (cubeMain[back][2][1] == colors[i])
             {
                 side = back;
                 block = 3;
@@ -3828,11 +3820,11 @@ bool solver::get_edge_location(const char &color_1, int &side, int &block)
     count = 0;
     for (int i{0}; i < 2; i++)
     {
-        if (cubeMain[bottom].at(1).at(0) == colors.at(i) || cubeMain[left].at(2).at(1) == colors.at(i))
+        if (cubeMain[bottom][1][0] == colors[i] || cubeMain[left][2][1] == colors[i])
             count++;
         if (count == 2)
         {
-            if (cubeMain[left].at(2).at(1) == colors.at(i))
+            if (cubeMain[left][2][1] == colors[i])
             {
                 side = left;
                 block = 3;
@@ -3844,16 +3836,16 @@ bool solver::get_edge_location(const char &color_1, int &side, int &block)
     count = 0;
     for (int i{0}; i < 2; i++)
     {
-        if (cubeMain[face].at(1).at(2) == colors.at(i) || cubeMain[right].at(1).at(0) == colors.at(i))
+        if (cubeMain[face][1][2] == colors[i] || cubeMain[right][1][0] == colors[i])
             count++;
         if (count == 2)
         {
-            if (cubeMain[face].at(1).at(2) == colors.at(i))
+            if (cubeMain[face][1][2] == colors[i])
             {
                 side = face;
                 block = 2;
             }
-            else if (cubeMain[right].at(1).at(0) == colors.at(i))
+            else if (cubeMain[right][1][0] == colors[i])
             {
                 side = right;
                 block = 4;
@@ -3864,16 +3856,16 @@ bool solver::get_edge_location(const char &color_1, int &side, int &block)
     count = 0;
     for (int i{0}; i < 2; i++)
     {
-        if (cubeMain[right].at(1).at(2) == colors.at(i) || cubeMain[back].at(1).at(0) == colors.at(i))
+        if (cubeMain[right][1][2] == colors[i] || cubeMain[back][1][0] == colors[i])
             count++;
         if (count == 2)
         {
-            if (cubeMain[right].at(1).at(2) == colors.at(i))
+            if (cubeMain[right][1][2] == colors[i])
             {
                 side = right;
                 block = 2;
             }
-            else if (cubeMain[back].at(1).at(0) == colors.at(i))
+            else if (cubeMain[back][1][0] == colors[i])
             {
                 side = back;
                 block = 4;
@@ -3884,16 +3876,16 @@ bool solver::get_edge_location(const char &color_1, int &side, int &block)
     count = 0;
     for (int i{0}; i < 2; i++)
     {
-        if (cubeMain[back].at(1).at(2) == colors.at(i) || cubeMain[left].at(1).at(0) == colors.at(i))
+        if (cubeMain[back][1][2] == colors[i] || cubeMain[left][1][0] == colors[i])
             count++;
         if (count == 2)
         {
-            if (cubeMain[back].at(1).at(2) == colors.at(i))
+            if (cubeMain[back][1][2] == colors[i])
             {
                 side = back;
                 block = 2;
             }
-            else if (cubeMain[left].at(1).at(0) == colors.at(i))
+            else if (cubeMain[left][1][0] == colors[i])
             {
                 side = left;
                 block = 4;
@@ -3904,16 +3896,16 @@ bool solver::get_edge_location(const char &color_1, int &side, int &block)
     count = 0;
     for (int i{0}; i < 2; i++)
     {
-        if (cubeMain[left].at(1).at(2) == colors.at(i) || cubeMain[face].at(1).at(0) == colors.at(i))
+        if (cubeMain[left][1][2] == colors[i] || cubeMain[face][1][0] == colors[i])
             count++;
         if (count == 2)
         {
-            if (cubeMain[left].at(1).at(2) == colors.at(i))
+            if (cubeMain[left][1][2] == colors[i])
             {
                 side = left;
                 block = 2;
             }
-            else if (cubeMain[face].at(1).at(0) == colors.at(i))
+            else if (cubeMain[face][1][0] == colors[i])
             {
                 side = face;
                 block = 4;
@@ -3940,11 +3932,11 @@ bool solver::find_edge_in_top_lyr(solver &temp_cube, const char &color_1, const 
     topSideColor = 'x';
     while (!pos)
     {
-        if (temp_cube.cubeMain[face].at(0).at(1) == color_1 && temp_cube.cubeMain[top].at(2).at(1) == color_2)
+        if (temp_cube.cubeMain[face][0][1] == color_1 && temp_cube.cubeMain[top][2][1] == color_2)
         {
             if (edgeSetter == "CALL_EDGE_SETTER")
             {
-                if (color_1 == temp_cube.cubeMain[face].at(1).at(1))
+                if (color_1 == temp_cube.cubeMain[face][1][1])
                     pos = true;
                 else
                 {
@@ -3955,11 +3947,11 @@ bool solver::find_edge_in_top_lyr(solver &temp_cube, const char &color_1, const 
             edgeSide = face;
             topSideColor = color_2;
         }
-        else if (temp_cube.cubeMain[top].at(1).at(2) == color_2 && temp_cube.cubeMain[right].at(0).at(1) == color_1)
+        else if (temp_cube.cubeMain[top][1][2] == color_2 && temp_cube.cubeMain[right][0][1] == color_1)
         {
             if (edgeSetter == "CALL_EDGE_SETTER")
             {
-                if (color_1 == temp_cube.cubeMain[right].at(1).at(1))
+                if (color_1 == temp_cube.cubeMain[right][1][1])
                     pos = true;
                 else
                 {
@@ -3970,11 +3962,11 @@ bool solver::find_edge_in_top_lyr(solver &temp_cube, const char &color_1, const 
             edgeSide = right;
             topSideColor = color_2;
         }
-        else if (temp_cube.cubeMain[top].at(1).at(0) == color_2 && temp_cube.cubeMain[left].at(0).at(1) == color_1)
+        else if (temp_cube.cubeMain[top][1][0] == color_2 && temp_cube.cubeMain[left][0][1] == color_1)
         {
             if (edgeSetter == "CALL_EDGE_SETTER")
             {
-                if (color_1 == temp_cube.cubeMain[left].at(1).at(1))
+                if (color_1 == temp_cube.cubeMain[left][1][1])
                     pos = true;
                 else
                 {
@@ -3985,11 +3977,11 @@ bool solver::find_edge_in_top_lyr(solver &temp_cube, const char &color_1, const 
             edgeSide = left;
             topSideColor = color_2;
         }
-        else if (temp_cube.cubeMain[top].at(0).at(1) == color_2 && temp_cube.cubeMain[back].at(0).at(1) == color_1)
+        else if (temp_cube.cubeMain[top][0][1] == color_2 && temp_cube.cubeMain[back][0][1] == color_1)
         {
             if (edgeSetter == "CALL_EDGE_SETTER")
             {
-                if (color_1 == temp_cube.cubeMain[back].at(1).at(1))
+                if (color_1 == temp_cube.cubeMain[back][1][1])
                     pos = true;
                 else
                 {
@@ -4001,11 +3993,11 @@ bool solver::find_edge_in_top_lyr(solver &temp_cube, const char &color_1, const 
             topSideColor = color_2;
         }
         // if second color is not on the face.....
-        else if (temp_cube.cubeMain[face].at(0).at(1) == color_2 && temp_cube.cubeMain[top].at(2).at(1) == color_1)
+        else if (temp_cube.cubeMain[face][0][1] == color_2 && temp_cube.cubeMain[top][2][1] == color_1)
         {
             if (edgeSetter == "CALL_EDGE_SETTER")
             {
-                if (color_2 == temp_cube.cubeMain[face].at(1).at(1))
+                if (color_2 == temp_cube.cubeMain[face][1][1])
                     pos = true;
                 else
                 {
@@ -4016,11 +4008,11 @@ bool solver::find_edge_in_top_lyr(solver &temp_cube, const char &color_1, const 
             edgeSide = face;
             topSideColor = color_1;
         }
-        else if (temp_cube.cubeMain[top].at(1).at(2) == color_1 && temp_cube.cubeMain[right].at(0).at(1) == color_2)
+        else if (temp_cube.cubeMain[top][1][2] == color_1 && temp_cube.cubeMain[right][0][1] == color_2)
         {
             if (edgeSetter == "CALL_EDGE_SETTER")
             {
-                if (color_2 == temp_cube.cubeMain[right].at(1).at(1))
+                if (color_2 == temp_cube.cubeMain[right][1][1])
                     pos = true;
                 else
                 {
@@ -4031,11 +4023,11 @@ bool solver::find_edge_in_top_lyr(solver &temp_cube, const char &color_1, const 
             edgeSide = right;
             topSideColor = color_1;
         }
-        else if (temp_cube.cubeMain[top].at(1).at(0) == color_1 && temp_cube.cubeMain[left].at(0).at(1) == color_2)
+        else if (temp_cube.cubeMain[top][1][0] == color_1 && temp_cube.cubeMain[left][0][1] == color_2)
         {
             if (edgeSetter == "CALL_EDGE_SETTER")
             {
-                if (color_2 == temp_cube.cubeMain[left].at(1).at(1))
+                if (color_2 == temp_cube.cubeMain[left][1][1])
                     pos = true;
                 else
                 {
@@ -4047,11 +4039,11 @@ bool solver::find_edge_in_top_lyr(solver &temp_cube, const char &color_1, const 
             topSideColor = color_1;
         }
         // back side edges
-        else if (temp_cube.cubeMain[top].at(0).at(1) == color_1 && temp_cube.cubeMain[back].at(0).at(1) == color_2)
+        else if (temp_cube.cubeMain[top][0][1] == color_1 && temp_cube.cubeMain[back][0][1] == color_2)
         {
             if (edgeSetter == "CALL_EDGE_SETTER")
             {
-                if (color_2 == temp_cube.cubeMain[back].at(1).at(1))
+                if (color_2 == temp_cube.cubeMain[back][1][1])
                     pos = true;
                 else
                 {
@@ -4105,11 +4097,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
     {
         colorCount = 0;
         //--------------------- ifs for TOP , FACE AND RIGHT ANGLED CORNER ---------------------
-        if (temp_cube.cubeMain[top].at(2).at(2) == color_1 && temp_cube.cubeMain[face].at(0).at(2) == color_2 && temp_cube.cubeMain[right].at(0).at(0) == color_3)
+        if (temp_cube.cubeMain[top][2][2] == color_1 && temp_cube.cubeMain[face][0][2] == color_2 && temp_cube.cubeMain[right][0][0] == color_3)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[face].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[right].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[face][1][1] == colors[i] || temp_cube.cubeMain[right][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4127,11 +4119,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(2).at(2) == color_3 && temp_cube.cubeMain[face].at(0).at(2) == color_1 && temp_cube.cubeMain[right].at(0).at(0) == color_2)
+        else if (temp_cube.cubeMain[top][2][2] == color_3 && temp_cube.cubeMain[face][0][2] == color_1 && temp_cube.cubeMain[right][0][0] == color_2)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[face].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[right].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[face][1][1] == colors[i] || temp_cube.cubeMain[right][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4149,11 +4141,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(2).at(2) == color_2 && temp_cube.cubeMain[face].at(0).at(2) == color_3 && temp_cube.cubeMain[right].at(0).at(0) == color_1)
+        else if (temp_cube.cubeMain[top][2][2] == color_2 && temp_cube.cubeMain[face][0][2] == color_3 && temp_cube.cubeMain[right][0][0] == color_1)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[face].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[right].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[face][1][1] == colors[i] || temp_cube.cubeMain[right][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4171,11 +4163,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(2).at(2) == color_3 && temp_cube.cubeMain[face].at(0).at(2) == color_2 && temp_cube.cubeMain[right].at(0).at(0) == color_1)
+        else if (temp_cube.cubeMain[top][2][2] == color_3 && temp_cube.cubeMain[face][0][2] == color_2 && temp_cube.cubeMain[right][0][0] == color_1)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[face].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[right].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[face][1][1] == colors[i] || temp_cube.cubeMain[right][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4193,11 +4185,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(2).at(2) == color_1 && temp_cube.cubeMain[face].at(0).at(2) == color_3 && temp_cube.cubeMain[right].at(0).at(0) == color_2)
+        else if (temp_cube.cubeMain[top][2][2] == color_1 && temp_cube.cubeMain[face][0][2] == color_3 && temp_cube.cubeMain[right][0][0] == color_2)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[face].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[right].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[face][1][1] == colors[i] || temp_cube.cubeMain[right][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4215,11 +4207,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(2).at(2) == color_2 && temp_cube.cubeMain[face].at(0).at(2) == color_1 && temp_cube.cubeMain[right].at(0).at(0) == color_3)
+        else if (temp_cube.cubeMain[top][2][2] == color_2 && temp_cube.cubeMain[face][0][2] == color_1 && temp_cube.cubeMain[right][0][0] == color_3)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[face].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[right].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[face][1][1] == colors[i] || temp_cube.cubeMain[right][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4238,11 +4230,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
             }
         }
         //--------------------- ifs for TOP , BACK AND RIGHT ANGLED CORNER ----------------------
-        else if (temp_cube.cubeMain[top].at(0).at(2) == color_1 && temp_cube.cubeMain[back].at(0).at(0) == color_2 && temp_cube.cubeMain[right].at(0).at(2) == color_3)
+        else if (temp_cube.cubeMain[top][0][2] == color_1 && temp_cube.cubeMain[back][0][0] == color_2 && temp_cube.cubeMain[right][0][2] == color_3)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[back].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[right].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[back][1][1] == colors[i] || temp_cube.cubeMain[right][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4260,11 +4252,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(0).at(2) == color_3 && temp_cube.cubeMain[back].at(0).at(0) == color_1 && temp_cube.cubeMain[right].at(0).at(2) == color_2)
+        else if (temp_cube.cubeMain[top][0][2] == color_3 && temp_cube.cubeMain[back][0][0] == color_1 && temp_cube.cubeMain[right][0][2] == color_2)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[back].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[right].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[back][1][1] == colors[i] || temp_cube.cubeMain[right][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4282,11 +4274,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(0).at(2) == color_2 && temp_cube.cubeMain[back].at(0).at(0) == color_3 && temp_cube.cubeMain[right].at(0).at(2) == color_1)
+        else if (temp_cube.cubeMain[top][0][2] == color_2 && temp_cube.cubeMain[back][0][0] == color_3 && temp_cube.cubeMain[right][0][2] == color_1)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[back].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[right].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[back][1][1] == colors[i] || temp_cube.cubeMain[right][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4304,11 +4296,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(0).at(2) == color_3 && temp_cube.cubeMain[back].at(0).at(0) == color_2 && temp_cube.cubeMain[right].at(0).at(2) == color_1)
+        else if (temp_cube.cubeMain[top][0][2] == color_3 && temp_cube.cubeMain[back][0][0] == color_2 && temp_cube.cubeMain[right][0][2] == color_1)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[back].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[right].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[back][1][1] == colors[i] || temp_cube.cubeMain[right][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4326,11 +4318,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(0).at(2) == color_1 && temp_cube.cubeMain[back].at(0).at(0) == color_3 && temp_cube.cubeMain[right].at(0).at(2) == color_2)
+        else if (temp_cube.cubeMain[top][0][2] == color_1 && temp_cube.cubeMain[back][0][0] == color_3 && temp_cube.cubeMain[right][0][2] == color_2)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[back].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[right].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[back][1][1] == colors[i] || temp_cube.cubeMain[right][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4348,11 +4340,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(0).at(2) == color_2 && temp_cube.cubeMain[back].at(0).at(0) == color_1 && temp_cube.cubeMain[right].at(0).at(2) == color_3)
+        else if (temp_cube.cubeMain[top][0][2] == color_2 && temp_cube.cubeMain[back][0][0] == color_1 && temp_cube.cubeMain[right][0][2] == color_3)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[back].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[right].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[back][1][1] == colors[i] || temp_cube.cubeMain[right][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4371,11 +4363,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
             }
         }
         //--------------------- ifs for TOP , BACK AND LEFT ANGLED CORNER ----------------------
-        else if (temp_cube.cubeMain[top].at(0).at(0) == color_1 && temp_cube.cubeMain[back].at(0).at(2) == color_2 && temp_cube.cubeMain[left].at(0).at(0) == color_3)
+        else if (temp_cube.cubeMain[top][0][0] == color_1 && temp_cube.cubeMain[back][0][2] == color_2 && temp_cube.cubeMain[left][0][0] == color_3)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[back].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[left].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[back][1][1] == colors[i] || temp_cube.cubeMain[left][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4393,11 +4385,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(0).at(0) == color_3 && temp_cube.cubeMain[back].at(0).at(2) == color_1 && temp_cube.cubeMain[left].at(0).at(0) == color_2)
+        else if (temp_cube.cubeMain[top][0][0] == color_3 && temp_cube.cubeMain[back][0][2] == color_1 && temp_cube.cubeMain[left][0][0] == color_2)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[back].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[left].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[back][1][1] == colors[i] || temp_cube.cubeMain[left][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4415,11 +4407,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(0).at(0) == color_2 && temp_cube.cubeMain[back].at(0).at(2) == color_3 && temp_cube.cubeMain[left].at(0).at(0) == color_1)
+        else if (temp_cube.cubeMain[top][0][0] == color_2 && temp_cube.cubeMain[back][0][2] == color_3 && temp_cube.cubeMain[left][0][0] == color_1)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[back].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[left].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[back][1][1] == colors[i] || temp_cube.cubeMain[left][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4437,11 +4429,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(0).at(0) == color_3 && temp_cube.cubeMain[back].at(0).at(2) == color_2 && temp_cube.cubeMain[left].at(0).at(0) == color_1)
+        else if (temp_cube.cubeMain[top][0][0] == color_3 && temp_cube.cubeMain[back][0][2] == color_2 && temp_cube.cubeMain[left][0][0] == color_1)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[back].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[left].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[back][1][1] == colors[i] || temp_cube.cubeMain[left][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4459,11 +4451,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(0).at(0) == color_1 && temp_cube.cubeMain[back].at(0).at(2) == color_3 && temp_cube.cubeMain[left].at(0).at(0) == color_2)
+        else if (temp_cube.cubeMain[top][0][0] == color_1 && temp_cube.cubeMain[back][0][2] == color_3 && temp_cube.cubeMain[left][0][0] == color_2)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[back].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[left].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[back][1][1] == colors[i] || temp_cube.cubeMain[left][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4481,11 +4473,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(0).at(0) == color_2 && temp_cube.cubeMain[back].at(0).at(2) == color_1 && temp_cube.cubeMain[left].at(0).at(0) == color_3)
+        else if (temp_cube.cubeMain[top][0][0] == color_2 && temp_cube.cubeMain[back][0][2] == color_1 && temp_cube.cubeMain[left][0][0] == color_3)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[back].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[left].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[back][1][1] == colors[i] || temp_cube.cubeMain[left][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4504,11 +4496,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
             }
         }
         //--------------------- ifs for TOP , FACE AND LEFT ANGLED CORNER ----------------------
-        else if (temp_cube.cubeMain[top].at(2).at(0) == color_1 && temp_cube.cubeMain[face].at(0).at(0) == color_2 && temp_cube.cubeMain[left].at(0).at(2) == color_3)
+        else if (temp_cube.cubeMain[top][2][0] == color_1 && temp_cube.cubeMain[face][0][0] == color_2 && temp_cube.cubeMain[left][0][2] == color_3)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[face].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[left].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[face][1][1] == colors[i] || temp_cube.cubeMain[left][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4526,11 +4518,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(2).at(0) == color_3 && temp_cube.cubeMain[face].at(0).at(0) == color_1 && temp_cube.cubeMain[left].at(0).at(2) == color_2)
+        else if (temp_cube.cubeMain[top][2][0] == color_3 && temp_cube.cubeMain[face][0][0] == color_1 && temp_cube.cubeMain[left][0][2] == color_2)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[face].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[left].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[face][1][1] == colors[i] || temp_cube.cubeMain[left][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4548,11 +4540,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(2).at(0) == color_2 && temp_cube.cubeMain[face].at(0).at(0) == color_3 && temp_cube.cubeMain[left].at(0).at(2) == color_1)
+        else if (temp_cube.cubeMain[top][2][0] == color_2 && temp_cube.cubeMain[face][0][0] == color_3 && temp_cube.cubeMain[left][0][2] == color_1)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[face].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[left].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[face][1][1] == colors[i] || temp_cube.cubeMain[left][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4570,11 +4562,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(2).at(0) == color_3 && temp_cube.cubeMain[face].at(0).at(0) == color_2 && temp_cube.cubeMain[left].at(0).at(2) == color_1)
+        else if (temp_cube.cubeMain[top][2][0] == color_3 && temp_cube.cubeMain[face][0][0] == color_2 && temp_cube.cubeMain[left][0][2] == color_1)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[face].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[left].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[face][1][1] == colors[i] || temp_cube.cubeMain[left][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4592,11 +4584,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(2).at(0) == color_1 && temp_cube.cubeMain[face].at(0).at(0) == color_3 && temp_cube.cubeMain[left].at(0).at(2) == color_2)
+        else if (temp_cube.cubeMain[top][2][0] == color_1 && temp_cube.cubeMain[face][0][0] == color_3 && temp_cube.cubeMain[left][0][2] == color_2)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[face].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[left].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[face][1][1] == colors[i] || temp_cube.cubeMain[left][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4614,11 +4606,11 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
                 moveCount++;
             }
         }
-        else if (temp_cube.cubeMain[top].at(2).at(0) == color_2 && temp_cube.cubeMain[face].at(0).at(0) == color_1 && temp_cube.cubeMain[left].at(0).at(2) == color_3)
+        else if (temp_cube.cubeMain[top][2][0] == color_2 && temp_cube.cubeMain[face][0][0] == color_1 && temp_cube.cubeMain[left][0][2] == color_3)
         {
             for (int i{0}; i < 2; i++)
             {
-                if (temp_cube.cubeMain[face].at(1).at(1) == colors.at(i) || temp_cube.cubeMain[left].at(1).at(1) == colors.at(i))
+                if (temp_cube.cubeMain[face][1][1] == colors[i] || temp_cube.cubeMain[left][1][1] == colors[i])
                     colorCount++;
             }
             if (colorCount == 2)
@@ -4669,25 +4661,23 @@ void solver::set_corner_on_top(solver &temp_cube, const char &color_1, const cha
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 int solver::find_edge_in_mid_lyr(solver &temp_cube, const char &color_1, const char &color_2, string_view edgeSetter)
 {
-    // temp_cube = *this;
-    // FRONT SIDE-EDGES
-    if (cubeMain[face].at(1).at(2) == color_1 && cubeMain[right].at(1).at(0) == color_2)
+    if (cubeMain[face][1][2] == color_1 && cubeMain[right][1][0] == color_2)
     {
-        if (color_1 == cubeMain[face].at(1).at(1) && color_2 == cubeMain[right].at(1).at(1))
+        if (color_1 == cubeMain[face][1][1] && color_2 == cubeMain[right][1][1])
         {
             return 1;
         }
-        else if (color_2 == cubeMain[face].at(1).at(1) && color_1 == cubeMain[right].at(1).at(1))
+        else if (color_2 == cubeMain[face][1][1] && color_1 == cubeMain[right][1][1])
         {
             return 0;
         }
-        else if (color_1 == cubeMain[face].at(1).at(1) || color_2 == cubeMain[face].at(1).at(1))
+        else if (color_1 == cubeMain[face][1][1] || color_2 == cubeMain[face][1][1])
         {
             tempSolution.push_back("R");
             tempSolution.push_back("U");
             tempSolution.push_back("RP");
         }
-        else if (color_1 == cubeMain[right].at(1).at(1) || color_2 == cubeMain[right].at(1).at(1))
+        else if (color_1 == cubeMain[right][1][1] || color_2 == cubeMain[right][1][1])
         {
             tempSolution.push_back("FP");
             tempSolution.push_back("UP");
@@ -4704,23 +4694,23 @@ int solver::find_edge_in_mid_lyr(solver &temp_cube, const char &color_1, const c
             find_edge_in_top_lyr(temp_cube, color_1, color_2, edgeSetter);
         return -1;
     }
-    else if (cubeMain[face].at(1).at(2) == color_2 && cubeMain[right].at(1).at(0) == color_1)
+    else if (cubeMain[face][1][2] == color_2 && cubeMain[right][1][0] == color_1)
     {
-        if (color_2 == cubeMain[face].at(1).at(1) && color_1 == cubeMain[right].at(1).at(1))
+        if (color_2 == cubeMain[face][1][1] && color_1 == cubeMain[right][1][1])
         {
             return 1;
         }
-        else if (color_1 == cubeMain[face].at(1).at(1) && color_2 == cubeMain[right].at(1).at(1))
+        else if (color_1 == cubeMain[face][1][1] && color_2 == cubeMain[right][1][1])
         {
             return 0;
         }
-        else if (color_1 == cubeMain[face].at(1).at(1) || color_2 == cubeMain[face].at(1).at(1))
+        else if (color_1 == cubeMain[face][1][1] || color_2 == cubeMain[face][1][1])
         {
             tempSolution.push_back("R");
             tempSolution.push_back("U");
             tempSolution.push_back("RP");
         }
-        else if (color_1 == cubeMain[right].at(1).at(1) || color_2 == cubeMain[right].at(1).at(1))
+        else if (color_1 == cubeMain[right][1][1] || color_2 == cubeMain[right][1][1])
         {
             tempSolution.push_back("FP");
             tempSolution.push_back("UP");
@@ -4737,23 +4727,23 @@ int solver::find_edge_in_mid_lyr(solver &temp_cube, const char &color_1, const c
             find_edge_in_top_lyr(temp_cube, color_1, color_2, edgeSetter);
         return -1;
     }
-    else if (cubeMain[face].at(1).at(0) == color_1 && cubeMain[left].at(1).at(2) == color_2)
+    else if (cubeMain[face][1][0] == color_1 && cubeMain[left][1][2] == color_2)
     {
-        if (color_1 == cubeMain[face].at(1).at(1) && color_2 == cubeMain[left].at(1).at(1))
+        if (color_1 == cubeMain[face][1][1] && color_2 == cubeMain[left][1][1])
         {
             return 1;
         }
-        else if (color_2 == cubeMain[face].at(1).at(1) && color_1 == cubeMain[left].at(1).at(1))
+        else if (color_2 == cubeMain[face][1][1] && color_1 == cubeMain[left][1][1])
         {
             return 0;
         }
-        else if (color_1 == cubeMain[face].at(1).at(1) || color_2 == cubeMain[face].at(1).at(1))
+        else if (color_1 == cubeMain[face][1][1] || color_2 == cubeMain[face][1][1])
         {
             tempSolution.push_back("LP");
             tempSolution.push_back("UP");
             tempSolution.push_back("L");
         }
-        else if (color_1 == cubeMain[left].at(1).at(1) || color_2 == cubeMain[left].at(1).at(1))
+        else if (color_1 == cubeMain[left][1][1] || color_2 == cubeMain[left][1][1])
         {
             tempSolution.push_back("F");
             tempSolution.push_back("U");
@@ -4770,23 +4760,23 @@ int solver::find_edge_in_mid_lyr(solver &temp_cube, const char &color_1, const c
             find_edge_in_top_lyr(temp_cube, color_1, color_2, edgeSetter);
         return -1;
     }
-    else if (cubeMain[face].at(1).at(0) == color_2 && cubeMain[left].at(1).at(2) == color_1)
+    else if (cubeMain[face][1][0] == color_2 && cubeMain[left][1][2] == color_1)
     {
-        if (color_2 == cubeMain[face].at(1).at(1) && color_1 == cubeMain[left].at(1).at(1))
+        if (color_2 == cubeMain[face][1][1] && color_1 == cubeMain[left][1][1])
         {
             return 1;
         }
-        else if (color_1 == cubeMain[face].at(1).at(1) && color_2 == cubeMain[left].at(1).at(1))
+        else if (color_1 == cubeMain[face][1][1] && color_2 == cubeMain[left][1][1])
         {
             return 0;
         }
-        else if (color_1 == cubeMain[face].at(1).at(1) || color_2 == cubeMain[face].at(1).at(1))
+        else if (color_1 == cubeMain[face][1][1] || color_2 == cubeMain[face][1][1])
         {
             tempSolution.push_back("LP");
             tempSolution.push_back("UP");
             tempSolution.push_back("L");
         }
-        else if (color_1 == cubeMain[left].at(1).at(1) || color_2 == cubeMain[left].at(1).at(1))
+        else if (color_1 == cubeMain[left][1][1] || color_2 == cubeMain[left][1][1])
         {
             tempSolution.push_back("F");
             tempSolution.push_back("U");
@@ -4804,23 +4794,23 @@ int solver::find_edge_in_mid_lyr(solver &temp_cube, const char &color_1, const c
         return -1;
     }
     // BACK SIDE-EDGES
-    else if (cubeMain[right].at(1).at(2) == color_1 && cubeMain[back].at(1).at(0) == color_2)
+    else if (cubeMain[right][1][2] == color_1 && cubeMain[back][1][0] == color_2)
     {
-        if (color_1 == cubeMain[right].at(1).at(1) && color_2 == cubeMain[back].at(1).at(1))
+        if (color_1 == cubeMain[right][1][1] && color_2 == cubeMain[back][1][1])
         {
             return 1;
         }
-        else if (color_2 == cubeMain[right].at(1).at(1) && color_1 == cubeMain[back].at(1).at(1))
+        else if (color_2 == cubeMain[right][1][1] && color_1 == cubeMain[back][1][1])
         {
             return 0;
         }
-        else if (color_1 == cubeMain[right].at(1).at(1) || color_2 == cubeMain[right].at(1).at(1))
+        else if (color_1 == cubeMain[right][1][1] || color_2 == cubeMain[right][1][1])
         {
             tempSolution.push_back("B");
             tempSolution.push_back("U");
             tempSolution.push_back("BP");
         }
-        else if (color_1 == cubeMain[back].at(1).at(1) || color_2 == cubeMain[back].at(1).at(1))
+        else if (color_1 == cubeMain[back][1][1] || color_2 == cubeMain[back][1][1])
         {
             tempSolution.push_back("RP");
             tempSolution.push_back("UP");
@@ -4837,23 +4827,23 @@ int solver::find_edge_in_mid_lyr(solver &temp_cube, const char &color_1, const c
             find_edge_in_top_lyr(temp_cube, color_1, color_2, edgeSetter);
         return -1;
     }
-    else if (cubeMain[right].at(1).at(2) == color_2 && cubeMain[back].at(1).at(0) == color_1)
+    else if (cubeMain[right][1][2] == color_2 && cubeMain[back][1][0] == color_1)
     {
-        if (color_2 == cubeMain[right].at(1).at(1) && color_1 == cubeMain[back].at(1).at(1))
+        if (color_2 == cubeMain[right][1][1] && color_1 == cubeMain[back][1][1])
         {
             return 1;
         }
-        else if (color_1 == cubeMain[right].at(1).at(1) && color_2 == cubeMain[back].at(1).at(1))
+        else if (color_1 == cubeMain[right][1][1] && color_2 == cubeMain[back][1][1])
         {
             return 0;
         }
-        else if (color_1 == cubeMain[right].at(1).at(1) || color_2 == cubeMain[right].at(1).at(1))
+        else if (color_1 == cubeMain[right][1][1] || color_2 == cubeMain[right][1][1])
         {
             tempSolution.push_back("B");
             tempSolution.push_back("U");
             tempSolution.push_back("BP");
         }
-        else if (color_1 == cubeMain[back].at(1).at(1) || color_2 == cubeMain[back].at(1).at(1))
+        else if (color_1 == cubeMain[back][1][1] || color_2 == cubeMain[back][1][1])
         {
             tempSolution.push_back("RP");
             tempSolution.push_back("UP");
@@ -4870,23 +4860,23 @@ int solver::find_edge_in_mid_lyr(solver &temp_cube, const char &color_1, const c
             find_edge_in_top_lyr(temp_cube, color_1, color_2, edgeSetter);
         return -1;
     }
-    else if (cubeMain[left].at(1).at(0) == color_1 && cubeMain[back].at(1).at(2) == color_2)
+    else if (cubeMain[left][1][0] == color_1 && cubeMain[back][1][2] == color_2)
     {
-        if (color_1 == cubeMain[left].at(1).at(1) && color_2 == cubeMain[back].at(1).at(1))
+        if (color_1 == cubeMain[left][1][1] && color_2 == cubeMain[back][1][1])
         {
             return 1;
         }
-        else if (color_2 == cubeMain[left].at(1).at(1) && color_1 == cubeMain[back].at(1).at(1))
+        else if (color_2 == cubeMain[left][1][1] && color_1 == cubeMain[back][1][1])
         {
             return 0;
         }
-        else if (color_1 == cubeMain[left].at(1).at(1) || color_2 == cubeMain[left].at(1).at(1))
+        else if (color_1 == cubeMain[left][1][1] || color_2 == cubeMain[left][1][1])
         {
             tempSolution.push_back("BP");
             tempSolution.push_back("U");
             tempSolution.push_back("B");
         }
-        else if (color_1 == cubeMain[back].at(1).at(1) || color_2 == cubeMain[back].at(1).at(1))
+        else if (color_1 == cubeMain[back][1][1] || color_2 == cubeMain[back][1][1])
         {
             tempSolution.push_back("L");
             tempSolution.push_back("U");
@@ -4903,23 +4893,23 @@ int solver::find_edge_in_mid_lyr(solver &temp_cube, const char &color_1, const c
             find_edge_in_top_lyr(temp_cube, color_1, color_2, edgeSetter);
         return -1;
     }
-    else if (cubeMain[left].at(1).at(0) == color_2 && cubeMain[back].at(1).at(2) == color_1)
+    else if (cubeMain[left][1][0] == color_2 && cubeMain[back][1][2] == color_1)
     {
-        if (color_2 == cubeMain[left].at(1).at(1) && color_1 == cubeMain[back].at(1).at(1))
+        if (color_2 == cubeMain[left][1][1] && color_1 == cubeMain[back][1][1])
         {
             return 1;
         }
-        else if (color_1 == cubeMain[left].at(1).at(1) && color_2 == cubeMain[back].at(1).at(1))
+        else if (color_1 == cubeMain[left][1][1] && color_2 == cubeMain[back][1][1])
         {
             return 0;
         }
-        else if (color_1 == cubeMain[left].at(1).at(1) || color_2 == cubeMain[left].at(1).at(1))
+        else if (color_1 == cubeMain[left][1][1] || color_2 == cubeMain[left][1][1])
         {
             tempSolution.push_back("BP");
             tempSolution.push_back("U");
             tempSolution.push_back("B");
         }
-        else if (color_1 == cubeMain[back].at(1).at(1) || color_2 == cubeMain[back].at(1).at(1))
+        else if (color_1 == cubeMain[back][1][1] || color_2 == cubeMain[back][1][1])
         {
             tempSolution.push_back("L");
             tempSolution.push_back("U");
@@ -4944,8 +4934,8 @@ int solver::find_edge_in_mid_lyr(solver &temp_cube, const char &color_1, const c
 void solver::f2LHelper(solver &temp_cube, const int &side, const int &colorBlock)
 {
     temp_cube = *this;
-    int sentinal;
-    const char bottom_color{cubeMain.at(bottom).at(1).at(1)};
+    int sentinel;
+    const char bottomColor{cubeMain[bottom][1][1]};
     bool cornerLocMatch{false}, boolEdgeSetter{false};
 
     // -------------------------------------------------- FACE SIDE ---------------------------------------------------------------
@@ -4954,28 +4944,28 @@ void solver::f2LHelper(solver &temp_cube, const int &side, const int &colorBlock
         switch (colorBlock)
         {
         case 1:
-            if (cubeMain.at(side).at(0).at(0) == bottom_color)
+            if (cubeMain[side][0][0] == bottomColor)
             {
-                cornerLocMatch = find_corner_colors(bottom_color, side, 0, 0);
+                cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
                 boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
                     // for the condition when corner is on the correct location but side edge is not on the top......
                     if (!boolEdgeSetter)
                     {
-                        sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                        if (sentinal == 1)
+                        sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (sentinel == 1)
                         {
                             setalgo(left, "U FP U F U FP U2 F", "f2l");
                         }
-                        else if (sentinal == 0)
+                        else if (sentinel == 0)
                         {
                             setalgo(left, "U FP UP F UP R U RP", "f2l");
                         }
-                        else if (sentinal == -1)
+                        else if (sentinel == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -5027,28 +5017,28 @@ void solver::f2LHelper(solver &temp_cube, const int &side, const int &colorBlock
             }
             break;
         case 2:
-            if (cubeMain.at(side).at(0).at(2) == bottom_color)
+            if (cubeMain[side][0][2] == bottomColor)
             {
-                cornerLocMatch = find_corner_colors(bottom_color, side, 0, 2);
+                cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
                 boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
                     // for the condition when corner is on the correct location but side edge is not on the top......
                     if (!boolEdgeSetter)
                     {
-                        sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                        if (sentinal == 1)
+                        sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (sentinel == 1)
                         {
                             setalgo(face, "UP R UP RP UP R U2 RP", "f2l");
                         }
-                        else if (sentinal == 0)
+                        else if (sentinel == 0)
                         {
                             setalgo(face, "UP R U RP U FP UP F", "f2l");
                         }
-                        else if (sentinal == -1)
+                        else if (sentinel == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -5109,28 +5099,28 @@ void solver::f2LHelper(solver &temp_cube, const int &side, const int &colorBlock
         switch (colorBlock)
         {
         case 1:
-            if (cubeMain.at(side).at(0).at(0) == bottom_color)
+            if (cubeMain[side][0][0] == bottomColor)
             {
-                cornerLocMatch = find_corner_colors(bottom_color, side, 0, 0);
+                cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
                 boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
                     // for the condition when corner is on the correct location but side edge is not on the top......
                     if (!boolEdgeSetter)
                     {
-                        sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                        if (sentinal == 1)
+                        sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (sentinel == 1)
                         {
                             setalgo(face, "U FP U F U FP U2 F", "f2l");
                         }
-                        else if (sentinal == 0)
+                        else if (sentinel == 0)
                         {
                             setalgo(face, "U FP UP F UP R U RP", "f2l");
                         }
-                        else if (sentinal == -1)
+                        else if (sentinel == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -5182,28 +5172,28 @@ void solver::f2LHelper(solver &temp_cube, const int &side, const int &colorBlock
             }
             break;
         case 2:
-            if (cubeMain.at(side).at(0).at(2) == bottom_color)
+            if (cubeMain[side][0][2] == bottomColor)
             {
-                cornerLocMatch = find_corner_colors(bottom_color, side, 0, 2);
+                cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
                 boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
                     // for the condition when corner is on the correct location but side edge is not on the top......
                     if (!boolEdgeSetter)
                     {
-                        sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                        if (sentinal == 1)
+                        sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (sentinel == 1)
                         {
                             setalgo(right, "UP R UP RP UP R U2 RP", "f2l");
                         }
-                        else if (sentinal == 0)
+                        else if (sentinel == 0)
                         {
                             setalgo(right, "UP R U RP U FP UP F", "f2l");
                         }
-                        else if (sentinal == -1)
+                        else if (sentinel == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -5264,28 +5254,28 @@ void solver::f2LHelper(solver &temp_cube, const int &side, const int &colorBlock
         switch (colorBlock)
         {
         case 1:
-            if (cubeMain.at(side).at(0).at(0) == bottom_color)
+            if (cubeMain[side][0][0] == bottomColor)
             {
-                cornerLocMatch = find_corner_colors(bottom_color, side, 0, 0);
+                cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
                 boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
                     // for the condition when corner is on the correct location but side edge is not on the top......
                     if (!boolEdgeSetter)
                     {
-                        sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                        if (sentinal == 1)
+                        sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (sentinel == 1)
                         {
                             setalgo(right, "U FP U F U FP U2 F", "f2l");
                         }
-                        else if (sentinal == 0)
+                        else if (sentinel == 0)
                         {
                             setalgo(right, "U FP UP F UP R U RP", "f2l");
                         }
-                        else if (sentinal == -1)
+                        else if (sentinel == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -5337,28 +5327,28 @@ void solver::f2LHelper(solver &temp_cube, const int &side, const int &colorBlock
             }
             break;
         case 2:
-            if (cubeMain.at(side).at(0).at(2) == bottom_color)
+            if (cubeMain[side][0][2] == bottomColor)
             {
-                cornerLocMatch = find_corner_colors(bottom_color, side, 0, 2);
+                cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
                 boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
                     // for the condition when corner is on the correct location but side edge is not on the top......
                     if (!boolEdgeSetter)
                     {
-                        sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                        if (sentinal == 1)
+                        sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (sentinel == 1)
                         {
                             setalgo(back, "UP R UP RP UP R U2 RP", "f2l");
                         }
-                        else if (sentinal == 0)
+                        else if (sentinel == 0)
                         {
                             setalgo(back, "UP R U RP U FP UP F", "f2l");
                         }
-                        else if (sentinal == -1)
+                        else if (sentinel == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -5419,28 +5409,28 @@ void solver::f2LHelper(solver &temp_cube, const int &side, const int &colorBlock
         switch (colorBlock)
         {
         case 1:
-            if (cubeMain.at(side).at(0).at(0) == bottom_color)
+            if (cubeMain[side][0][0] == bottomColor)
             {
-                cornerLocMatch = find_corner_colors(bottom_color, side, 0, 0);
+                cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
                 boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
                     // for the condition when corner is on the correct location but side edge is not on the top......
                     if (!boolEdgeSetter)
                     {
-                        sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                        if (sentinal == 1)
+                        sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (sentinel == 1)
                         {
                             setalgo(back, "U FP U F U FP U2 F", "f2l");
                         }
-                        else if (sentinal == 0)
+                        else if (sentinel == 0)
                         {
                             setalgo(back, "U FP UP F UP R U RP", "f2l");
                         }
-                        else if (sentinal == -1)
+                        else if (sentinel == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -5492,28 +5482,28 @@ void solver::f2LHelper(solver &temp_cube, const int &side, const int &colorBlock
             }
             break;
         case 2:
-            if (cubeMain.at(side).at(0).at(2) == bottom_color)
+            if (cubeMain[side][0][2] == bottomColor)
             {
-                cornerLocMatch = find_corner_colors(bottom_color, side, 0, 2);
+                cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
                 boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
                     // for the condition when corner is on the correct location but side edge is not on the top......
                     if (!boolEdgeSetter)
                     {
-                        sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                        if (sentinal == 1)
+                        sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (sentinel == 1)
                         {
                             setalgo(left, "UP R UP RP UP R U2 RP", "f2l");
                         }
-                        else if (sentinal == 0)
+                        else if (sentinel == 0)
                         {
                             setalgo(left, "UP R U RP U FP UP F", "f2l");
                         }
-                        else if (sentinal == -1)
+                        else if (sentinel == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -5574,27 +5564,27 @@ void solver::f2LHelper(solver &temp_cube, const int &side, const int &colorBlock
         switch (colorBlock)
         {
         case 1:
-            if (cubeMain.at(side).at(0).at(0) == bottom_color)
+            if (cubeMain[side][0][0] == bottomColor)
             {
-                cornerLocMatch = find_corner_colors(bottom_color, side, 0, 0);
+                cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
                 boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
                     if (!boolEdgeSetter)
                     {
-                        sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                        if (sentinal == 1)
+                        sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (sentinel == 1)
                         {
                             setalgo(back, "R U RP UP R U RP UP R U RP", "f2l");
                         }
-                        else if (sentinal == 0)
+                        else if (sentinel == 0)
                         {
                             setalgo(back, "R UP RP U FP U F", "f2l");
                         }
-                        else if (sentinal == -1)
+                        else if (sentinel == -1)
                         {
                             // this is for the condition when the side elements are not in the correct location....
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -5646,27 +5636,27 @@ void solver::f2LHelper(solver &temp_cube, const int &side, const int &colorBlock
             }
             break;
         case 2:
-            if (cubeMain.at(side).at(0).at(2) == bottom_color)
+            if (cubeMain[side][0][2] == bottomColor)
             {
-                cornerLocMatch = find_corner_colors(bottom_color, side, 0, 2);
+                cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
                 boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
                     if (!boolEdgeSetter)
                     {
-                        sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                        if (sentinal == 1)
+                        sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (sentinel == 1)
                         {
                             setalgo(right, "R U RP UP R U RP UP R U RP", "f2l");
                         }
-                        else if (sentinal == 0)
+                        else if (sentinel == 0)
                         {
                             setalgo(right, "R UP RP U FP U F", "f2l");
                         }
-                        else if (sentinal == -1)
+                        else if (sentinel == -1)
                         {
                             // this is for the condition when the side elements are not in the correct location....
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -5718,27 +5708,27 @@ void solver::f2LHelper(solver &temp_cube, const int &side, const int &colorBlock
             }
             break;
         case 3:
-            if (cubeMain.at(side).at(2).at(0) == bottom_color)
+            if (cubeMain[side][2][0] == bottomColor)
             {
-                cornerLocMatch = find_corner_colors(bottom_color, side, 2, 0);
+                cornerLocMatch = find_corner_colors(bottomColor, side, 2, 0);
                 boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
                     if (!boolEdgeSetter)
                     {
-                        sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                        if (sentinal == 1)
+                        sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (sentinel == 1)
                         {
                             setalgo(left, "R U RP UP R U RP UP R U RP", "f2l");
                         }
-                        else if (sentinal == 0)
+                        else if (sentinel == 0)
                         {
                             setalgo(left, "R UP RP U FP U F", "f2l");
                         }
-                        else if (sentinal == -1)
+                        else if (sentinel == -1)
                         {
                             // this is for the condition when the side elements are not in the correct location....
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -5790,27 +5780,27 @@ void solver::f2LHelper(solver &temp_cube, const int &side, const int &colorBlock
             }
             break;
         case 4:
-            if (cubeMain.at(side).at(2).at(2) == bottom_color)
+            if (cubeMain[side][2][2] == bottomColor)
             {
-                cornerLocMatch = find_corner_colors(bottom_color, side, 2, 2);
+                cornerLocMatch = find_corner_colors(bottomColor, side, 2, 2);
                 boolEdgeSetter = find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                 if (cornerLocMatch)
                 {
                     if (!boolEdgeSetter)
                     {
-                        sentinal = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                        if (sentinal == 1)
+                        sentinel = find_edge_in_mid_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        if (sentinel == 1)
                         {
                             setalgo(face, "R U RP UP R U RP UP R U RP", "f2l");
                         }
-                        else if (sentinal == 0)
+                        else if (sentinel == 0)
                         {
                             setalgo(face, "R UP RP U FP U F", "f2l");
                         }
-                        else if (sentinal == -1)
+                        else if (sentinel == -1)
                         {
                             // this is for the condition when the side elements are not in the correct location....
-                            set_corner_on_top(temp_cube, bottom_color, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(temp_cube, bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                             find_edge_in_top_lyr(temp_cube, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
                         }
                     }
@@ -6104,11 +6094,11 @@ void solver::shortest_cube_solution()
     algorithmCorrector(solutionSides.at(bestSolutionIndex), best_f2l_solutions.at(bestSolutionIndex));
     algorithmCorrector(solutionSides.at(bestSolutionIndex), best_oll_solutions.at(bestSolutionIndex));
     algorithmCorrector(solutionSides.at(bestSolutionIndex), best_pll_solutions.at(bestSolutionIndex));
-    this->CrossSolution = best_crs_solutions.at(bestSolutionIndex);
-    this->F2LSolution = best_f2l_solutions.at(bestSolutionIndex);
-    this->OLLSolution = best_oll_solutions.at(bestSolutionIndex);
-    this->PLLSolution = best_pll_solutions.at(bestSolutionIndex);
-    this->solution_side = solutionSides.at(bestSolutionIndex);
+    this->crossSolution = best_crs_solutions.at(bestSolutionIndex);
+    this->f2lSolution = best_f2l_solutions.at(bestSolutionIndex);
+    this->ollSolution = best_oll_solutions.at(bestSolutionIndex);
+    this->pllSolution = best_pll_solutions.at(bestSolutionIndex);
+    this->solutionSide = solutionSides.at(bestSolutionIndex);
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CODES THE OLL LAYER IN '1' AND '0' CHARACTER.
@@ -6120,7 +6110,7 @@ void solver::shortest_cube_solution()
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 string solver::oll_coder()
 {
-    const char top_color{cubeMain.at(top).at(1).at(1)};
+    const char top_color{cubeMain[top][1][1]};
     string OLLCode{};
     // CODING TOP SIDE OF THE CUBE.....
     for (auto vecOfvec : cubeMain[top])
@@ -6130,31 +6120,31 @@ string solver::oll_coder()
             else
                 OLLCode += '0';
     // CODING FIRST ROW OF FACE SIDE OF THE CUBE.....
-    for (auto vecOfchar : cubeMain[face].at(0))
+    for (auto vecOfchar : cubeMain[face][0])
         if (vecOfchar == top_color)
             OLLCode += '1';
         else
             OLLCode += '0';
     // CODING FIRST ROW OF RIGHT SIDE OF THE CUBE.....
-    for (auto vecOfchar : cubeMain[right].at(0))
+    for (auto vecOfchar : cubeMain[right][0])
         if (vecOfchar == top_color)
             OLLCode += '1';
         else
             OLLCode += '0';
     // CODING FIRST ROW OF BACK SIDE OF THE CUBE.....
-    for (auto vecOfchar : cubeMain[back].at(0))
+    for (auto vecOfchar : cubeMain[back][0])
         if (vecOfchar == top_color)
             OLLCode += '1';
         else
             OLLCode += '0';
     // CODING FIRST ROW OF LEFT SIDE OF THE CUBE.....
-    for (auto vecOfchar : cubeMain[left].at(0))
+    for (auto vecOfchar : cubeMain[left][0])
         if (vecOfchar == top_color)
             OLLCode += '1';
         else
             OLLCode += '0';
-    // RETURNING THE FULLY CODED STRING.....
-    return OLLCode;
+
+    return OLLCode; // RETURNING THE FULLY CODED STRING.....
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION HAVE SOLUTION FOR ALL THE CONDITIONS POSSIBLE IN OLL
@@ -6414,7 +6404,7 @@ bool solver::oll_logic(const int &side, string_view OLLcode)
     return true;
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
-   THIS FUNCTION APPLIES TEMPSOLUTION TO THE CUBE AND SAVES THE ALGORITHM TO THE F2LSOLUTION
+   THIS FUNCTION APPLIES TEMPSOLUTION TO THE CUBE AND SAVES THE ALGORITHM TO THE f2lSolution
    AND THEN CLEARS THE TEMPSOLUTION.
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 void solver::applySolution(string_view applySolutionOn)
@@ -6487,16 +6477,16 @@ void solver::applySolution(string_view applySolutionOn)
     }
     if (applySolutionOn == "crs")
         for (size_t i{0}; i < tempSolution.size(); i++)
-            CrossSolution.push_back(tempSolution.at(i));
+            crossSolution.push_back(tempSolution.at(i));
     else if (applySolutionOn == "f2l")
         for (size_t i{0}; i < tempSolution.size(); i++)
-            F2LSolution.push_back(tempSolution.at(i));
+            f2lSolution.push_back(tempSolution.at(i));
     else if (applySolutionOn == "oll")
         for (size_t i{0}; i < tempSolution.size(); i++)
-            OLLSolution.push_back(tempSolution.at(i));
+            ollSolution.push_back(tempSolution.at(i));
     else if (applySolutionOn == "pll")
         for (size_t i{0}; i < tempSolution.size(); i++)
-            PLLSolution.push_back(tempSolution.at(i));
+            pllSolution.push_back(tempSolution.at(i));
     tempSolution.clear();
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
@@ -6794,9 +6784,9 @@ void solver::cube_reorienter(solver &source, const int &side)
 void solver::correct_last_layer()
 {
     for (int move{0}; move < 4; move++)
-        if (cubeMain[face].at(0).at(1) != cubeMain[face].at(1).at(1))
+        if (cubeMain[face][0][1] != cubeMain[face][1][1])
             setalgo(face, "U", "pll");
         else
             break;
-    solution_optimizer(PLLSolution);
+    solution_optimizer(pllSolution);
 }

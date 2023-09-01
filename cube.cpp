@@ -11,17 +11,16 @@ ostream &operator<<(ostream &os, const cube &cube)
 }
 istream &operator>>(istream &is, cube &cube)
 {
-    bool colors_check{false};
-    int side{}, one_time{0};
-    string buff{};
-    char ch{};
+    bool isColorsCorrect{false};
+    int side{}, attempt{1};
+    char inputClr{};
     while (1)
     {
         cube.check_colors();
         cube.cube_state();
-        for (int six_times{0}; six_times < 6; six_times++)
+        for (int sixTimesLoop{0}; sixTimesLoop < 6; sixTimesLoop++)
         {
-            switch (six_times)
+            switch (sixTimesLoop)
             {
             case 0:
                 side = 0;
@@ -44,64 +43,70 @@ istream &operator>>(istream &is, cube &cube)
             default:
                 break;
             }
-            buff = "ENTER THE COLORS OF \"" BOLD + side_name(side) + DEFAULT "\" SIDE OF THE CUBE: \n";
-            std::cout << buff;
-            if (six_times < 4)
+            std::cout << "ENTER THE COLORS OF \"" BOLD + side_name(side) + DEFAULT "\" SIDE OF THE CUBE: \n";
+            if (sixTimesLoop < 4)
             {
                 for (int row{0}, r{1}; row < 3; row++, r++)
                 {
                     cout << "Row_" << r << "-> ";
                     for (int col{0}, r{0}; col < 3; col++, r++)
                     {
-                        cin >> ch;
-                        cube.cubeMain.at(side).at(row).at(col) = ch;
+                        cin >> inputClr;
+                        cube.cubeMain[side][row][col] = inputClr;
                     }
                 }
                 clearLines(15);
                 cube.check_colors();
                 cube.cube_state();
             }
-            else if (six_times == 4)
+            else if (sixTimesLoop == 4)
             {
                 for (int col{2}, r{1}; col >= 0; col--, r++)
                 {
                     cout << "Row_" << r << "-> ";
                     for (int row{0}; row < 3; row++)
                     {
-                        cin >> ch;
-                        cube.cubeMain.at(side).at(row).at(col) = ch;
+                        cin >> inputClr;
+                        cube.cubeMain[side][row][col] = inputClr;
                     }
                 }
                 clearLines(15);
                 cube.check_colors();
                 cube.cube_state();
             }
-            else if (six_times == 5)
+            else if (sixTimesLoop == 5)
             {
                 for (int col{0}, r{1}; col < 3; col++, r++)
                 {
                     cout << "Row_" << r << "-> ";
                     for (int row{2}; row >= 0; row--)
                     {
-                        cin >> ch;
-                        cube.cubeMain.at(side).at(row).at(col) = ch;
+                        cin >> inputClr;
+                        cube.cubeMain[side][row][col] = inputClr;
                     }
                 }
                 clearLines(15);
-                colors_check = cube.check_colors();
+                isColorsCorrect = cube.check_colors();
                 cube.cube_state();
             }
         }
-        if (colors_check == false)
+        if (isColorsCorrect == false)
         {
-            clearLines(11);
-            if (one_time == 0)
-                cout << RED << "Wrong input! please try again..." << DEFAULT << endl;
-            one_time++;
+            if (attempt == 1)
+            {
+                clearLines(11);
+                cerr << RED << "Attempt(" << attempt << "): Wrong input! please try again..." << DEFAULT << endl;
+            }
+            else
+            {
+                clearLines(12);
+                cerr << RED << "Attempt(" << attempt << "): Wrong input! please try again..." << DEFAULT << endl;
+            }
             cube.default_cube();
+            attempt++;
         }
         else
-            break;
+            break; // breaking the infinite loop
     }
     return is;
 }
@@ -116,10 +121,10 @@ cube::cube()
         cubeMain.push_back(vector<vector<char>>());
         for (short m{0}; m < 3; m++)
         {
-            cubeMain.at(l).push_back(vector<char>());
+            cubeMain[l].push_back(vector<char>());
             for (short n{0}; n < 3; n++)
             {
-                cubeMain.at(l).at(m).push_back('x');
+                cubeMain[l][m].push_back('x');
             }
         }
     }
@@ -133,7 +138,7 @@ cube::cube(const cube &src)
         {
             for (short n{0}; n < 3; n++)
             {
-                cubeMain.at(l).at(m).at(n) = src.cubeMain.at(l).at(m).at(n);
+                cubeMain[l][m][n] = src.cubeMain[l][m][n];
             }
         }
     }
@@ -268,53 +273,57 @@ void cube::cube_state() const
    ----------------------------------------------------------------------------------------------------------------------------------------*/
 bool cube::check_colors()
 {
-    vector<int> colors(6, 0);
-    vector<char> colors_ch{'b', 'w', 'o', 'g', 'r', 'y'};
-    vector<string> color_asci{BLUE, WHITE, BLACK, GREEN, RED, YELLOW};
+    vector<int> intColorsCount(6, 0);
+    vector<char> charColors{'b', 'w', 'o', 'g', 'r', 'y'};
+    vector<string> colorAsciis{BLUE, WHITE, BLACK, GREEN, RED, YELLOW};
     for (short l{0}; l < 6; l++)
     {
         for (short m{0}; m < 3; m++)
         {
             for (short n{0}; n < 3; n++)
             {
-                switch (cubeMain.at(l).at(m).at(n))
+                switch (cubeMain[l][m][n])
                 {
                 case 'b':
-                    colors[0]++;
+                    intColorsCount[0]++;
                     break;
                 case 'w':
-                    colors[1]++;
+                    intColorsCount[1]++;
                     break;
                 case 'o':
-                    colors[2]++;
+                    intColorsCount[2]++;
                     break;
                 case 'g':
-                    colors[3]++;
+                    intColorsCount[3]++;
                     break;
                 case 'r':
-                    colors[4]++;
+                    intColorsCount[4]++;
                     break;
                 case 'y':
-                    colors[5]++;
+                    intColorsCount[5]++;
                     break;
                 };
             }
         }
     }
-    // printing the colors count ...
-    for (int i{0}; i < colors.size(); i++)
+    // printing the Colors count ...
+    for (int i{0}; i < intColorsCount.size(); i++)
     {
-        cout << "[" << color_asci[i] << colors_ch[i] << ":" << colors.at(i) << DEFAULT << "]"
+        cout << "[" << colorAsciis[i] << charColors[i] << ":" << intColorsCount[i] << DEFAULT << "]"
              << "  ";
     }
     cout << endl;
-    // checking if the colors are 9 and assigning 'x' if not...
-    if (colors.at(0) != 9 || colors.at(1) != 9 || colors.at(2) != 9 || colors.at(3) != 9 || colors.at(4) != 9 || colors.at(5) != 9)
+    // checking if the intColorsCount are 9 and assigning 'x' if not...
+    if (intColorsCount[0] != 9 || intColorsCount[1] != 9 || intColorsCount[2] != 9 || intColorsCount[3] != 9 || intColorsCount[4] != 9 || intColorsCount[5] != 9)
     {
         return false;
     }
     return true;
 }
+
+/* ----------------------------------------------------------------------------------------------------------------------------------------
+   making cube to default state
+   ----------------------------------------------------------------------------------------------------------------------------------------*/
 void cube::default_cube()
 {
     for (short l{0}; l < 6; l++)
@@ -323,7 +332,7 @@ void cube::default_cube()
         {
             for (short n{0}; n < 3; n++)
             {
-                cubeMain.at(l).at(m).at(n) = 'x';
+                cubeMain[l][m][n] = 'x';
             }
         }
     }
@@ -337,7 +346,7 @@ void cube::face_rotate_clockwise()
     sideBarBackup.clear();
     face_transpose(face, "CW");
     for (_i = 0; _i < 3; _i++)
-        sideBarBackup.push_back(cubeMain[top].at(2).at(_i));
+        sideBarBackup.push_back(cubeMain[top][2][_i]);
     side_bar_sender(left, "R", "REV");
     side_bar_receiver(top, "BTM");
     side_bar_sender(bottom, "T", "FWD");
@@ -345,14 +354,14 @@ void cube::face_rotate_clockwise()
     side_bar_sender(right, "L", "REV");
     side_bar_receiver(bottom, "T");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[right].at(_i).at(0) = sideBarBackup.at(_i);
+        cubeMain[right][_i][0] = sideBarBackup[_i];
 }
 void cube::right_rotate_clockwise()
 {
     sideBarBackup.clear();
     face_transpose(right, "CW");
     for (_j = 2; _j >= 0; _j--)
-        sideBarBackup.push_back(cubeMain[top].at(_j).at(2));
+        sideBarBackup.push_back(cubeMain[top][_j][2]);
     side_bar_sender(face, "R", "FWD");
     side_bar_receiver(top, "R");
     side_bar_sender(bottom, "R", "FWD");
@@ -360,14 +369,14 @@ void cube::right_rotate_clockwise()
     side_bar_sender(back, "L", "REV");
     side_bar_receiver(bottom, "R");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[back].at(_i).at(0) = sideBarBackup.at(_i);
+        cubeMain[back][_i][0] = sideBarBackup[_i];
 }
 void cube::back_rotate_clockwise()
 {
     sideBarBackup.clear();
     face_transpose(back, "CW");
     for (_j = 2; _j >= 0; _j--)
-        sideBarBackup.push_back(cubeMain[top].at(0).at(_j));
+        sideBarBackup.push_back(cubeMain[top][0][_j]);
     side_bar_sender(right, "R", "FWD");
     side_bar_receiver(top, "T");
     side_bar_sender(bottom, "BTM", "REV");
@@ -375,14 +384,14 @@ void cube::back_rotate_clockwise()
     side_bar_sender(left, "L", "FWD");
     side_bar_receiver(bottom, "BTM");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[left].at(_i).at(0) = sideBarBackup.at(_i);
+        cubeMain[left][_i][0] = sideBarBackup[_i];
 }
 void cube::left_rotate_clockwise()
 {
     sideBarBackup.clear();
     face_transpose(left, "CW");
     for (_i = 0; _i < 3; _i++)
-        sideBarBackup.push_back(cubeMain[top].at(_i).at(0));
+        sideBarBackup.push_back(cubeMain[top][_i][0]);
     side_bar_sender(back, "R", "REV");
     side_bar_receiver(top, "L");
     side_bar_sender(bottom, "L", "REV");
@@ -390,14 +399,14 @@ void cube::left_rotate_clockwise()
     side_bar_sender(face, "L", "FWD");
     side_bar_receiver(bottom, "L");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[face].at(_i).at(0) = sideBarBackup.at(_i);
+        cubeMain[face][_i][0] = sideBarBackup[_i];
 }
 void cube::top_rotate_clockwise()
 {
     sideBarBackup.clear();
     face_transpose(top, "CW");
     for (_i = 0; _i < 3; _i++)
-        sideBarBackup.push_back(cubeMain[face].at(0).at(_i));
+        sideBarBackup.push_back(cubeMain[face][0][_i]);
     side_bar_sender(right, "T", "FWD");
     side_bar_receiver(face, "T");
     side_bar_sender(back, "T", "FWD");
@@ -405,14 +414,14 @@ void cube::top_rotate_clockwise()
     side_bar_sender(left, "T", "FWD");
     side_bar_receiver(back, "T");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[left].at(0).at(_i) = sideBarBackup.at(_i);
+        cubeMain[left][0][_i] = sideBarBackup[_i];
 }
 void cube::bottom_rotate_clockwise()
 {
     sideBarBackup.clear();
     face_transpose(bottom, "CW");
     for (_i = 0; _i < 3; _i++)
-        sideBarBackup.push_back(cubeMain[face].at(2).at(_i));
+        sideBarBackup.push_back(cubeMain[face][2][_i]);
     side_bar_sender(left, "BTM", "FWD");
     side_bar_receiver(face, "BTM");
     side_bar_sender(back, "BTM", "FWD");
@@ -420,13 +429,13 @@ void cube::bottom_rotate_clockwise()
     side_bar_sender(right, "BTM", "FWD");
     side_bar_receiver(back, "BTM");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[right].at(2).at(_i) = sideBarBackup.at(_i);
+        cubeMain[right][2][_i] = sideBarBackup[_i];
 }
 void cube::mid_rotate_clockwise()
 {
     sideBarBackup.clear();
     for (_i = 0; _i < 3; _i++)
-        sideBarBackup.push_back(cubeMain[face].at(_i).at(1));
+        sideBarBackup.push_back(cubeMain[face][_i][1]);
     side_bar_sender(top, "M", "FWD");
     side_bar_receiver(face, "M");
     side_bar_sender(back, "M", "REV");
@@ -434,13 +443,13 @@ void cube::mid_rotate_clockwise()
     side_bar_sender(bottom, "M", "REV");
     side_bar_receiver(back, "M");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[bottom].at(_i).at(1) = sideBarBackup.at(_i);
+        cubeMain[bottom][_i][1] = sideBarBackup[_i];
 }
 void cube::equator_rotate_clockwise()
 {
     sideBarBackup.clear();
     for (_i = 0; _i < 3; _i++)
-        sideBarBackup.push_back(cubeMain[face].at(1).at(_i));
+        sideBarBackup.push_back(cubeMain[face][1][_i]);
     side_bar_sender(left, "EQT", "FWD");
     side_bar_receiver(face, "EQT");
     side_bar_sender(back, "EQT", "FWD");
@@ -448,13 +457,13 @@ void cube::equator_rotate_clockwise()
     side_bar_sender(right, "EQT", "FWD");
     side_bar_receiver(back, "EQT");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[right].at(1).at(_i) = sideBarBackup.at(_i);
+        cubeMain[right][1][_i] = sideBarBackup[_i];
 }
 void cube::stand_rotate_clockwise()
 {
     sideBarBackup.clear();
     for (_i = 0; _i < 3; _i++)
-        sideBarBackup.push_back(cubeMain[top].at(1).at(_i));
+        sideBarBackup.push_back(cubeMain[top][1][_i]);
     side_bar_sender(left, "M", "REV");
     side_bar_receiver(top, "EQT");
     side_bar_sender(bottom, "EQT", "FWD");
@@ -462,7 +471,7 @@ void cube::stand_rotate_clockwise()
     side_bar_sender(right, "M", "REV");
     side_bar_receiver(bottom, "EQT");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[right].at(_i).at(1) = sideBarBackup.at(_i);
+        cubeMain[right][_i][1] = sideBarBackup[_i];
 }
 // COUNTER CLOCKWISE ROTATIONS....
 void cube::face_rotate_counter_clockwise()
@@ -470,7 +479,7 @@ void cube::face_rotate_counter_clockwise()
     sideBarBackup.clear();
     face_transpose(face, "CCW");
     for (_j = 2; _j >= 0; _j--)
-        sideBarBackup.push_back(cubeMain[top].at(2).at(_j));
+        sideBarBackup.push_back(cubeMain[top][2][_j]);
     side_bar_sender(right, "L", "FWD");
     side_bar_receiver(top, "BTM");
     side_bar_sender(bottom, "T", "REV");
@@ -478,14 +487,14 @@ void cube::face_rotate_counter_clockwise()
     side_bar_sender(left, "R", "FWD");
     side_bar_receiver(bottom, "T");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[left].at(_i).at(2) = sideBarBackup.at(_i);
+        cubeMain[left][_i][2] = sideBarBackup[_i];
 }
 void cube::right_rotate_counter_clockwise()
 {
     sideBarBackup.clear();
     face_transpose(right, "CCW");
     for (_i = 0; _i < 3; _i++)
-        sideBarBackup.push_back(cubeMain[top].at(_i).at(2));
+        sideBarBackup.push_back(cubeMain[top][_i][2]);
     side_bar_sender(back, "L", "REV");
     side_bar_receiver(top, "R");
     side_bar_sender(bottom, "R", "REV");
@@ -493,14 +502,14 @@ void cube::right_rotate_counter_clockwise()
     side_bar_sender(face, "R", "FWD");
     side_bar_receiver(bottom, "R");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[face].at(_i).at(2) = sideBarBackup.at(_i);
+        cubeMain[face][_i][2] = sideBarBackup[_i];
 }
 void cube::back_rotate_counter_clockwise()
 {
     sideBarBackup.clear();
     face_transpose(back, "CCW");
     for (_i = 0; _i < 3; _i++)
-        sideBarBackup.push_back(cubeMain[top].at(0).at(_i));
+        sideBarBackup.push_back(cubeMain[top][0][_i]);
     side_bar_sender(left, "L", "REV");
     side_bar_receiver(top, "T");
     side_bar_sender(bottom, "BTM", "FWD");
@@ -508,14 +517,14 @@ void cube::back_rotate_counter_clockwise()
     side_bar_sender(right, "R", "REV");
     side_bar_receiver(bottom, "BTM");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[right].at(_i).at(2) = sideBarBackup.at(_i);
+        cubeMain[right][_i][2] = sideBarBackup[_i];
 }
 void cube::left_rotate_counter_clockwise()
 {
     sideBarBackup.clear();
     face_transpose(left, "CCW");
     for (_j = 2; _j >= 0; _j--)
-        sideBarBackup.push_back(cubeMain[top].at(_j).at(0));
+        sideBarBackup.push_back(cubeMain[top][_j][0]);
     side_bar_sender(face, "L", "FWD");
     side_bar_receiver(top, "L");
     side_bar_sender(bottom, "L", "FWD");
@@ -523,14 +532,14 @@ void cube::left_rotate_counter_clockwise()
     side_bar_sender(back, "R", "REV");
     side_bar_receiver(bottom, "L");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[back].at(_i).at(2) = sideBarBackup.at(_i);
+        cubeMain[back][_i][2] = sideBarBackup[_i];
 }
 void cube::top_rotate_counter_clockwise()
 {
     sideBarBackup.clear();
     face_transpose(top, "CCW");
     for (_i = 0; _i < 3; _i++)
-        sideBarBackup.push_back(cubeMain[face].at(0).at(_i));
+        sideBarBackup.push_back(cubeMain[face][0][_i]);
     side_bar_sender(left, "T", "FWD");
     side_bar_receiver(face, "T");
     side_bar_sender(back, "T", "FWD");
@@ -538,14 +547,14 @@ void cube::top_rotate_counter_clockwise()
     side_bar_sender(right, "T", "FWD");
     side_bar_receiver(back, "T");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[right].at(0).at(_i) = sideBarBackup.at(_i);
+        cubeMain[right][0][_i] = sideBarBackup[_i];
 }
 void cube::bottom_rotate_counter_clockwise()
 {
     sideBarBackup.clear();
     face_transpose(bottom, "CCW");
     for (_i = 0; _i < 3; _i++)
-        sideBarBackup.push_back(cubeMain[face].at(2).at(_i));
+        sideBarBackup.push_back(cubeMain[face][2][_i]);
     side_bar_sender(right, "BTM", "FWD");
     side_bar_receiver(face, "BTM");
     side_bar_sender(back, "BTM", "FWD");
@@ -553,13 +562,13 @@ void cube::bottom_rotate_counter_clockwise()
     side_bar_sender(left, "BTM", "FWD");
     side_bar_receiver(back, "BTM");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[left].at(2).at(_i) = sideBarBackup.at(_i);
+        cubeMain[left][2][_i] = sideBarBackup[_i];
 }
 void cube::mid_rotate_counter_clockwise()
 {
     sideBarBackup.clear();
     for (_i = 0; _i < 3; _i++)
-        sideBarBackup.push_back(cubeMain[face].at(_i).at(1));
+        sideBarBackup.push_back(cubeMain[face][_i][1]);
     side_bar_sender(bottom, "M", "FWD");
     side_bar_receiver(face, "M");
     side_bar_sender(back, "M", "REV");
@@ -567,13 +576,13 @@ void cube::mid_rotate_counter_clockwise()
     side_bar_sender(top, "M", "REV");
     side_bar_receiver(back, "M");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[top].at(_i).at(1) = sideBarBackup.at(_i);
+        cubeMain[top][_i][1] = sideBarBackup[_i];
 }
 void cube::equator_rotate_counter_clockwise()
 {
     sideBarBackup.clear();
     for (_i = 0; _i < 3; _i++)
-        sideBarBackup.push_back(cubeMain[face].at(1).at(_i));
+        sideBarBackup.push_back(cubeMain[face][1][_i]);
     side_bar_sender(right, "EQT", "FWD");
     side_bar_receiver(face, "EQT");
     side_bar_sender(back, "EQT", "FWD");
@@ -581,13 +590,13 @@ void cube::equator_rotate_counter_clockwise()
     side_bar_sender(left, "EQT", "FWD");
     side_bar_receiver(back, "EQT");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[left].at(1).at(_i) = sideBarBackup.at(_i);
+        cubeMain[left][1][_i] = sideBarBackup[_i];
 }
 void cube::stand_rotate_counter_clockwise()
 {
     sideBarBackup.clear();
     for (_i = 0; _i < 3; _i++)
-        sideBarBackup.push_back(cubeMain[top].at(1).at(_i));
+        sideBarBackup.push_back(cubeMain[top][1][_i]);
     side_bar_sender(right, "M", "FWD");
     side_bar_receiver(top, "EQT");
     side_bar_sender(bottom, "EQT", "REV");
@@ -595,7 +604,7 @@ void cube::stand_rotate_counter_clockwise()
     side_bar_sender(left, "M", "FWD");
     side_bar_receiver(bottom, "EQT");
     for (_j = 2, _i = 0; _j >= 0, _i < 3; _j--, _i++)
-        cubeMain[left].at(_i).at(1) = sideBarBackup.at(_j);
+        cubeMain[left][_i][1] = sideBarBackup[_j];
 }
 // TWICE MOVES.......
 void cube::face_rotate_two_times()
@@ -603,114 +612,114 @@ void cube::face_rotate_two_times()
     sideBarBackup.clear();
     face_transpose(face, "2CW");
     for (_j = 2; _j >= 0; _j--)
-        sideBarBackup.push_back(cubeMain[top].at(2).at(_j));
+        sideBarBackup.push_back(cubeMain[top][2][_j]);
     side_bar_sender(bottom, "T", "REV");
     side_bar_receiver(top, "BTM");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[bottom].at(0).at(_i) = sideBarBackup.at(_i);
+        cubeMain[bottom][0][_i] = sideBarBackup[_i];
 
     sideBarBackup.clear();
     for (_j = 2; _j >= 0; _j--)
-        sideBarBackup.push_back(cubeMain[right].at(_j).at(0));
+        sideBarBackup.push_back(cubeMain[right][_j][0]);
     side_bar_sender(left, "R", "REV");
     side_bar_receiver(right, "L");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[left].at(_i).at(2) = sideBarBackup.at(_i);
+        cubeMain[left][_i][2] = sideBarBackup[_i];
 }
 void cube::right_rotate_two_times()
 {
     sideBarBackup.clear();
     face_transpose(right, "2CW");
     for (_i = 0; _i < 3; _i++)
-        sideBarBackup.push_back(cubeMain[top].at(_i).at(2));
+        sideBarBackup.push_back(cubeMain[top][_i][2]);
     side_bar_sender(bottom, "R", "FWD");
     side_bar_receiver(top, "R");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[bottom].at(_i).at(2) = sideBarBackup.at(_i);
+        cubeMain[bottom][_i][2] = sideBarBackup[_i];
 
     sideBarBackup.clear();
     for (_j = 2; _j >= 0; _j--)
-        sideBarBackup.push_back(cubeMain[face].at(_j).at(2));
+        sideBarBackup.push_back(cubeMain[face][_j][2]);
     side_bar_sender(back, "L", "REV");
     side_bar_receiver(face, "R");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[back].at(_i).at(0) = sideBarBackup.at(_i);
+        cubeMain[back][_i][0] = sideBarBackup[_i];
 }
 void cube::back_rotate_two_times()
 {
     sideBarBackup.clear();
     face_transpose(back, "2CW");
     for (_j = 2; _j >= 0; _j--)
-        sideBarBackup.push_back(cubeMain[top].at(0).at(_j));
+        sideBarBackup.push_back(cubeMain[top][0][_j]);
     side_bar_sender(bottom, "BTM", "REV");
     side_bar_receiver(top, "T");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[bottom].at(2).at(_i) = sideBarBackup.at(_i);
+        cubeMain[bottom][2][_i] = sideBarBackup[_i];
 
     sideBarBackup.clear();
     for (_j = 2; _j >= 0; _j--)
-        sideBarBackup.push_back(cubeMain[right].at(_j).at(2));
+        sideBarBackup.push_back(cubeMain[right][_j][2]);
     side_bar_sender(left, "L", "REV");
     side_bar_receiver(right, "R");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[left].at(_i).at(0) = sideBarBackup.at(_i);
+        cubeMain[left][_i][0] = sideBarBackup[_i];
 }
 void cube::left_rotate_two_times()
 {
     sideBarBackup.clear();
     face_transpose(left, "2CW");
     for (_i = 0; _i < 3; _i++)
-        sideBarBackup.push_back(cubeMain[top].at(_i).at(0));
+        sideBarBackup.push_back(cubeMain[top][_i][0]);
     side_bar_sender(bottom, "L", "FWD");
     side_bar_receiver(top, "L");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[bottom].at(_i).at(0) = sideBarBackup.at(_i);
+        cubeMain[bottom][_i][0] = sideBarBackup[_i];
 
     sideBarBackup.clear();
     for (_j = 2; _j >= 0; _j--)
-        sideBarBackup.push_back(cubeMain[face].at(_j).at(0));
+        sideBarBackup.push_back(cubeMain[face][_j][0]);
     side_bar_sender(back, "R", "REV");
     side_bar_receiver(face, "L");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[back].at(_i).at(2) = sideBarBackup.at(_i);
+        cubeMain[back][_i][2] = sideBarBackup[_i];
 }
 void cube::top_rotate_two_times()
 {
     sideBarBackup.clear();
     face_transpose(top, "2CW");
     for (_i = 0; _i < 3; _i++)
-        sideBarBackup.push_back(cubeMain[face].at(0).at(_i));
+        sideBarBackup.push_back(cubeMain[face][0][_i]);
     side_bar_sender(back, "T", "FWD");
     side_bar_receiver(face, "T");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[back].at(0).at(_i) = sideBarBackup.at(_i);
+        cubeMain[back][0][_i] = sideBarBackup[_i];
 
     sideBarBackup.clear();
     for (_i = 0; _i < 3; _i++)
-        sideBarBackup.push_back(cubeMain[right].at(0).at(_i));
+        sideBarBackup.push_back(cubeMain[right][0][_i]);
     side_bar_sender(left, "T", "FWD");
     side_bar_receiver(right, "T");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[left].at(0).at(_i) = sideBarBackup.at(_i);
+        cubeMain[left][0][_i] = sideBarBackup[_i];
 }
 void cube::bottom_rotate_two_times()
 {
     sideBarBackup.clear();
     face_transpose(bottom, "2CW");
     for (_i = 0; _i < 3; _i++)
-        sideBarBackup.push_back(cubeMain[face].at(2).at(_i));
+        sideBarBackup.push_back(cubeMain[face][2][_i]);
     side_bar_sender(back, "BTM", "FWD");
     side_bar_receiver(face, "BTM");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[back].at(2).at(_i) = sideBarBackup.at(_i);
+        cubeMain[back][2][_i] = sideBarBackup[_i];
 
     sideBarBackup.clear();
     for (_i = 0; _i < 3; _i++)
-        sideBarBackup.push_back(cubeMain[right].at(2).at(_i));
+        sideBarBackup.push_back(cubeMain[right][2][_i]);
     side_bar_sender(left, "BTM", "FWD");
     side_bar_receiver(right, "BTM");
     for (_i = 0; _i < 3; _i++)
-        cubeMain[left].at(2).at(_i) = sideBarBackup.at(_i);
+        cubeMain[left][2][_i] = sideBarBackup[_i];
 }
 // WHOLE CUBE REORIENTATION......
 void cube::x_axis_rotation_clockwise()
@@ -750,413 +759,6 @@ void cube::z_axis_rotation_counter_clockwise()
     B;
 }
 
-void cube::side_rotate(const int &side, string_view direction)
-{
-    if (direction == "2CW")
-    {
-        face_transpose(side, direction);
-        if (side == face)
-        {
-            for (_j = 2; _j >= 0; _j--)
-                sideBarBackup.push_back(cubeMain[top].at(2).at(_j));
-            side_bar_sender(bottom, "T", "REV");
-            side_bar_receiver(top, "BTM");
-            for (_i = 0; _i < 3; _i++)
-                cubeMain[bottom].at(0).at(_i) = sideBarBackup.at(_i);
-
-            sideBarBackup.clear();
-            for (_j = 2; _j >= 0; _j--)
-                sideBarBackup.push_back(cubeMain[right].at(_j).at(0));
-            side_bar_sender(left, "R", "REV");
-            side_bar_receiver(right, "L");
-            for (_i = 0; _i < 3; _i++)
-                cubeMain[left].at(_i).at(2) = sideBarBackup.at(_i);
-        }
-        else if (side == back)
-        {
-            for (_j = 2; _j >= 0; _j--)
-                sideBarBackup.push_back(cubeMain[top].at(0).at(_j));
-            side_bar_sender(bottom, "BTM", "REV");
-            side_bar_receiver(top, "T");
-            for (_i = 0; _i < 3; _i++)
-                cubeMain[bottom].at(2).at(_i) = sideBarBackup.at(_i);
-
-            sideBarBackup.clear();
-            for (_j = 2; _j >= 0; _j--)
-                sideBarBackup.push_back(cubeMain[right].at(_j).at(2));
-            side_bar_sender(left, "L", "REV");
-            side_bar_receiver(right, "R");
-            for (_i = 0; _i < 3; _i++)
-                cubeMain[left].at(_i).at(0) = sideBarBackup.at(_i);
-        }
-        else if (side == left)
-        {
-            for (_i = 0; _i < 3; _i++)
-                sideBarBackup.push_back(cubeMain[top].at(_i).at(0));
-            side_bar_sender(bottom, "L", "FWD");
-            side_bar_receiver(top, "L");
-            for (_i = 0; _i < 3; _i++)
-                cubeMain[bottom].at(_i).at(0) = sideBarBackup.at(_i);
-
-            sideBarBackup.clear();
-            for (_j = 2; _j >= 0; _j--)
-                sideBarBackup.push_back(cubeMain[face].at(_j).at(0));
-            side_bar_sender(back, "R", "REV");
-            side_bar_receiver(face, "L");
-            for (_i = 0; _i < 3; _i++)
-                cubeMain[back].at(_i).at(2) = sideBarBackup.at(_i);
-        }
-        else if (side == right)
-        {
-            for (_i = 0; _i < 3; _i++)
-                sideBarBackup.push_back(cubeMain[top].at(_i).at(2));
-            side_bar_sender(bottom, "R", "FWD");
-            side_bar_receiver(top, "R");
-            for (_i = 0; _i < 3; _i++)
-                cubeMain[bottom].at(_i).at(2) = sideBarBackup.at(_i);
-
-            sideBarBackup.clear();
-            for (_j = 2; _j >= 0; _j--)
-                sideBarBackup.push_back(cubeMain[face].at(_j).at(2));
-            side_bar_sender(back, "L", "REV");
-            side_bar_receiver(face, "R");
-            for (_i = 0; _i < 3; _i++)
-                cubeMain[back].at(_i).at(0) = sideBarBackup.at(_i);
-        }
-        else if (side == top)
-        {
-            for (_i = 0; _i < 3; _i++)
-                sideBarBackup.push_back(cubeMain[face].at(0).at(_i));
-            side_bar_sender(back, "T", "FWD");
-            side_bar_receiver(face, "T");
-            for (_i = 0; _i < 3; _i++)
-                cubeMain[back].at(0).at(_i) = sideBarBackup.at(_i);
-
-            sideBarBackup.clear();
-            for (_i = 0; _i < 3; _i++)
-                sideBarBackup.push_back(cubeMain[right].at(0).at(_i));
-            side_bar_sender(left, "T", "FWD");
-            side_bar_receiver(right, "T");
-            for (_i = 0; _i < 3; _i++)
-                cubeMain[left].at(0).at(_i) = sideBarBackup.at(_i);
-        }
-        else if (side == bottom)
-        {
-            for (_i = 0; _i < 3; _i++)
-                sideBarBackup.push_back(cubeMain[face].at(2).at(_i));
-            side_bar_sender(back, "BTM", "FWD");
-            side_bar_receiver(face, "BTM");
-            for (_i = 0; _i < 3; _i++)
-                cubeMain[back].at(2).at(_i) = sideBarBackup.at(_i);
-
-            sideBarBackup.clear();
-            for (_i = 0; _i < 3; _i++)
-                sideBarBackup.push_back(cubeMain[right].at(2).at(_i));
-            side_bar_sender(left, "BTM", "FWD");
-            side_bar_receiver(right, "BTM");
-            for (_i = 0; _i < 3; _i++)
-                cubeMain[left].at(2).at(_i) = sideBarBackup.at(_i);
-        }
-    }
-    else if (side >= face && side <= bottom)
-    {
-        face_transpose(side, direction);
-        if (side == face)
-        {
-            for (_i = 0; _i < 3; _i++)
-                sideBarBackup.push_back(cubeMain[top].at(2).at(_i));
-            if (direction == "CW")
-            {
-                side_bar_sender(left, "R", "REV");
-                side_bar_receiver(top, "BTM");
-                side_bar_sender(bottom, "T", "FWD");
-                side_bar_receiver(left, "R");
-                side_bar_sender(right, "L", "REV");
-                side_bar_receiver(bottom, "T");
-                for (_i = 0; _i < 3; _i++)
-                    cubeMain[right].at(_i).at(0) = sideBarBackup.at(_i);
-            }
-            else
-            {
-                side_bar_sender(right, "L", "FWD");
-                side_bar_receiver(top, "BTM");
-                side_bar_sender(bottom, "T", "REV");
-                side_bar_receiver(right, "L");
-                side_bar_sender(left, "R", "FWD");
-                side_bar_receiver(bottom, "T");
-                for (_j = 2, _i = 0; _j >= 0, _i < 3; _j--, _i++)
-                    cubeMain[left].at(_i).at(2) = sideBarBackup.at(_j);
-                // side_bar_receiver(left, "R");
-            }
-        }
-        else if (side == back)
-        {
-            for (_i = 0; _i < 3; _i++)
-                sideBarBackup.push_back(cubeMain[top].at(0).at(_i));
-            if (direction == "CW")
-            {
-                side_bar_sender(right, "R", "FWD");
-                side_bar_receiver(top, "T");
-                side_bar_sender(bottom, "BTM", "REV");
-                side_bar_receiver(right, "R");
-                side_bar_sender(left, "L", "FWD");
-                side_bar_receiver(bottom, "BTM");
-                for (_j = 2, _i = 0; _j >= 0, _i < 3; _j--, _i++)
-                    cubeMain[left].at(_i).at(0) = sideBarBackup.at(_j);
-                // side_bar_receiver(left, "L");
-            }
-            else
-            {
-                side_bar_sender(left, "L", "REV");
-                side_bar_receiver(top, "T");
-                side_bar_sender(bottom, "BTM", "FWD");
-                side_bar_receiver(left, "L");
-                side_bar_sender(right, "R", "REV");
-                side_bar_receiver(bottom, "BTM");
-                for (_i = 0; _i < 3; _i++)
-                    cubeMain[right].at(_i).at(2) = sideBarBackup.at(_i);
-            }
-        }
-        else if (side == left)
-        {
-            for (_i = 0; _i < 3; _i++)
-                sideBarBackup.push_back(cubeMain[top].at(_i).at(0));
-            if (direction == "CW")
-            {
-                side_bar_sender(back, "R", "REV");
-                side_bar_receiver(top, "L");
-                side_bar_sender(bottom, "L", "REV");
-                side_bar_receiver(back, "R");
-                side_bar_sender(face, "L", "FWD");
-                side_bar_receiver(bottom, "L");
-                for (_i = 0; _i < 3; _i++)
-                    cubeMain[face].at(_i).at(0) = sideBarBackup.at(_i);
-            }
-            else
-            {
-                side_bar_sender(face, "L", "FWD");
-                side_bar_receiver(top, "L");
-                side_bar_sender(bottom, "L", "FWD");
-                side_bar_receiver(face, "L");
-                side_bar_sender(back, "R", "REV");
-                side_bar_receiver(bottom, "L");
-                for (_j = 2, _i = 0; _j >= 0, _i < 3; _j--, _i++)
-                    cubeMain[back].at(_i).at(2) = sideBarBackup.at(_j);
-                // side_bar_receiver(back, "R");
-            }
-        }
-        else if (side == right)
-        {
-            for (_i = 0; _i < 3; _i++)
-                sideBarBackup.push_back(cubeMain[top].at(_i).at(2));
-            if (direction == "CW")
-            {
-                side_bar_sender(face, "R", "FWD");
-                side_bar_receiver(top, "R");
-                side_bar_sender(bottom, "R", "FWD");
-                side_bar_receiver(face, "R");
-                side_bar_sender(back, "L", "REV");
-                side_bar_receiver(bottom, "R");
-                for (_j = 2, _i = 0; _j >= 0, _i < 3; _j--, _i++)
-                    cubeMain[back].at(_i).at(0) = sideBarBackup.at(_j);
-                // side_bar_receiver(back, "L");
-            }
-            else
-            {
-                side_bar_sender(back, "L", "REV");
-                side_bar_receiver(top, "R");
-                side_bar_sender(bottom, "R", "REV");
-                side_bar_receiver(back, "L");
-                side_bar_sender(face, "R", "FWD");
-                side_bar_receiver(bottom, "R");
-                for (_i = 0; _i < 3; _i++)
-                    cubeMain[face].at(_i).at(2) = sideBarBackup.at(_i);
-            }
-        }
-        else if (side == top)
-        {
-            for (_i = 0; _i < 3; _i++)
-                sideBarBackup.push_back(cubeMain[face].at(0).at(_i));
-            if (direction == "CW")
-            {
-                side_bar_sender(right, "T", "FWD");
-                side_bar_receiver(face, "T");
-                side_bar_sender(back, "T", "FWD");
-                side_bar_receiver(right, "T");
-                side_bar_sender(left, "T", "FWD");
-                side_bar_receiver(back, "T");
-                for (_i = 0; _i < 3; _i++)
-                    cubeMain[left].at(0).at(_i) = sideBarBackup.at(_i);
-            }
-            else
-            {
-                side_bar_sender(left, "T", "FWD");
-                side_bar_receiver(face, "T");
-                side_bar_sender(back, "T", "FWD");
-                side_bar_receiver(left, "T");
-                side_bar_sender(right, "T", "FWD");
-                side_bar_receiver(back, "T");
-                for (_i = 0; _i < 3; _i++)
-                    cubeMain[right].at(0).at(_i) = sideBarBackup.at(_i);
-            }
-        }
-        else if (side == bottom)
-        {
-            for (_i = 0; _i < 3; _i++)
-                sideBarBackup.push_back(cubeMain[face].at(2).at(_i));
-            if (direction == "CW")
-            {
-                side_bar_sender(left, "BTM", "FWD");
-                side_bar_receiver(face, "BTM");
-                side_bar_sender(back, "BTM", "FWD");
-                side_bar_receiver(left, "BTM");
-                side_bar_sender(right, "BTM", "FWD");
-                side_bar_receiver(back, "BTM");
-                for (_i = 0; _i < 3; _i++)
-                    cubeMain[right].at(2).at(_i) = sideBarBackup.at(_i);
-            }
-            else
-            {
-                side_bar_sender(right, "BTM", "FWD");
-                side_bar_receiver(face, "BTM");
-                side_bar_sender(back, "BTM", "FWD");
-                side_bar_receiver(right, "BTM");
-                side_bar_sender(left, "BTM", "FWD");
-                side_bar_receiver(back, "BTM");
-                for (_i = 0; _i < 3; _i++)
-                    cubeMain[left].at(2).at(_i) = sideBarBackup.at(_i);
-            }
-        }
-    }
-    else if (side == mid)
-    {
-        for (_i = 0; _i < 3; _i++)
-            sideBarBackup.push_back(cubeMain[face].at(_i).at(1));
-        if (direction == "CW")
-        {
-            side_bar_sender(top, "M", "FWD");
-            side_bar_receiver(face, "M");
-            side_bar_sender(back, "M", "REV");
-            side_bar_receiver(top, "M");
-            side_bar_sender(bottom, "M", "REV");
-            side_bar_receiver(back, "M");
-            for (_i = 0; _i < 3; _i++)
-                cubeMain[bottom].at(_i).at(1) = sideBarBackup.at(_i);
-        }
-        else
-        {
-            side_bar_sender(bottom, "M", "FWD");
-            side_bar_receiver(face, "M");
-            side_bar_sender(back, "M", "REV");
-            side_bar_receiver(bottom, "M");
-            side_bar_sender(top, "M", "REV");
-            side_bar_receiver(back, "M");
-            for (_i = 0; _i < 3; _i++)
-                cubeMain[top].at(_i).at(1) = sideBarBackup.at(_i);
-        }
-    }
-    else if (side == equator)
-    {
-        for (_i = 0; _i < 3; _i++)
-            sideBarBackup.push_back(cubeMain[face].at(1).at(_i));
-        if (direction == "CW")
-        {
-            side_bar_sender(left, "EQT", "FWD");
-            side_bar_receiver(face, "EQT");
-            side_bar_sender(back, "EQT", "FWD");
-            side_bar_receiver(left, "EQT");
-            side_bar_sender(right, "EQT", "FWD");
-            side_bar_receiver(back, "EQT");
-            for (_i = 0; _i < 3; _i++)
-                cubeMain[right].at(1).at(_i) = sideBarBackup.at(_i);
-        }
-        else
-        {
-            side_bar_sender(right, "EQT", "FWD");
-            side_bar_receiver(face, "EQT");
-            side_bar_sender(back, "EQT", "FWD");
-            side_bar_receiver(right, "EQT");
-            side_bar_sender(left, "EQT", "FWD");
-            side_bar_receiver(back, "EQT");
-            for (_i = 0; _i < 3; _i++)
-                cubeMain[left].at(1).at(_i) = sideBarBackup.at(_i);
-        }
-    }
-    else if (side == stand)
-    {
-        for (_i = 0; _i < 3; _i++)
-            sideBarBackup.push_back(cubeMain[top].at(1).at(_i));
-        if (direction == "CW")
-        {
-            side_bar_sender(left, "M", "REV");
-            side_bar_receiver(top, "EQT");
-            side_bar_sender(bottom, "EQT", "FWD");
-            side_bar_receiver(left, "M");
-            side_bar_sender(right, "M", "REV");
-            side_bar_receiver(bottom, "EQT");
-            for (_i = 0; _i < 3; _i++)
-                cubeMain[right].at(_i).at(1) = sideBarBackup.at(_i);
-        }
-        else
-        {
-            side_bar_sender(right, "M", "FWD");
-            side_bar_receiver(top, "EQT");
-            side_bar_sender(bottom, "EQT", "REV");
-            side_bar_receiver(right, "M");
-            side_bar_sender(left, "M", "FWD");
-            side_bar_receiver(bottom, "EQT");
-            for (_j = 2, _i = 0; _j >= 0, _i < 3; _j--, _i++)
-                cubeMain[left].at(_i).at(1) = sideBarBackup.at(_j);
-            // side_bar_receiver(left, "M");
-        }
-    }
-    // RECURSION WILL OCCUR FOR THE BELLOW THREE CONDITIONS......
-    else if (side == axisX)
-    {
-        if (direction == "CW")
-        {
-            R;
-            MP;
-            LP;
-        }
-        else
-        {
-            RP;
-            M;
-            L;
-        }
-    }
-    else if (side == axisY)
-    {
-        if (direction == "CW")
-        {
-            U;
-            EP;
-            DP;
-        }
-        else
-        {
-            UP;
-            E;
-            D;
-        }
-    }
-    else if (side == axisZ)
-    {
-        if (direction == "CW")
-        {
-            F;
-            S;
-            BP;
-        }
-        else
-        {
-            FP;
-            SP;
-            B;
-        }
-    }
-}
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THE THREE BELLOW FUNCITON ARE FOR SIDE ROTATION LOGICS OF THE CUBE...
    ----------------------------------------------------------------------------------------------------------------------------------------*/
@@ -1170,7 +772,7 @@ void cube::face_transpose(const int &side, string_view direction)
             _i = 2;
             for (_col = 0; _col < 3; _col++)
             {
-                tempVec[_i][_j] = cubeMain[side].at(_row).at(_col);
+                tempVec[_i][_j] = cubeMain[side][_row][_col];
                 _i--;
             }
             _j++;
@@ -1184,7 +786,7 @@ void cube::face_transpose(const int &side, string_view direction)
             _i = 0;
             for (_col = 0; _col < 3; _col++)
             {
-                tempVec[_i][_j] = cubeMain[side].at(_row).at(_col);
+                tempVec[_i][_j] = cubeMain[side][_row][_col];
                 _i++;
             }
             _j--;
@@ -1198,13 +800,13 @@ void cube::face_transpose(const int &side, string_view direction)
             _i = 2;
             for (_col = 0; _col < 3; _col++)
             {
-                tempVec[_j][_i] = cubeMain[side].at(_row).at(_col);
+                tempVec[_j][_i] = cubeMain[side][_row][_col];
                 _i--;
             }
             _j--;
         }
     }
-    (cubeMain)[side] = tempVec;
+    cubeMain[side] = tempVec;
 }
 void cube::side_bar_sender(const int &side, string_view sideBarDirection, string_view vectorStoringDirection)
 {
@@ -1213,32 +815,32 @@ void cube::side_bar_sender(const int &side, string_view sideBarDirection, string
         if (sideBarDirection == "L")
         {
             for (_i = 0; _i < 3; _i++)
-                sideBar.push_back(cubeMain[side].at(_i).at(0));
+                sideBar.push_back(cubeMain[side][_i][0]);
         }
         else if (sideBarDirection == "R")
         {
             for (_i = 0; _i < 3; _i++)
-                sideBar.push_back(cubeMain[side].at(_i).at(2));
+                sideBar.push_back(cubeMain[side][_i][2]);
         }
         else if (sideBarDirection == "T")
         {
             for (_i = 0; _i < 3; _i++)
-                sideBar.push_back(cubeMain[side].at(0).at(_i));
+                sideBar.push_back(cubeMain[side][0][_i]);
         }
         else if (sideBarDirection == "BTM")
         {
             for (_i = 0; _i < 3; _i++)
-                sideBar.push_back(cubeMain[side].at(2).at(_i));
+                sideBar.push_back(cubeMain[side][2][_i]);
         }
         else if (sideBarDirection == "M")
         {
             for (_i = 0; _i < 3; _i++)
-                sideBar.push_back(cubeMain[side].at(_i).at(1));
+                sideBar.push_back(cubeMain[side][_i][1]);
         }
         else if (sideBarDirection == "EQT")
         {
             for (_i = 0; _i < 3; _i++)
-                sideBar.push_back(cubeMain[side].at(1).at(_i));
+                sideBar.push_back(cubeMain[side][1][_i]);
         }
     }
     else
@@ -1246,32 +848,32 @@ void cube::side_bar_sender(const int &side, string_view sideBarDirection, string
         if (sideBarDirection == "L")
         {
             for (int _j{2}; _j >= 0; _j--)
-                sideBar.push_back(cubeMain[side].at(_j).at(0));
+                sideBar.push_back(cubeMain[side][_j][0]);
         }
         else if (sideBarDirection == "R")
         {
             for (int _j{2}; _j >= 0; _j--)
-                sideBar.push_back(cubeMain[side].at(_j).at(2));
+                sideBar.push_back(cubeMain[side][_j][2]);
         }
         else if (sideBarDirection == "T")
         {
             for (int _j{2}; _j >= 0; _j--)
-                sideBar.push_back(cubeMain[side].at(0).at(_j));
+                sideBar.push_back(cubeMain[side][0][_j]);
         }
         else if (sideBarDirection == "BTM")
         {
             for (int _j{2}; _j >= 0; _j--)
-                sideBar.push_back(cubeMain[side].at(2).at(_j));
+                sideBar.push_back(cubeMain[side][2][_j]);
         }
         else if (sideBarDirection == "M")
         {
             for (int _j{2}; _j >= 0; _j--)
-                sideBar.push_back(cubeMain[side].at(_j).at(1));
+                sideBar.push_back(cubeMain[side][_j][1]);
         }
         else if (sideBarDirection == "EQT")
         {
             for (int _j{2}; _j >= 0; _j--)
-                sideBar.push_back(cubeMain[side].at(1).at(_j));
+                sideBar.push_back(cubeMain[side][1][_j]);
         }
     }
 }
@@ -1280,41 +882,41 @@ void cube::side_bar_receiver(const int &side, string_view sideBarDirection)
     if (sideBarDirection == "BTM")
     {
         for (_i = 0; _i < 3; _i++)
-            cubeMain[side].at(2).at(_i) = sideBar.at(_i);
+            cubeMain[side][2][_i] = sideBar[_i];
     }
     else if (sideBarDirection == "L")
     {
         for (_i = 0; _i < 3; _i++)
-            cubeMain[side].at(_i).at(0) = sideBar.at(_i);
+            cubeMain[side][_i][0] = sideBar[_i];
     }
     else if (sideBarDirection == "T")
     {
         for (_i = 0; _i < 3; _i++)
-            cubeMain[side].at(0).at(_i) = sideBar.at(_i);
+            cubeMain[side][0][_i] = sideBar[_i];
     }
     else if (sideBarDirection == "R")
     {
         for (_i = 0; _i < 3; _i++)
-            cubeMain[side].at(_i).at(2) = sideBar.at(_i);
+            cubeMain[side][_i][2] = sideBar[_i];
     }
     else if (sideBarDirection == "M")
     {
         for (_i = 0; _i < 3; _i++)
-            cubeMain[side].at(_i).at(1) = sideBar.at(_i);
+            cubeMain[side][_i][1] = sideBar[_i];
     }
     else if (sideBarDirection == "EQT")
     {
         for (_i = 0; _i < 3; _i++)
-            cubeMain[side].at(1).at(_i) = sideBar.at(_i);
+            cubeMain[side][1][_i] = sideBar[_i];
     }
     sideBar.clear();
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THSI FUNCITON PROVIDES COLOR NAME STRING IN EXCHANGE OF INTEGER VALUE OF THE COLOR
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-string side_name(const int &colorAsci)
+string side_name(const int &colorAscii)
 {
-    switch (colorAsci)
+    switch (colorAscii)
     {
     case 0:
         return "FACE";
@@ -1335,7 +937,7 @@ string side_name(const int &colorAsci)
         return "BOTTOM";
         break;
     default:
-        return "ERROR FINDING COLOR NAME...";
+        return "ERROR FINDING COLOR NAME";
         break;
     }
 }

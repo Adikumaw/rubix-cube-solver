@@ -15,8 +15,8 @@ class solver : public cube
 private:
    vector<char> cornerColors;
    char topSideColor;
-   short edgeSide, solution_side;
-   vector<string> CrossSolution, F2LSolution, OLLSolution, PLLSolution, tempSolution;
+   short edgeSide, solutionSide;
+   vector<string> crossSolution, f2lSolution, ollSolution, pllSolution, tempSolution;
    vector<vector<string>> crossSolutions, f2lSolutions, ollSolutions, pllSolutions;
 
 public:
