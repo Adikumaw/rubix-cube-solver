@@ -17,8 +17,10 @@ private:
     bool get_edge_location(const char &color_1, int &side, int &block);
 
 public:
+    Cross(const Cube &cube);
+    Cross();
+    void solver(vector<vector<string>> &solutions) override;
     virtual void applySolution(bool apply = true) override;
-    void solver(vector<vector<string>> &solutions);
 };
 
 #endif //_CROSS_H_

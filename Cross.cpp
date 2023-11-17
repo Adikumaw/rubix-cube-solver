@@ -2,6 +2,9 @@
 #include <algorithm>
 #include "Optimiser.h"
 
+Cross::Cross() : Cube() {}
+Cross::Cross(const Cube &cube) : Cube(cube) {}
+
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION SOLVES THE BOTTOM CROSS OF THE RUBIX Cube...
    ----------------------------------------------------------------------------------------------------------------------------------------*/
@@ -1198,7 +1201,7 @@ void Cross::solver(vector<vector<string>> &solutions)
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION COUNTS THE NUMBER OF BASE EDGES CURENTLY LOCATED AT THE BOTTOM...
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-int Cross::count_bottom_lyr_edge(const Cross &src)
+int Cross::count_bottom_lyr_edge(const Cross &src) // TODO remove source parameter...
 {
     int colorCount{0};
     if (src.CubeMain[bottom][0][1] == src.CubeMain[bottom][1][1])
@@ -1215,7 +1218,7 @@ int Cross::count_bottom_lyr_edge(const Cross &src)
    THIS FUNCTION THIS FUNCTION RETURNS THE MAIN ORIENTATION OF THE CROSS COLORS.....
    AND A TEMPRORY solver CLASS SHOULD BE PROVIDED TO THE FUNCTION FOR BETTER PERFORMANCE....
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-vector<char> Cross::get_equator_colors_orientation(const Cross &source)
+vector<char> Cross::get_equator_colors_orientation(const Cross &source) // TODO remove source parameter..
 {
     vector<char> crossColorOrientation{};
     crossColorOrientation.push_back(source.CubeMain[face][1][1]);
@@ -1228,7 +1231,7 @@ vector<char> Cross::get_equator_colors_orientation(const Cross &source)
    THIS FUNCTION THIS FUNCTION RETURNS THE CURRENT ORIENTATION OF THE CROSS EDGES ON THE BOTTOM...
    AND A TEMPRORY solver CLASS SHOULD BE PROVIDED TO THE FUNCTION FOR BETTER PERFORMANCE....
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-vector<char> Cross::get_cross_colors_orientation(const Cross &source)
+vector<char> Cross::get_cross_colors_orientation(const Cross &source) // TODO remove source parameter...
 {
     vector<char> baseCross{};
     if (source.CubeMain[bottom][0][1] == source.CubeMain[bottom][1][1])
