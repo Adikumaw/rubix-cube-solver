@@ -10,9 +10,13 @@ private:
     /* data */
     vector<string> solution;
     // vector<vector<string>> solutions;
+    Oll &operator=(const Oll &oll);
+
 public:
+    Oll();
+    Oll(const Cube &cube);
+    void solver(vector<vector<string>> &solutions) override;
     virtual void applySolution(bool apply = true) override;
-    vector<string> solver();
     string oll_coder();
     bool oll_logic(const int &side, string_view OLLcode);
 };

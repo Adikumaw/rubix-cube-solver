@@ -11,6 +11,7 @@ private:
     /* data */
     vector<string> solution;
     // vector<vector<string>> solutions;
+    Cross &operator=(const Cross &cross);
     int count_bottom_lyr_edge(const Cross &src);
     vector<char> get_equator_colors_orientation(const Cross &source);
     vector<char> get_cross_colors_orientation(const Cross &source);

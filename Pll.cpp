@@ -3,10 +3,21 @@
 #include "Optimiser.h"
 #include <algorithm>
 
+Pll::Pll() : Cube() {}
+Pll::Pll(const Cube &cube) : Cube(cube) {}
+
+Pll &Pll::operator=(const Pll &pll)
+{
+    Cube::operator=(pll);
+    if (this != &pll)
+        this->solution = pll.solution;
+    return *this;
+}
+
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CALLS THE PLL LOGIC FUNCTION AND CHECKS IT ON WHICH SIDE THE PLL CONDITIONS WILL MATCHES AND SOLVES THE PLL LAYER.
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-vector<string> Pll::solver()
+void Pll::solver(vector<vector<string>> &solutions)
 {
     solution.clear();
     bool solve{false};
@@ -46,8 +57,10 @@ vector<string> Pll::solver()
             if (solve)
             {
                 // solution_optimizer(pllSolution);
+                correct_last_layer();
                 Optimiser::optimise(solution);
-                return solution;
+                solutions.push_back(solution);
+                return;
             }
             PLLcode = pll_coder(orientation);
         }
@@ -186,4 +199,13 @@ void Pll::applySolution(bool apply) // overriden function...
             solution.push_back(tempSolution.at(i));
     }
     tempSolution.clear(); // clear the tempsolutoin to avoid additional application..
+}
+
+void Pll::correct_last_layer()
+{
+    for (int move{0}; move < 4; move++)
+        if (CubeMain[face][0][1] != CubeMain[face][1][1])
+            setalgo(face, "U");
+        else
+            break;
 }

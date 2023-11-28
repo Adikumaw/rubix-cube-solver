@@ -1,10 +1,20 @@
 #include "Oll.h"
 #include "Optimiser.h"
 
+Oll::Oll() : Cube() {}
+Oll::Oll(const Cube &cube) : Cube(cube) {}
+
+Oll &Oll::operator=(const Oll &oll)
+{
+    Cube::operator=(oll);
+    if (this != &oll)
+        this->solution = oll.solution;
+    return *this;
+}
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CALLS THE OLL LOGIC FUNCTION AND CHECKS IT ON WHICH SIDE THE OLL CONDITIONS WILL MATCHES AND SOLVES THE OLL LAYER.
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-vector<string> Oll::solver()
+void Oll::solver(vector<vector<string>> &solutions)
 {
     solution.clear();
     bool solve{false};
@@ -49,7 +59,8 @@ vector<string> Oll::solver()
         if (solve)
         {
             Optimiser::optimise(solution);
-            return solution;
+            solutions.push_back(solution);
+            return;
         }
         OLLcode = oll_coder();
     }

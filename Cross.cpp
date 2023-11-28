@@ -5,6 +5,15 @@
 Cross::Cross() : Cube() {}
 Cross::Cross(const Cube &cube) : Cube(cube) {}
 
+Cross &Cross::operator=(const Cross &cross)
+{
+    Cube::operator=(cross);
+
+    if (this != &cross)
+        this->solution = cross.solution;
+    return *this;
+}
+
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION SOLVES THE BOTTOM CROSS OF THE RUBIX Cube...
    ----------------------------------------------------------------------------------------------------------------------------------------*/
@@ -40,8 +49,6 @@ void Cross::solver(vector<vector<string>> &solutions)
         {
             // Optimising f2lSolution....
             Optimiser::optimise(solution);
-            // solution_optimizer(crossSolution);
-            // storeSolution.solutions.push_back(solution);
             solutions.push_back(solution);
             return;
         }

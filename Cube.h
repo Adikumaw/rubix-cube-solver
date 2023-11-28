@@ -13,21 +13,21 @@ string side_name(const int &colorAsci);
 
 class Cube
 {
+private:
     /* ----------------------------------------------------------------------------------------------------------------------------------------
 OPERATOR OVERLOADING
 ----------------------------------------------------------------------------------------------------------------------------------------*/
     friend ostream &operator<<(ostream &os, const Cube &Cube);
     friend istream &operator>>(istream &is, Cube &Cube);
+    friend class CubeSolver;
 
-private:
     vector<char> sideBar, sideBarBackup;
     short _i, _j, _row, _col;
-    vector<vector<char>> tempVec{
-        {'0', '0', '0'},
-        {'0', '0', '0'},
-        {'0', '0', '0'}};
+    static vector<vector<char>> tempVec;
 
 public:
+    Cube &operator=(const Cube &cube);
+    virtual void solver(vector<vector<string>> &solutions){};
     static int trials;
     /* ----------------------------------------------------------------------------------------------------------------------------------------
       CONSTRUCTORS FOR Cube CLASS
@@ -38,6 +38,14 @@ public:
        SHOWS Cube'S CURRENT STATUS...
        ----------------------------------------------------------------------------------------------------------------------------------------*/
     void Cube_state() const;
+
+    // WHOLE Cube REORIENTATION....
+    void x_axis_rotation_clockwise();
+    void y_axis_rotation_clockwise();
+    void z_axis_rotation_clockwise();
+    void x_axis_rotation_counter_clockwise();
+    void y_axis_rotation_counter_clockwise();
+    void z_axis_rotation_counter_clockwise();
 
 protected:
     // MEMBERS
@@ -60,9 +68,14 @@ protected:
     };
 
     // MEMBER FUNCTIONS....
-    virtual void applySolution(bool apply = true);
+    virtual void applySolution(bool apply = true)
+    {
+        applyTempSolution();
+        tempSolution.clear();
+    };
     // virtual vector<vector<string>> getSolutions();
     void setalgo(const int &side, string str_algo, bool apply = true);
+    void setalgo(const int &side, vector<string> algo, bool apply = true);
     void applyTempSolution();
     /* ----------------------------------------------------------------------------------------------------------------------------------------
    checks color correctness
@@ -102,13 +115,6 @@ protected:
     void left_rotate_two_times();
     void top_rotate_two_times();
     void bottom_rotate_two_times();
-    // WHOLE Cube REORIENTATION....
-    void x_axis_rotation_clockwise();
-    void y_axis_rotation_clockwise();
-    void z_axis_rotation_clockwise();
-    void x_axis_rotation_counter_clockwise();
-    void y_axis_rotation_counter_clockwise();
-    void z_axis_rotation_counter_clockwise();
     /* ----------------------------------------------------------------------------------------------------------------------------------------
       THE THREE BELLOW FUNCITON ARE FOR SIDE ROTATION LOGICS OF THE Cube.
       ----------------------------------------------------------------------------------------------------------------------------------------*/

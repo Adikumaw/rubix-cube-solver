@@ -2,6 +2,18 @@
 #include <algorithm>
 #include <random>
 #include "Optimiser.h"
+
+F2l::F2l() : Cube() {}
+F2l::F2l(const Cube &cube) : Cube(cube) {}
+
+F2l &F2l::operator=(const F2l &f2l)
+{
+    Cube::operator=(f2l);
+    if (this != &f2l)
+        this->solution = f2l.solution;
+    return *this;
+}
+
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION SOLVES THE F2L_LAYER OF THE RUBIX Cube....
    AND A TEMPRORY solver CLASS SHOULD BE PROVIDED TO THE FUNCTION FOR BETTER PERFORMANCE....
@@ -2141,7 +2153,11 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, string_
         }
         else // this block is for stoping the loop from running infinite times...
         {
-            pos = true;
+            break;
+        }
+        if (edgeSetter != "CALL_EDGE_SETTER")
+        { // exit loop if edgeSetter is DO_NOT_CALL to avoid infinite looping
+            break;
         }
     }
     // IF MOVECOUNT IS 3 IT IS GOING TO APPLY U-PRIME ELSE IN OTHER TWO CONDITIONS (2,1) IT IS GOING TO APPLY SIMPLE U OPERATIONS.....
@@ -2992,7 +3008,8 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
     //     break;
     // }
     // applySolution("f2l");
-    f2LHelper(side, colorBlock);
+    if (F2LHelper == "CALL_F2LHELPER")
+        f2LHelper(side, colorBlock);
 }
 
 /* ----------------------------------------------------------------------------------------------------------------------------------------

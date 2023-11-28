@@ -2,8 +2,18 @@
 #include "miscellaneous.h"
 #include "colors.h"
 
+vector<vector<char>> Cube::tempVec = {
+    {'0', '0', '0'},
+    {'0', '0', '0'},
+    {'0', '0', '0'}};
 int Cube::trials = 0;
 
+Cube &Cube::operator=(const Cube &cube)
+{
+    if (this != &cube)
+        this->CubeMain = cube.CubeMain;
+    return *this;
+};
 ostream &operator<<(ostream &os, const Cube &Cube)
 {
     Cube.Cube_state();
@@ -132,16 +142,17 @@ Cube::Cube()
 Cube::Cube(const Cube &src)
     : Cube{}
 {
-    for (short l{0}; l < 6; l++)
-    {
-        for (short m{0}; m < 3; m++)
-        {
-            for (short n{0}; n < 3; n++)
-            {
-                CubeMain[l][m][n] = src.CubeMain[l][m][n];
-            }
-        }
-    }
+    // for (short l{0}; l < 6; l++)
+    // {
+    //     for (short m{0}; m < 3; m++)
+    //     {
+    //         for (short n{0}; n < 3; n++)
+    //         {
+    //             CubeMain[l][m][n] = src.CubeMain[l][m][n];
+    //         }
+    //     }
+    // }
+    this->CubeMain = src.CubeMain;
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    SHOWS Cube'S CURRENT STATUS...
@@ -407,6 +418,79 @@ void Cube::setalgo(const int &side, string str_algo, bool apply)
         }
     }
     tempSolution.push_back(move);
+    applySolution(apply);
+}
+void Cube::setalgo(const int &side, vector<string> algo, bool apply)
+{
+    if (side == right)
+    {
+        for (size_t i{0}; i < algo.size(); i++)
+        {
+            if (algo[i][0] == 'F')
+                algo[i][0] = 'R';
+            else if (algo[i][0] == 'L')
+                algo[i][0] = 'F';
+            else if (algo[i][0] == 'R')
+                algo[i][0] = 'B';
+            else if (algo[i][0] == 'B')
+                algo[i][0] = 'L';
+            else if (algo[i][0] == 'M')
+                algo[i][0] = 'S';
+            else if (algo[i] == "S")
+                algo[i] = "MP";
+            else if (algo[i] == "SP")
+                algo[i] = "M";
+            else if (algo[i] == "S2")
+                algo[i] = "M2";
+            // but E will remain E...
+        }
+    }
+    else if (side == back)
+    {
+        for (size_t i{0}; i < algo.size(); i++)
+        {
+            if (algo[i][0] == 'F')
+                algo[i][0] = 'B';
+            else if (algo[i][0] == 'L')
+                algo[i][0] = 'R';
+            else if (algo[i][0] == 'R')
+                algo[i][0] = 'L';
+            else if (algo[i][0] == 'B')
+                algo[i][0] = 'F';
+            else if (algo[i] == "M")
+                algo[i] = "MP";
+            else if (algo[i] == "MP")
+                algo[i] = "M";
+            // M2 will remain same..
+            else if (algo[i] == "S")
+                algo[i] = "SP";
+            else if (algo[i] == "SP")
+                algo[i] = "S";
+        }
+    }
+    else if (side == left)
+    {
+        for (size_t i{0}; i < algo.size(); i++)
+        {
+            if (algo[i][0] == 'F')
+                algo[i][0] = 'L';
+            else if (algo[i][0] == 'L')
+                algo[i][0] = 'B';
+            else if (algo[i][0] == 'R')
+                algo[i][0] = 'F';
+            else if (algo[i][0] == 'B')
+                algo[i][0] = 'R';
+            else if (algo[i] == "M")
+                algo[i] = "SP";
+            else if (algo[i] == "M2")
+                algo[i] = "S2";
+            else if (algo[i] == "MP")
+                algo[i] = "S";
+            else if (algo[i][0] == 'S')
+                algo[i][0] = 'M';
+        }
+    };
+    tempSolution = algo; // copying algo to tempalgo..
     applySolution(apply);
 }
 
