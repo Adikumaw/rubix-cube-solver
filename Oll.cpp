@@ -18,14 +18,15 @@ void Oll::solver(vector<vector<string>> &solutions)
 {
     solution.clear();
     bool solve{false};
-    string OLLcode{};
-    OLLcode = oll_coder();
+    // string OLLcode{};
+    long int ollCode;
+    ollCode = oll_coder();
     for (int i{0}; i < 4; i++)
     {
         switch (i)
         {
         case 0:
-            solve = oll_logic(face, OLLcode);
+            solve = oll_logic(face, ollCode);
             if (!solve)
             {
                 U;
@@ -33,7 +34,7 @@ void Oll::solver(vector<vector<string>> &solutions)
             break;
         case 1:
             UP;
-            solve = oll_logic(right, OLLcode);
+            solve = oll_logic(right, ollCode);
             if (!solve)
             {
                 U;
@@ -43,7 +44,7 @@ void Oll::solver(vector<vector<string>> &solutions)
         case 2:
             U;
             U;
-            solve = oll_logic(back, OLLcode);
+            solve = oll_logic(back, ollCode);
             if (!solve)
             {
                 UP;
@@ -51,7 +52,7 @@ void Oll::solver(vector<vector<string>> &solutions)
             break;
         case 3:
             U;
-            solve = oll_logic(left, OLLcode);
+            solve = oll_logic(left, ollCode);
             break;
         default:
             break;
@@ -62,7 +63,7 @@ void Oll::solver(vector<vector<string>> &solutions)
             solutions.push_back(solution);
             return;
         }
-        OLLcode = oll_coder();
+        ollCode = oll_coder();
     }
     cerr << "error solving Oll layer...." << endl;
 }
@@ -75,43 +76,48 @@ void Oll::solver(vector<vector<string>> &solutions)
    THE OTHER THREE FOR FIRST ROW OF BACK AND
    THE LAST THREE CHARACHTER IS FOR FIRST ROW OF LEFT
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-string Oll::oll_coder()
+long int Oll::oll_coder()
 {
     const char top_color{CubeMain[top][1][1]};
     string OLLCode{};
+    long int ollCode{0};
     // CODING TOP SIDE OF THE Cube.....
     for (auto vecOfvec : CubeMain[top])
         for (auto vecOfchar : vecOfvec)
             if (vecOfchar == top_color)
-                OLLCode += '1';
+                ollCode = (ollCode << 1 | 1); // OLLCode += '1';
             else
-                OLLCode += '0';
+                ollCode = ollCode << 1; // OLLCode += '0';
+
     // CODING FIRST ROW OF FACE SIDE OF THE Cube.....
     for (auto vecOfchar : CubeMain[face][0])
         if (vecOfchar == top_color)
-            OLLCode += '1';
+            ollCode = (ollCode << 1 | 1); // OLLCode += '1';
         else
-            OLLCode += '0';
+            ollCode = ollCode << 1; // OLLCode += '0';
+
     // CODING FIRST ROW OF RIGHT SIDE OF THE Cube.....
     for (auto vecOfchar : CubeMain[right][0])
         if (vecOfchar == top_color)
-            OLLCode += '1';
+            ollCode = (ollCode << 1 | 1); // OLLCode += '1';
         else
-            OLLCode += '0';
+            ollCode = ollCode << 1; // OLLCode += '0';
+
     // CODING FIRST ROW OF BACK SIDE OF THE Cube.....
     for (auto vecOfchar : CubeMain[back][0])
         if (vecOfchar == top_color)
-            OLLCode += '1';
+            ollCode = (ollCode << 1 | 1); // OLLCode += '1';
         else
-            OLLCode += '0';
+            ollCode = ollCode << 1; // OLLCode += '0';
+
     // CODING FIRST ROW OF LEFT SIDE OF THE Cube.....
     for (auto vecOfchar : CubeMain[left][0])
         if (vecOfchar == top_color)
-            OLLCode += '1';
+            ollCode = (ollCode << 1 | 1); // OLLCode += '1';
         else
-            OLLCode += '0';
+            ollCode = ollCode << 1; // OLLCode += '0';
 
-    return OLLCode; // RETURNING THE FULLY CODED STRING.....
+    return ollCode; // RETURNING THE FULLY CODED STRING.....
 }
 
 /* ----------------------------------------------------------------------------------------------------------------------------------------
@@ -119,251 +125,251 @@ string Oll::oll_coder()
    LAYER AND IT DIRECTLY CALLS THE SETALGO TO APPLY THE CONDITION.
    IT RETURNS TRUE IF THE CONDITION MATCHES THE CODE AND FALSE WHEN OLLCODE DOSEN'T MATCHES ANY CONDITION
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-bool Oll::oll_logic(const int &side, string_view OLLcode)
+bool Oll::oll_logic(const int &side, long int ollCode)
 {
-    if (OLLcode == "111111111000000000000")
+    if (ollCode == 0b111111111000000000000L)
     {
         return true;
     }
     // DOT CONDITIONS...
-    else if (OLLcode == "000010000010111010111")
+    else if (ollCode == 0b000010000010111010111L)
     {
         setalgo(side, "R U BP R B R2 UP RP F R FP");
     }
-    else if (OLLcode == "000010000111011010110")
+    else if (ollCode == 0b000010000111011010110L)
     {
         setalgo(side, "RP F R FP U2 RP F R F2 U2 F");
     }
-    else if (OLLcode == "000010001010011011011")
+    else if (ollCode == 0b000010001010011011011L)
     {
         setalgo(side, "B U L UP LP BP U B L U LP UP BP");
     }
-    else if (OLLcode == "001010000110110010110")
+    else if (ollCode == 0b001010000110110010110L)
     {
         setalgo(side, "RP U2 RP F R FP UP FP UP F UP R");
     }
-    else if (OLLcode == "100010001010010110011")
+    else if (ollCode == 0b100010001010010110011L)
     {
         setalgo(side, "R U RP U RP F R FP U2 RP F R FP");
     }
-    else if (OLLcode == "101010101010010010010")
+    else if (ollCode == 0b101010101010010010010L)
     {
         setalgo(side, "MP U2 M U2 MP U M U2 MP U2 M");
     }
-    else if (OLLcode == "101010000010110010011")
+    else if (ollCode == 0b101010000010110010011L)
     {
         setalgo(side, "RP U2 F R U RP UP F2 U2 F R");
     }
-    else if (OLLcode == "000010101010010111010")
+    else if (ollCode == 0b000010101010010111010L)
     {
         setalgo(side, "F R U RP U FP U2 FP L F LP");
     }
     // LINE CONDITIONS...
-    else if (OLLcode == "010010010100111001010")
+    else if (ollCode == 0b010010010100111001010L)
     {
         setalgo(side, "RP UP FP U FP L F LP F R");
     }
-    else if (OLLcode == "010010010000111000111")
+    else if (ollCode == 0b010010010000111000111L)
     {
         setalgo(side, "R UP B2 D BP U2 B DP B2 U RP");
     }
-    else if (OLLcode == "000111000110101011000")
+    else if (ollCode == 0b000111000110101011000L)
     {
         setalgo(side, "F U R UP RP U R UP RP FP");
     }
-    else if (OLLcode == "000111000010101010101")
+    else if (ollCode == 0b000111000010101010101L)
     {
         setalgo(side, "LP BP L UP RP U R UP RP U R LP B L");
     }
     // CROSS CONDITION....
-    else if (OLLcode == "010111010100101001000")
+    else if (ollCode == 0b010111010100101001000L)
     {
         setalgo(side, "L UP RP U LP U R U RP U R");
     }
-    else if (OLLcode == "010111010000101000101")
+    else if (ollCode == 0b010111010000101000101L)
     {
         setalgo(side, "R U RP U R UP RP U R U2 RP");
     }
-    else if (OLLcode == "010111011100000100100")
+    else if (ollCode == 0b010111011100000100100L)
     {
         setalgo(side, "LP U R UP L U RP");
     }
-    else if (OLLcode == "010111011000001001001")
+    else if (ollCode == 0b010111011000001001001L)
     {
         setalgo(side, "RP U2 R U RP U R");
     }
-    else if (OLLcode == "110111110001000100000")
+    else if (ollCode == 0b110111110001000100000L)
     {
         setalgo(side, "RP FP L F R FP LP F");
     }
-    else if (OLLcode == "111111010101000000000")
+    else if (ollCode == 0b111111010101000000000L)
     {
         setalgo(side, "R2 D RP U2 R DP RP U2 RP");
     }
-    else if (OLLcode == "110111011000000100001")
+    else if (ollCode == 0b110111011000000100001L)
     {
         setalgo(side, "RP FP LP F R FP L F");
     }
     // 4 CORNERS....
-    else if (OLLcode == "101110111000010010000")
+    else if (ollCode == 0b101110111000010010000L)
     {
         setalgo(side, "MP UP M U2 MP UP M");
     }
-    else if (OLLcode == "101111101010000010000")
+    else if (ollCode == 0b101111101010000010000L)
     {
         setalgo(side, "LP R U RP UP L RP F R FP");
     }
     // SHAPE _| .......
-    else if (OLLcode == "010110100011011001000")
+    else if (ollCode == 0b010110100011011001000L)
     {
         setalgo(side, "L F RP F R F2 LP");
     }
-    else if (OLLcode == "110110001110011000000")
+    else if (ollCode == 0b110110001110011000000L)
     {
         setalgo(side, "F RP FP R U R UP RP");
     }
-    else if (OLLcode == "010110001110010100100")
+    else if (ollCode == 0b010110001110010100100L)
     {
         setalgo(side, "RP UP R F RP FP U F R FP");
     }
-    else if (OLLcode == "010110101010010101000")
+    else if (ollCode == 0b010110101010010101000L)
     {
         setalgo(side, "UP R U2 RP UP R UP R2 FP UP F U R");
     }
-    else if (OLLcode == "010110000011010100101")
+    else if (ollCode == 0b010110000011010100101L)
     {
         setalgo(side, "F R U RP UP R U RP UP FP");
     }
-    else if (OLLcode == "010110000111010101000")
+    else if (ollCode == 0b010110000111010101000L)
     {
         setalgo(side, "L FP LP F U2 L2 B L BP L");
     }
     // SHAPE \_ .....
-    else if (OLLcode == "010011101010000101010")
+    else if (ollCode == 0b010011101010000101010L)
     {
         setalgo(side, "UP RP U2 R U RP U R2 B U BP UP RP");
     }
-    else if (OLLcode == "011011000110100000110")
+    else if (ollCode == 0b011011000110100000110L)
     {
         setalgo(side, "L F2 RP FP R FP LP");
     }
-    else if (OLLcode == "010011000110101001010")
+    else if (ollCode == 0b010011000110101001010L)
     {
         setalgo(side, "FP LP UP L U LP UP L U F");
     }
-    else if (OLLcode == "011011100010100001010")
+    else if (ollCode == 0b011011100010100001010L)
     {
         setalgo(side, "RP U2 R2 BP RP B RP U2 R");
     }
-    else if (OLLcode == "010011000111000101010")
+    else if (ollCode == 0b010011000111000101010L)
     {
         setalgo(side, "RP F R FP U2 R2 BP RP B RP");
     }
-    else if (OLLcode == "010011000011000100111")
+    else if (ollCode == 0b010011000011000100111L)
     {
         setalgo(side, "RP F RP FP R2 U2 BP R B RP");
     }
     // SHAPE -\ .....
-    else if (OLLcode == "001110010001010011001")
+    else if (ollCode == 0b001110010001010011001L)
     {
         setalgo(side, "R U RP BP R B UP BP RP B");
     }
-    else if (OLLcode == "100110010100110110000")
+    else if (ollCode == 0b100110010100110110000L)
     {
         setalgo(side, "LP BP L UP RP U R LP B L");
     }
-    else if (OLLcode == "000110011100010110100")
+    else if (ollCode == 0b000110011100010110100L)
     {
         setalgo(side, "M LP UP L UP LP U2 L UP MP");
     }
-    else if (OLLcode == "101110010000110010001")
+    else if (ollCode == 0b101110010000110010001L)
     {
         setalgo(side, "BP R BP R2 U R U RP UP R B2");
     }
     // SHAPE \- ....
-    else if (OLLcode == "000011010001000110111")
+    else if (ollCode == 0b000011010001000110111L)
     {
         setalgo(side, "LP B L2 FP L2 BP L2 F LP");
     }
-    else if (OLLcode == "000011110001001011010")
+    else if (ollCode == 0b000011110001001011010L)
     {
         setalgo(side, "M R U RP U R U2 RP U MP");
     }
-    else if (OLLcode == "000011011000001011011")
+    else if (ollCode == 0b000011011000001011011L)
     {
         setalgo(side, "LP B2 R B RP B L");
     }
-    else if (OLLcode == "101011010000100010011")
+    else if (ollCode == 0b101011010000100010011L)
     {
         setalgo(side, "R2 U RP BP R UP R2 U R B RP");
     }
     // SHAPE C ....
-    else if (OLLcode == "110010110000111000010")
+    else if (ollCode == 0b110010110000111000010L)
     {
         setalgo(side, "R U R BP RP B UP RP");
     }
-    else if (OLLcode == "000111101010001010100")
+    else if (ollCode == 0b000111101010001010100L)
     {
         setalgo(side, "R U RP UP BP RP F R FP B");
     }
     // SHAPE L ....
-    else if (OLLcode == "000111001110000110100")
+    else if (ollCode == 0b000111001110000110100L)
     {
         setalgo(side, "RP F R U RP FP R F UP FP");
     }
-    else if (OLLcode == "000111100011001011000")
+    else if (ollCode == 0b000111100011001011000L)
     {
         setalgo(side, "L FP LP UP L F LP FP U F");
     }
-    else if (OLLcode == "000111001010001011001")
+    else if (ollCode == 0b000111001010001011001L)
     {
         setalgo(side, "LP BP L RP UP R U LP B L");
     }
-    else if (OLLcode == "000111100010100110100")
+    else if (ollCode == 0b000111100010100110100L)
     {
         setalgo(side, "R B RP L U LP UP R BP RP");
     }
     // SHAPE P .....
-    else if (OLLcode == "110110100010111000000")
+    else if (ollCode == 0b110110100010111000000L)
     {
         setalgo(side, "F U R UP RP FP");
     }
-    else if (OLLcode == "011011001110000001010")
+    else if (ollCode == 0b011011001110000001010L)
     {
         setalgo(side, "RP UP F U R UP RP FP R");
     }
-    else if (OLLcode == "110110100011010100000")
+    else if (ollCode == 0b110110100011010100000L)
     {
         setalgo(side, "L U FP UP LP U L F LP");
     }
-    else if (OLLcode == "011011001010000000111")
+    else if (ollCode == 0b011011001010000000111L)
     {
         setalgo(side, "FP UP LP U L F");
     }
     // SHAPE T .....
-    else if (OLLcode == "001111001010000010101")
+    else if (ollCode == 0b001111001010000010101L)
     {
         setalgo(side, "F R U RP UP FP");
     }
-    else if (OLLcode == "001111001110000011000")
+    else if (ollCode == 0b001111001110000011000L)
     {
         setalgo(side, "R U RP UP RP F R FP");
     }
     // SHAPE W ....
-    else if (OLLcode == "001011110001000010110")
+    else if (ollCode == 0b001011110001000010110L)
     {
         setalgo(side, "L U LP U L UP LP UP LP B L BP");
     }
-    else if (OLLcode == "100110011100011010000")
+    else if (ollCode == 0b100110011100011010000L)
     {
         setalgo(side, "RP UP R UP RP U R U R BP RP B");
     }
     // SHAPE Z ....
-    else if (OLLcode == "100111001010000110001")
+    else if (ollCode == 0b100111001010000110001L)
     {
         setalgo(side, "RP F R U RP UP FP U R");
     }
-    else if (OLLcode == "001111100010100011000")
+    else if (ollCode == 0b001111100010100011000L)
     {
         setalgo(side, "L FP LP UP L U F UP LP");
     }
