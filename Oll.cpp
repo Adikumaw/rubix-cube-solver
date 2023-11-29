@@ -79,7 +79,7 @@ void Oll::solver(vector<vector<string>> &solutions)
 long int Oll::oll_coder()
 {
     const char top_color{CubeMain[top][1][1]};
-    string OLLCode{};
+    // string OLLCode{};
     long int ollCode{0};
     // CODING TOP SIDE OF THE Cube.....
     for (auto vecOfvec : CubeMain[top])
