@@ -25,14 +25,14 @@ void Cross::solver(vector<vector<string>> &solutions)
     char edgeColor{};
     vector<char> mainOrientation{}, currentOrientation{};
     vector<int> crsEdges{};
-    mainOrientation = move(get_equator_colors_orientation(*this));
-    currentOrientation = move(get_cross_colors_orientation(*this));
-    crossColorCount = count_bottom_lyr_edge(*this);
+    mainOrientation = move(get_equator_colors_orientation());
+    currentOrientation = move(get_cross_colors_orientation());
+    crossColorCount = count_bottom_lyr_edge();
 
     if (crossColorCount == 4)
     {
         // for the condition when crosscolor count == 4....
-        currentOrientation = move(get_cross_colors_orientation(*this));
+        currentOrientation = move(get_cross_colors_orientation());
         for (int i{0}; i < 4; i++)
         {
             count = 0;
@@ -92,7 +92,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                     break;
                 }
                 // Verifying the current orientation...
-                currentOrientation = move(get_cross_colors_orientation(*this));
+                currentOrientation = move(get_cross_colors_orientation());
                 for (int i{0}; i < 4; i++)
                 {
                     count = 0;
@@ -180,7 +180,7 @@ void Cross::solver(vector<vector<string>> &solutions)
         sourceBackup = *this;
         if (!get_edge_location(edgeColor, side, block))
             std::cout << "error finding coordinate...." << endl;
-        crossColorCount = count_bottom_lyr_edge(*this);
+        crossColorCount = count_bottom_lyr_edge();
         if (crossColorCount != 4)
         {
             if (side >= face && side <= right)
@@ -218,7 +218,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                         // one or two edges on the bottom...
                         case 1:
                         case 2:
-                            currentOrientation = move(get_cross_colors_orientation(*this));
+                            currentOrientation = move(get_cross_colors_orientation());
                             for (int i{0}; i < 4; i++)
                             {
                                 count = 0;
@@ -240,7 +240,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                                         setalgo(side, "F RP");
                                     else
                                         setalgo(side, "FP L");
-                                    crossColorCount = count_bottom_lyr_edge(*this);
+                                    crossColorCount = count_bottom_lyr_edge();
                                     if (limit == 3 && crossColorCount == 2)
                                     {
                                         if (twotimes == 0)
@@ -252,11 +252,11 @@ void Cross::solver(vector<vector<string>> &solutions)
                                     }
                                     else
                                         twocorrect = 0;
-                                    crossColorCount = count_bottom_lyr_edge(*this);
+                                    crossColorCount = count_bottom_lyr_edge();
                                     if (crossColorCount >= limit)
                                     {
                                         // Verifying the current Orientation......
-                                        currentOrientation = move(get_cross_colors_orientation(*this));
+                                        currentOrientation = move(get_cross_colors_orientation());
                                         for (int i{0}; i < 4; i++)
                                         {
                                             count = 0;
@@ -293,7 +293,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                             }
                             break;
                         case 3:
-                            currentOrientation = move(get_cross_colors_orientation(*this));
+                            currentOrientation = move(get_cross_colors_orientation());
                             for (int i{0}; i < 4; i++)
                             {
                                 count = 0;
@@ -318,7 +318,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                                             setalgo(side, "F RP FP");
                                         else
                                             setalgo(side, "FP L F");
-                                        crossColorCount = count_bottom_lyr_edge(*this);
+                                        crossColorCount = count_bottom_lyr_edge();
                                         if (crossColorCount == 4)
                                         {
                                             if (checkside == 2)
@@ -363,7 +363,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                                             setalgo(side, "F RP");
                                         else
                                             setalgo(side, "FP L");
-                                        crossColorCount = count_bottom_lyr_edge(*this);
+                                        crossColorCount = count_bottom_lyr_edge();
                                         if (crossColorCount == 2)
                                         {
                                             if (twotimes == 0)
@@ -375,11 +375,11 @@ void Cross::solver(vector<vector<string>> &solutions)
                                         }
                                         else
                                             twocorrect = 0;
-                                        crossColorCount = count_bottom_lyr_edge(*this);
+                                        crossColorCount = count_bottom_lyr_edge();
                                         if (crossColorCount == 3)
                                         {
                                             // Verifying the current orientation...
-                                            currentOrientation = move(get_cross_colors_orientation(*this));
+                                            currentOrientation = move(get_cross_colors_orientation());
                                             for (int i{0}; i < 4; i++)
                                             {
                                                 count = 0;
@@ -426,11 +426,11 @@ void Cross::solver(vector<vector<string>> &solutions)
                                             setalgo(side, "F RP");
                                         else
                                             setalgo(side, "FP L");
-                                        crossColorCount = count_bottom_lyr_edge(*this);
+                                        crossColorCount = count_bottom_lyr_edge();
                                         if (crossColorCount <= 3)
                                         {
                                             // Verifying the current orientation...
-                                            currentOrientation = move(get_cross_colors_orientation(*this));
+                                            currentOrientation = move(get_cross_colors_orientation());
                                             for (int i{0}; i < 4; i++)
                                             {
                                                 count = 0;
@@ -476,7 +476,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                         // one or two edges on the bottom
                         case 1:
                         case 2:
-                            currentOrientation = move(get_cross_colors_orientation(*this));
+                            currentOrientation = move(get_cross_colors_orientation());
                             for (int i{0}; i < 4; i++)
                             {
                                 count = 0;
@@ -493,11 +493,11 @@ void Cross::solver(vector<vector<string>> &solutions)
                             for (int checkside{0}; checkside < 4; checkside++)
                             {
                                 setalgo(side, "RP");
-                                crossColorCount = count_bottom_lyr_edge(*this);
+                                crossColorCount = count_bottom_lyr_edge();
                                 if (crossColorCount >= limit)
                                 {
                                     // Verifying the current orientation...
-                                    currentOrientation = move(get_cross_colors_orientation(*this));
+                                    currentOrientation = move(get_cross_colors_orientation());
                                     for (int i{0}; i < 4; i++)
                                     {
                                         count = 0;
@@ -518,7 +518,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                             }
                             break;
                         case 3:
-                            currentOrientation = move(get_cross_colors_orientation(*this));
+                            currentOrientation = move(get_cross_colors_orientation());
                             for (int i{0}; i < 4; i++)
                             {
                                 count = 0;
@@ -537,7 +537,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                                 for (int checkside{0}; checkside < 4; checkside++)
                                 {
                                     setalgo(side, "RP");
-                                    crossColorCount = count_bottom_lyr_edge(*this);
+                                    crossColorCount = count_bottom_lyr_edge();
                                     if (crossColorCount == 4)
                                     {
                                         break;
@@ -554,11 +554,11 @@ void Cross::solver(vector<vector<string>> &solutions)
                                 for (int checkside{0}; checkside < 4; checkside++)
                                 {
                                     setalgo(side, "RP");
-                                    crossColorCount = count_bottom_lyr_edge(*this);
+                                    crossColorCount = count_bottom_lyr_edge();
                                     if (crossColorCount == 3)
                                     {
                                         // Verifying the current orientation...
-                                        currentOrientation = move(get_cross_colors_orientation(*this));
+                                        currentOrientation = move(get_cross_colors_orientation());
                                         for (int i{0}; i < 4; i++)
                                         {
                                             count = 0;
@@ -584,11 +584,11 @@ void Cross::solver(vector<vector<string>> &solutions)
                                 for (int checkside{0}; checkside < 4; checkside++)
                                 {
                                     setalgo(side, "RP");
-                                    crossColorCount = count_bottom_lyr_edge(*this);
+                                    crossColorCount = count_bottom_lyr_edge();
                                     if (crossColorCount <= 3)
                                     {
                                         // Verifying the current orientation...
-                                        currentOrientation = move(get_cross_colors_orientation(*this));
+                                        currentOrientation = move(get_cross_colors_orientation());
                                         for (int i{0}; i < 4; i++)
                                         {
                                             count = 0;
@@ -645,7 +645,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                         // one or two edges on the bottom...
                         case 1:
                         case 2:
-                            currentOrientation = move(get_cross_colors_orientation(*this));
+                            currentOrientation = move(get_cross_colors_orientation());
                             for (int i{0}; i < 4; i++)
                             {
                                 count = 0;
@@ -679,11 +679,11 @@ void Cross::solver(vector<vector<string>> &solutions)
                                 default:
                                     break;
                                 }
-                                crossColorCount = count_bottom_lyr_edge(*this);
+                                crossColorCount = count_bottom_lyr_edge();
                                 if (crossColorCount >= limit)
                                 {
                                     // Verifying the current orientation...
-                                    currentOrientation = move(get_cross_colors_orientation(*this));
+                                    currentOrientation = move(get_cross_colors_orientation());
                                     for (int i{0}; i < 4; i++)
                                     {
                                         count = 0;
@@ -729,7 +729,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                             break;
                             // three edges on the bottom...
                         case 3:
-                            currentOrientation = move(get_cross_colors_orientation(*this));
+                            currentOrientation = move(get_cross_colors_orientation());
                             for (int i{0}; i < 4; i++)
                             {
                                 count = 0;
@@ -785,11 +785,11 @@ void Cross::solver(vector<vector<string>> &solutions)
                                     default:
                                         break;
                                     }
-                                    crossColorCount = count_bottom_lyr_edge(*this);
+                                    crossColorCount = count_bottom_lyr_edge();
                                     if (crossColorCount == 3)
                                     {
                                         // Verifying the current orientation...
-                                        currentOrientation = move(get_cross_colors_orientation(*this));
+                                        currentOrientation = move(get_cross_colors_orientation());
                                         for (int i{0}; i < 4; i++)
                                         {
                                             count = 0;
@@ -870,7 +870,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                         // one or two edges on the bottom...
                         case 1:
                         case 2:
-                            currentOrientation = move(get_cross_colors_orientation(*this));
+                            currentOrientation = move(get_cross_colors_orientation());
                             for (int i{0}; i < 4; i++)
                             {
                                 count = 0;
@@ -887,11 +887,11 @@ void Cross::solver(vector<vector<string>> &solutions)
                             for (int checkside{0}; checkside < 4; checkside++)
                             {
                                 setalgo(side, "L");
-                                crossColorCount = count_bottom_lyr_edge(*this);
+                                crossColorCount = count_bottom_lyr_edge();
                                 if (crossColorCount >= limit)
                                 {
                                     // Verifying the current orientation...
-                                    currentOrientation = move(get_cross_colors_orientation(*this));
+                                    currentOrientation = move(get_cross_colors_orientation());
                                     for (int i{0}; i < 4; i++)
                                     {
                                         count = 0;
@@ -913,7 +913,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                             break;
                             // When three edges on the bottom...
                         case 3:
-                            currentOrientation = move(get_cross_colors_orientation(*this));
+                            currentOrientation = move(get_cross_colors_orientation());
                             for (int i{0}; i < 4; i++)
                             {
                                 count = 0;
@@ -933,7 +933,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                                 for (int checkside{0}; checkside < 4; checkside++)
                                 {
                                     setalgo(side, "L");
-                                    crossColorCount = count_bottom_lyr_edge(*this);
+                                    crossColorCount = count_bottom_lyr_edge();
                                     if (crossColorCount == 4)
                                     {
                                         break;
@@ -950,11 +950,11 @@ void Cross::solver(vector<vector<string>> &solutions)
                                 for (int checkside{0}; checkside < 4; checkside++)
                                 {
                                     setalgo(side, "L");
-                                    crossColorCount = count_bottom_lyr_edge(*this);
+                                    crossColorCount = count_bottom_lyr_edge();
                                     if (crossColorCount == 3)
                                     {
                                         // Verifying the current orientation...
-                                        currentOrientation = move(get_cross_colors_orientation(*this));
+                                        currentOrientation = move(get_cross_colors_orientation());
                                         for (int i{0}; i < 4; i++)
                                         {
                                             count = 0;
@@ -980,11 +980,11 @@ void Cross::solver(vector<vector<string>> &solutions)
                                 for (int checkside{0}; checkside < 4; checkside++)
                                 {
                                     setalgo(side, "L");
-                                    crossColorCount = count_bottom_lyr_edge(*this);
+                                    crossColorCount = count_bottom_lyr_edge();
                                     if (crossColorCount <= 3)
                                     {
                                         // Verifying the current orientation...
-                                        currentOrientation = move(get_cross_colors_orientation(*this));
+                                        currentOrientation = move(get_cross_colors_orientation());
                                         for (int i{0}; i < 4; i++)
                                         {
                                             count = 0;
@@ -1053,7 +1053,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                         // one or two edges on the bottom...
                     case 1:
                     case 2:
-                        currentOrientation = move(get_cross_colors_orientation(*this));
+                        currentOrientation = move(get_cross_colors_orientation());
                         for (int i{0}; i < 4; i++)
                         {
                             count = 0;
@@ -1070,11 +1070,11 @@ void Cross::solver(vector<vector<string>> &solutions)
                         for (int checkside{0}; checkside < 4; checkside++)
                         {
                             setalgo(side_2, "F2");
-                            crossColorCount = count_bottom_lyr_edge(*this);
+                            crossColorCount = count_bottom_lyr_edge();
                             if (crossColorCount >= limit)
                             {
                                 // Verifying the current orientation...
-                                currentOrientation = move(get_cross_colors_orientation(*this));
+                                currentOrientation = move(get_cross_colors_orientation());
                                 for (int i{0}; i < 4; i++)
                                 {
                                     count = 0;
@@ -1096,7 +1096,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                         break;
                         // three edges on the bottom...
                     case 3:
-                        currentOrientation = move(get_cross_colors_orientation(*this));
+                        currentOrientation = move(get_cross_colors_orientation());
                         for (int i{0}; i < 4; i++)
                         {
                             count = 0;
@@ -1117,7 +1117,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                             for (int checkside{0}; checkside < 4; checkside++)
                             {
                                 setalgo(side_2, "F2");
-                                crossColorCount = count_bottom_lyr_edge(*this);
+                                crossColorCount = count_bottom_lyr_edge();
                                 if (crossColorCount == 4)
                                 {
                                     break;
@@ -1134,11 +1134,11 @@ void Cross::solver(vector<vector<string>> &solutions)
                             for (int checkside{0}; checkside < 4; checkside++)
                             {
                                 setalgo(side_2, "F2");
-                                crossColorCount = count_bottom_lyr_edge(*this);
+                                crossColorCount = count_bottom_lyr_edge();
                                 if (crossColorCount == 3)
                                 {
                                     // Verifying the current orientation...
-                                    currentOrientation = move(get_cross_colors_orientation(*this));
+                                    currentOrientation = move(get_cross_colors_orientation());
                                     for (int i{0}; i < 4; i++)
                                     {
                                         count = 0;
@@ -1164,11 +1164,11 @@ void Cross::solver(vector<vector<string>> &solutions)
                             for (int checkside{0}; checkside < 4; checkside++)
                             {
                                 setalgo(side_2, "F2");
-                                crossColorCount = count_bottom_lyr_edge(*this);
+                                crossColorCount = count_bottom_lyr_edge();
                                 if (crossColorCount <= 3)
                                 {
                                     // Verifying the current orientation...
-                                    currentOrientation = move(get_cross_colors_orientation(*this));
+                                    currentOrientation = move(get_cross_colors_orientation());
                                     for (int i{0}; i < 4; i++)
                                     {
                                         count = 0;
@@ -1208,16 +1208,16 @@ void Cross::solver(vector<vector<string>> &solutions)
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION COUNTS THE NUMBER OF BASE EDGES CURENTLY LOCATED AT THE BOTTOM...
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-int Cross::count_bottom_lyr_edge(const Cross &src) // TODO remove source parameter...
+int Cross::count_bottom_lyr_edge()
 {
     int colorCount{0};
-    if (src.CubeMain[bottom][0][1] == src.CubeMain[bottom][1][1])
+    if (CubeMain[bottom][0][1] == CubeMain[bottom][1][1])
         colorCount++;
-    if (src.CubeMain[bottom][1][0] == src.CubeMain[bottom][1][1])
+    if (CubeMain[bottom][1][0] == CubeMain[bottom][1][1])
         colorCount++;
-    if (src.CubeMain[bottom][1][2] == src.CubeMain[bottom][1][1])
+    if (CubeMain[bottom][1][2] == CubeMain[bottom][1][1])
         colorCount++;
-    if (src.CubeMain[bottom][2][1] == src.CubeMain[bottom][1][1])
+    if (CubeMain[bottom][2][1] == CubeMain[bottom][1][1])
         colorCount++;
     return colorCount;
 }
@@ -1225,36 +1225,36 @@ int Cross::count_bottom_lyr_edge(const Cross &src) // TODO remove source paramet
    THIS FUNCTION THIS FUNCTION RETURNS THE MAIN ORIENTATION OF THE CROSS COLORS.....
    AND A TEMPRORY solver CLASS SHOULD BE PROVIDED TO THE FUNCTION FOR BETTER PERFORMANCE....
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-vector<char> Cross::get_equator_colors_orientation(const Cross &source) // TODO remove source parameter..
+vector<char> Cross::get_equator_colors_orientation()
 {
     vector<char> crossColorOrientation{};
-    crossColorOrientation.push_back(source.CubeMain[face][1][1]);
-    crossColorOrientation.push_back(source.CubeMain[right][1][1]);
-    crossColorOrientation.push_back(source.CubeMain[back][1][1]);
-    crossColorOrientation.push_back(source.CubeMain[left][1][1]);
+    crossColorOrientation.push_back(CubeMain[face][1][1]);
+    crossColorOrientation.push_back(CubeMain[right][1][1]);
+    crossColorOrientation.push_back(CubeMain[back][1][1]);
+    crossColorOrientation.push_back(CubeMain[left][1][1]);
     return std::move(crossColorOrientation);
 }
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION THIS FUNCTION RETURNS THE CURRENT ORIENTATION OF THE CROSS EDGES ON THE BOTTOM...
    AND A TEMPRORY solver CLASS SHOULD BE PROVIDED TO THE FUNCTION FOR BETTER PERFORMANCE....
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-vector<char> Cross::get_cross_colors_orientation(const Cross &source) // TODO remove source parameter...
+vector<char> Cross::get_cross_colors_orientation()
 {
     vector<char> baseCross{};
-    if (source.CubeMain[bottom][0][1] == source.CubeMain[bottom][1][1])
-        baseCross.push_back(source.CubeMain[face][2][1]);
+    if (CubeMain[bottom][0][1] == CubeMain[bottom][1][1])
+        baseCross.push_back(CubeMain[face][2][1]);
     else
         baseCross.push_back('\0');
-    if (source.CubeMain[bottom][1][2] == source.CubeMain[bottom][1][1])
-        baseCross.push_back(source.CubeMain[right][2][1]);
+    if (CubeMain[bottom][1][2] == CubeMain[bottom][1][1])
+        baseCross.push_back(CubeMain[right][2][1]);
     else
         baseCross.push_back('\0');
-    if (source.CubeMain[bottom][2][1] == source.CubeMain[bottom][1][1])
-        baseCross.push_back(source.CubeMain[back][2][1]);
+    if (CubeMain[bottom][2][1] == CubeMain[bottom][1][1])
+        baseCross.push_back(CubeMain[back][2][1]);
     else
         baseCross.push_back('\0');
-    if (source.CubeMain[bottom][1][0] == source.CubeMain[bottom][1][1])
-        baseCross.push_back(source.CubeMain[left][2][1]);
+    if (CubeMain[bottom][1][0] == CubeMain[bottom][1][1])
+        baseCross.push_back(CubeMain[left][2][1]);
     else
         baseCross.push_back('\0');
     return move(baseCross);
