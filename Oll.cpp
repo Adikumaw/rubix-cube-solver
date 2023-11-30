@@ -85,37 +85,37 @@ long int Oll::oll_coder()
     for (auto vecOfvec : CubeMain[top])
         for (auto vecOfchar : vecOfvec)
             if (vecOfchar == top_color)
-                ollCode = (ollCode << 1 | 1); // OLLCode += '1';
+                ollCode = (ollCode << 1 | 1);
             else
-                ollCode = ollCode << 1; // OLLCode += '0';
+                ollCode = ollCode << 1;
 
     // CODING FIRST ROW OF FACE SIDE OF THE Cube.....
     for (auto vecOfchar : CubeMain[face][0])
         if (vecOfchar == top_color)
-            ollCode = (ollCode << 1 | 1); // OLLCode += '1';
+            ollCode = (ollCode << 1 | 1);
         else
-            ollCode = ollCode << 1; // OLLCode += '0';
+            ollCode = ollCode << 1;
 
     // CODING FIRST ROW OF RIGHT SIDE OF THE Cube.....
     for (auto vecOfchar : CubeMain[right][0])
         if (vecOfchar == top_color)
-            ollCode = (ollCode << 1 | 1); // OLLCode += '1';
+            ollCode = (ollCode << 1 | 1);
         else
-            ollCode = ollCode << 1; // OLLCode += '0';
+            ollCode = ollCode << 1;
 
     // CODING FIRST ROW OF BACK SIDE OF THE Cube.....
     for (auto vecOfchar : CubeMain[back][0])
         if (vecOfchar == top_color)
-            ollCode = (ollCode << 1 | 1); // OLLCode += '1';
+            ollCode = (ollCode << 1 | 1);
         else
-            ollCode = ollCode << 1; // OLLCode += '0';
+            ollCode = ollCode << 1;
 
     // CODING FIRST ROW OF LEFT SIDE OF THE Cube.....
     for (auto vecOfchar : CubeMain[left][0])
         if (vecOfchar == top_color)
-            ollCode = (ollCode << 1 | 1); // OLLCode += '1';
+            ollCode = (ollCode << 1 | 1);
         else
-            ollCode = ollCode << 1; // OLLCode += '0';
+            ollCode = ollCode << 1;
 
     return ollCode; // RETURNING THE FULLY CODED STRING.....
 }
