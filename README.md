@@ -1,4 +1,4 @@
-# Rubik's Cube Solver *(by aditya kumawat)*
+# Rubik's Cube Solver v2.0.0 *(by aditya kumawat)*
 `` _solve any scramble in seconds_ ``
 
 ![Static Badge](https://img.shields.io/badge/C%2B%2B-language-blue)
@@ -22,7 +22,7 @@ https://github.com/Adikumaw/rubix-cube-solver/assets/92208854/ad1c92ea-0dfa-43b7
 ## How to Use
 1. Compile the rubiks_cube_solver.c file using your preferred C compiler:
 ```
- g++ -o rubiks_cube_solver rubixmain.cpp cube.cpp solver.cpp miscellaneous.cpp
+ g++ -o rubiks_cube_solver rubixmain.cpp Cube.cpp Cross.cpp F2l.cpp Oll.cpp Pll.cpp CubeSolver.cpp miscellaneous.cpp Optimiser.cpp
 ```
 2. Run the compiled executable:
 ```
