@@ -263,13 +263,9 @@ void CubeSolver::algorithmCorrector(const int &side, vector<string> &algorithm)
     {
         return;
     }
-    else
+    else if (algorithm.at(0) == "")
     {
-        if (algorithm.at(0) == "")
-        {
-            std::cout << "error";
-            return;
-        }
+        return;
     }
     if (side == 0) // face
     {
