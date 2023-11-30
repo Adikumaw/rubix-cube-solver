@@ -2029,7 +2029,7 @@ bool F2l::find_corner_colors(const char &bottomColor, const int &side, const int
    AND MAKES TOPSIDECOLOR === "THE COLOR IN THE TOP OF SIDE ELEMENT"
    AND EDGESIDE === "TO THE SIDE OF TEH EDGE ELEMENT ON THE Cube"
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, bool edgeSetter)
+bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, const bool &edgeSetter)
 {
     bool pos{false};
     // the bellow two assignment is for the precaution of removing past assignments....
@@ -2191,7 +2191,7 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, bool ed
    ELSE IF EDGE IS IN NEAR LOCATION THAN IT WILL RETURN "-1" AND WILL MOVE THE EDGE OUT OF THE MID LAYER.
    AND IF EDGESETTER IS === true THAN IT WILL CALL THE EDGESETTER_ON_TOP FUNCTION.
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-int F2l::find_edge_in_mid_lyr(const char &color_1, const char &color_2, bool edgeSetter)
+int F2l::find_edge_in_mid_lyr(const char &color_1, const char &color_2, const bool &edgeSetter)
 {
     if (CubeMain[face][1][2] == color_1 && CubeMain[right][1][0] == color_2)
     {
@@ -2465,7 +2465,7 @@ int F2l::find_edge_in_mid_lyr(const char &color_1, const char &color_2, bool edg
 THIS FUNCTION SIMPLY MOVES THE CORNER ELEMENT TO THE CORRECT LOCATION, IF IT IS ON THE TOP SIDE OF THE Cube
    AND IF F2LHELPER === true THAN IT WILL CALL THE REQUIRED SIDE OF F2LHELPER FUNCTION
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char &color_3, bool F2LHelper)
+void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char &color_3, const bool &F2LHelper)
 {
     // temp_Cube = *this;
     vector<char> colors{color_2, color_3};

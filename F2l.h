@@ -22,9 +22,9 @@ public:
     virtual void applySolution(bool apply = true) override;
     bool get_corner_location(const char &color_1, const char &color_2, int &side, int &block);
     bool find_corner_colors(const char &bottomColor, const int &side, const int &row, const int &col);
-    bool find_edge_in_top_lyr(const char &color_1, const char &color_2, bool edgeSetter);
-    int find_edge_in_mid_lyr(const char &color_1, const char &color_2, bool edgeSetter);
-    void set_corner_on_top(const char &color_1, const char &color_2, const char &color_3, bool F2LHelper);
+    bool find_edge_in_top_lyr(const char &color_1, const char &color_2, const bool &edgeSetter);
+    int find_edge_in_mid_lyr(const char &color_1, const char &color_2, const bool &edgeSetter);
+    void set_corner_on_top(const char &color_1, const char &color_2, const char &color_3, const bool &F2LHelper);
     void f2LHelper(const int &side, const int &colorBlock);
 };
 
