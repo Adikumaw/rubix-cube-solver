@@ -95,10 +95,10 @@ void F2l::solver(vector<vector<string>> &solutions)
                         if (cornerLocMatch)
                         {
                             // for optimization purposes....
-                            boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                            boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), true);
                             sentinel = -1;
                             if (!boolEdgeSetter)
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), true);
                             if (sentinel == -1)
                             {
                                 if (edgeSide == left)
@@ -121,11 +121,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                             case 0:
                                 setalgo(left, "R U RP");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
                                 setalgo(left, "FP UP F");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
                                 break;
@@ -139,10 +139,10 @@ void F2l::solver(vector<vector<string>> &solutions)
                         cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
                         if (cornerLocMatch)
                         {
-                            boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                            boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), true);
                             sentinel = -1;
                             if (!boolEdgeSetter)
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), true);
                             if (sentinel == -1)
                             {
                                 if (edgeSide == face)
@@ -165,11 +165,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                             case 0:
                                 setalgo(face, "R U RP");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
                                 setalgo(face, "FP UP F");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
                                 break;
@@ -183,10 +183,10 @@ void F2l::solver(vector<vector<string>> &solutions)
                         cornerLocMatch = find_corner_colors(bottomColor, side, 2, 0);
                         if (cornerLocMatch)
                         {
-                            boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                            boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), true);
                             sentinel = -1;
                             if (!boolEdgeSetter)
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), true);
                             if (sentinel == -1)
                             {
                                 if (edgeSide == back)
@@ -209,11 +209,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                             case 0:
                                 setalgo(back, "R U RP");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
                                 setalgo(back, "FP UP F");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
                                 break;
@@ -227,10 +227,10 @@ void F2l::solver(vector<vector<string>> &solutions)
                         cornerLocMatch = find_corner_colors(bottomColor, side, 2, 2);
                         if (cornerLocMatch)
                         {
-                            boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                            boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), true);
                             sentinel = -1;
                             if (!boolEdgeSetter)
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), true);
                             if (sentinel == -1)
                             {
                                 if (edgeSide == right)
@@ -253,11 +253,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                             case 0:
                                 setalgo(right, "R U RP");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
                                 setalgo(right, "FP UP F");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
                                 break;
@@ -278,13 +278,13 @@ void F2l::solver(vector<vector<string>> &solutions)
                     if (CubeMain[side][0][0] == bottomColor)
                     {
                         cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
-                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
                                     setalgo(left, "U FP U F U FP U2 F");
@@ -296,8 +296,8 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 else if (sentinel == -1)
                                 {
                                     // the corner setter will set the corner and will pass the control back to this function.....
-                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 }
                             }
                             if (edgeSide == face)
@@ -347,7 +347,7 @@ void F2l::solver(vector<vector<string>> &solutions)
                         } // this else is for the condition when the corner or edge is not on the right location....
                         else
                         {
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                         }
                     }
                     break;
@@ -355,13 +355,13 @@ void F2l::solver(vector<vector<string>> &solutions)
                     if (CubeMain[side][0][2] == bottomColor)
                     {
                         cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
-                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
                                     setalgo(face, "UP R UP RP UP R U2 RP");
@@ -373,8 +373,8 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 else if (sentinel == -1)
                                 {
                                     // the corner setter will set the corner and will pass the control back to this function.....
-                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 }
                             }
                             if (edgeSide == face)
@@ -424,7 +424,7 @@ void F2l::solver(vector<vector<string>> &solutions)
                         }
                         else
                         {
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                         }
                     }
                     break;
@@ -432,13 +432,13 @@ void F2l::solver(vector<vector<string>> &solutions)
                     if (CubeMain[side][2][0] == bottomColor)
                     {
                         cornerLocMatch = find_corner_colors(bottomColor, side, 2, 0);
-                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), true);
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), true);
                                 if (sentinel == 1)
                                 {
                                     setalgo(left, "R UP RP U R U2 RP U R UP RP");
@@ -464,11 +464,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                             case 0:
                                 setalgo(left, "R U RP");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
                                 setalgo(left, "FP UP F");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
                                 break;
@@ -480,13 +480,13 @@ void F2l::solver(vector<vector<string>> &solutions)
                     if (CubeMain[side][2][2] == bottomColor)
                     {
                         cornerLocMatch = find_corner_colors(bottomColor, side, 2, 2);
-                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), true);
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), true);
                                 if (sentinel == 1)
                                 {
                                     setalgo(face, "R UP RP UP R U RP UP R U2 RP");
@@ -512,11 +512,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                             case 0:
                                 setalgo(face, "R U RP");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
                                 setalgo(face, "FP UP F");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
                                 break;
@@ -537,13 +537,13 @@ void F2l::solver(vector<vector<string>> &solutions)
                     if (CubeMain[side][0][0] == bottomColor)
                     {
                         cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
-                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
                                     setalgo(face, "U FP U F U FP U2 F");
@@ -555,8 +555,8 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 else if (sentinel == -1)
                                 {
                                     // the corner setter will set the corner and will pass the control back to this function.....
-                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 }
                             }
                             if (edgeSide == right)
@@ -606,7 +606,7 @@ void F2l::solver(vector<vector<string>> &solutions)
                         } // this else is for the condition when the corner or edge is not on the right location....
                         else
                         {
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                         }
                     }
                     break;
@@ -614,13 +614,13 @@ void F2l::solver(vector<vector<string>> &solutions)
                     if (CubeMain[side][0][2] == bottomColor)
                     {
                         cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
-                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
                                     setalgo(right, "UP R UP RP UP R U2 RP");
@@ -632,8 +632,8 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 else if (sentinel == -1)
                                 {
                                     // the corner setter will set the corner and will pass the control back to this function.....
-                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 }
                             }
                             if (edgeSide == right)
@@ -683,7 +683,7 @@ void F2l::solver(vector<vector<string>> &solutions)
                         }
                         else
                         {
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                         }
                     }
                     break;
@@ -691,13 +691,13 @@ void F2l::solver(vector<vector<string>> &solutions)
                     if (CubeMain[side][2][0] == bottomColor)
                     {
                         cornerLocMatch = find_corner_colors(bottomColor, side, 2, 0);
-                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), true);
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), true);
                                 if (sentinel == 1)
                                 {
                                     setalgo(face, "R UP RP U R U2 RP U R UP RP");
@@ -723,11 +723,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                             case 0:
                                 setalgo(face, "R U RP");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
                                 setalgo(face, "FP UP F");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
                                 break;
@@ -739,13 +739,13 @@ void F2l::solver(vector<vector<string>> &solutions)
                     if (CubeMain[side][2][2] == bottomColor)
                     {
                         cornerLocMatch = find_corner_colors(bottomColor, side, 2, 2);
-                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), true);
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), true);
                                 if (sentinel == 1)
                                 {
                                     setalgo(right, "R UP RP UP R U RP UP R U2 RP");
@@ -771,11 +771,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                             case 0:
                                 setalgo(right, "R U RP");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
                                 setalgo(right, "FP UP F");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
                                 break;
@@ -796,13 +796,13 @@ void F2l::solver(vector<vector<string>> &solutions)
                     if (CubeMain[side][0][0] == bottomColor)
                     {
                         cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
-                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
                                     setalgo(right, "U FP U F U FP U2 F");
@@ -814,8 +814,8 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 else if (sentinel == -1)
                                 {
                                     // the corner setter will set the corner and will pass the control back to this function.....
-                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 }
                             }
                             if (edgeSide == back)
@@ -865,7 +865,7 @@ void F2l::solver(vector<vector<string>> &solutions)
                         } // this else is for the condition when the corner or edge is not on the right location....
                         else
                         {
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                         }
                     }
                     break;
@@ -873,13 +873,13 @@ void F2l::solver(vector<vector<string>> &solutions)
                     if (CubeMain[side][0][2] == bottomColor)
                     {
                         cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
-                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
                                     setalgo(back, "UP R UP RP UP R U2 RP");
@@ -891,8 +891,8 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 else if (sentinel == -1)
                                 {
                                     // the corner setter will set the corner and will pass the control back to this function.....
-                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 }
                             }
                             if (edgeSide == back)
@@ -942,7 +942,7 @@ void F2l::solver(vector<vector<string>> &solutions)
                         }
                         else
                         {
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                         }
                     }
                     break;
@@ -950,13 +950,13 @@ void F2l::solver(vector<vector<string>> &solutions)
                     if (CubeMain[side][2][0] == bottomColor)
                     {
                         cornerLocMatch = find_corner_colors(bottomColor, side, 2, 0);
-                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), true);
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), true);
                                 if (sentinel == 1)
                                 {
                                     setalgo(right, "R UP RP U R U2 RP U R UP RP");
@@ -982,11 +982,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                             case 0:
                                 setalgo(right, "R U RP");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
                                 setalgo(right, "FP UP F");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
                                 break;
@@ -998,13 +998,13 @@ void F2l::solver(vector<vector<string>> &solutions)
                     if (CubeMain[side][2][2] == bottomColor)
                     {
                         cornerLocMatch = find_corner_colors(bottomColor, side, 2, 2);
-                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), true);
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), true);
                                 if (sentinel == 1)
                                 {
                                     setalgo(back, "R UP RP UP R U RP UP R U2 RP");
@@ -1030,11 +1030,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                             case 0:
                                 setalgo(back, "R U RP");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
                                 setalgo(back, "FP UP F");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
                                 break;
@@ -1055,13 +1055,13 @@ void F2l::solver(vector<vector<string>> &solutions)
                     if (CubeMain[side][0][0] == bottomColor)
                     {
                         cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
-                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
                                     setalgo(back, "U FP U F U FP U2 F");
@@ -1073,8 +1073,8 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 else if (sentinel == -1)
                                 {
                                     // the corner setter will set the corner and will pass the control back to this function.....
-                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 }
                             }
                             if (edgeSide == left)
@@ -1124,7 +1124,7 @@ void F2l::solver(vector<vector<string>> &solutions)
                         } // this else is for the condition when the corner or edge is not on the right location....
                         else
                         {
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                         }
                     }
                     break;
@@ -1132,13 +1132,13 @@ void F2l::solver(vector<vector<string>> &solutions)
                     if (CubeMain[side][0][2] == bottomColor)
                     {
                         cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
-                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
                                     setalgo(left, "UP R UP RP UP R U2 RP");
@@ -1150,8 +1150,8 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 else if (sentinel == -1)
                                 {
                                     // the corner setter will set the corner and will pass the control back to this function.....
-                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 }
                             }
                             if (edgeSide == left)
@@ -1201,7 +1201,7 @@ void F2l::solver(vector<vector<string>> &solutions)
                         }
                         else
                         {
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                         }
                     }
                     break;
@@ -1209,13 +1209,13 @@ void F2l::solver(vector<vector<string>> &solutions)
                     if (CubeMain[side][2][0] == bottomColor)
                     {
                         cornerLocMatch = find_corner_colors(bottomColor, side, 2, 0);
-                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), true);
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), true);
                                 if (sentinel == 1)
                                 {
                                     setalgo(back, "R UP RP U R U2 RP U R UP RP");
@@ -1241,11 +1241,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                             case 0:
                                 setalgo(back, "R U RP");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
                                 setalgo(back, "FP UP F");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
                                 break;
@@ -1257,13 +1257,13 @@ void F2l::solver(vector<vector<string>> &solutions)
                     if (CubeMain[side][2][2] == bottomColor)
                     {
                         cornerLocMatch = find_corner_colors(bottomColor, side, 2, 2);
-                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), true);
                         if (cornerLocMatch)
                         {
                             // for the condition when corner is on the correct location but side edge is not on the top......
                             if (!boolEdgeSetter)
                             {
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "CALL_EDGE_SETTER");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), true);
                                 if (sentinel == 1)
                                 {
                                     setalgo(left, "R UP RP UP R U RP UP R U2 RP");
@@ -1289,11 +1289,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                             case 0:
                                 setalgo(left, "R U RP");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
                                 setalgo(left, "FP UP F");
-                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                                set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
                                 break;
@@ -1314,12 +1314,12 @@ void F2l::solver(vector<vector<string>> &solutions)
                     if (CubeMain[side][0][0] == bottomColor)
                     {
                         cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
-                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (cornerLocMatch)
                         {
                             if (!boolEdgeSetter)
                             {
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
                                     setalgo(back, "R U RP UP R U RP UP R U RP");
@@ -1331,8 +1331,8 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 else if (sentinel == -1)
                                 {
                                     // this is for the condition when the side elements are not in the correct location....
-                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 }
                             }
                             if (edgeSide == face)
@@ -1382,7 +1382,7 @@ void F2l::solver(vector<vector<string>> &solutions)
                         }
                         else
                         {
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                         }
                     }
                     break;
@@ -1390,12 +1390,12 @@ void F2l::solver(vector<vector<string>> &solutions)
                     if (CubeMain[side][0][2] == bottomColor)
                     {
                         cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
-                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (cornerLocMatch)
                         {
                             if (!boolEdgeSetter)
                             {
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
                                     setalgo(right, "R U RP UP R U RP UP R U RP");
@@ -1407,8 +1407,8 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 else if (sentinel == -1)
                                 {
                                     // this is for the condition when the side elements are not in the correct location....
-                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 }
                             }
                             if (edgeSide == left)
@@ -1458,7 +1458,7 @@ void F2l::solver(vector<vector<string>> &solutions)
                         }
                         else
                         {
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                         }
                     }
                     break;
@@ -1466,12 +1466,12 @@ void F2l::solver(vector<vector<string>> &solutions)
                     if (CubeMain[side][2][0] == bottomColor)
                     {
                         cornerLocMatch = find_corner_colors(bottomColor, side, 2, 0);
-                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (cornerLocMatch)
                         {
                             if (!boolEdgeSetter)
                             {
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
                                     setalgo(left, "R U RP UP R U RP UP R U RP");
@@ -1483,8 +1483,8 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 else if (sentinel == -1)
                                 {
                                     // this is for the condition when the side elements are not in the correct location....
-                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 }
                             }
                             if (edgeSide == right)
@@ -1534,7 +1534,7 @@ void F2l::solver(vector<vector<string>> &solutions)
                         }
                         else
                         {
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                         }
                     }
                     break;
@@ -1542,12 +1542,12 @@ void F2l::solver(vector<vector<string>> &solutions)
                     if (CubeMain[side][2][2] == bottomColor)
                     {
                         cornerLocMatch = find_corner_colors(bottomColor, side, 2, 2);
-                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (cornerLocMatch)
                         {
                             if (!boolEdgeSetter)
                             {
-                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
                                     setalgo(face, "R U RP UP R U RP UP R U RP");
@@ -1559,8 +1559,8 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 else if (sentinel == -1)
                                 {
                                     // this is for the condition when the side elements are not in the correct location....
-                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                                    set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                                    find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 }
                             }
                             if (edgeSide == back)
@@ -1610,7 +1610,7 @@ void F2l::solver(vector<vector<string>> &solutions)
                         }
                         else
                         {
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "CALL_F2LHELPER");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                         }
                     }
                     break;
@@ -2025,11 +2025,11 @@ bool F2l::find_corner_colors(const char &bottomColor, const int &side, const int
 
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCTION CHECKS IF THE SIDE ELEMENT IS ON THE TOP OF THE Cube IF IT IS IT RERURNS "TRUE" ELSE IT RETURNS "FALSE".
-   IF THE EDGESETTER IS === "CALL_EDGE_SETTER" THAN IT MOVES THE SIDE EDGE TO THE CORRECT LOCATION, ELSE LET IT STAY ON THE SAME LOCATION
+   IF THE EDGESETTER IS === true THAN IT MOVES THE SIDE EDGE TO THE CORRECT LOCATION, ELSE LET IT STAY ON THE SAME LOCATION
    AND MAKES TOPSIDECOLOR === "THE COLOR IN THE TOP OF SIDE ELEMENT"
    AND EDGESIDE === "TO THE SIDE OF TEH EDGE ELEMENT ON THE Cube"
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, string_view edgeSetter)
+bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, bool edgeSetter)
 {
     bool pos{false};
     // the bellow two assignment is for the precaution of removing past assignments....
@@ -2039,7 +2039,7 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, string_
     {
         if (CubeMain[face][0][1] == color_1 && CubeMain[top][2][1] == color_2)
         {
-            if (edgeSetter == "CALL_EDGE_SETTER")
+            if (edgeSetter)
             {
                 if (color_1 == CubeMain[face][1][1])
                     pos = true;
@@ -2053,7 +2053,7 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, string_
         }
         else if (CubeMain[top][1][2] == color_2 && CubeMain[right][0][1] == color_1)
         {
-            if (edgeSetter == "CALL_EDGE_SETTER")
+            if (edgeSetter)
             {
                 if (color_1 == CubeMain[right][1][1])
                     pos = true;
@@ -2067,7 +2067,7 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, string_
         }
         else if (CubeMain[top][1][0] == color_2 && CubeMain[left][0][1] == color_1)
         {
-            if (edgeSetter == "CALL_EDGE_SETTER")
+            if (edgeSetter)
             {
                 if (color_1 == CubeMain[left][1][1])
                     pos = true;
@@ -2081,7 +2081,7 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, string_
         }
         else if (CubeMain[top][0][1] == color_2 && CubeMain[back][0][1] == color_1)
         {
-            if (edgeSetter == "CALL_EDGE_SETTER")
+            if (edgeSetter)
             {
                 if (color_1 == CubeMain[back][1][1])
                     pos = true;
@@ -2096,7 +2096,7 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, string_
         // if second color is not on the face.....
         else if (CubeMain[face][0][1] == color_2 && CubeMain[top][2][1] == color_1)
         {
-            if (edgeSetter == "CALL_EDGE_SETTER")
+            if (edgeSetter)
             {
                 if (color_2 == CubeMain[face][1][1])
                     pos = true;
@@ -2110,7 +2110,7 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, string_
         }
         else if (CubeMain[top][1][2] == color_1 && CubeMain[right][0][1] == color_2)
         {
-            if (edgeSetter == "CALL_EDGE_SETTER")
+            if (edgeSetter)
             {
                 if (color_2 == CubeMain[right][1][1])
                     pos = true;
@@ -2124,7 +2124,7 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, string_
         }
         else if (CubeMain[top][1][0] == color_1 && CubeMain[left][0][1] == color_2)
         {
-            if (edgeSetter == "CALL_EDGE_SETTER")
+            if (edgeSetter)
             {
                 if (color_2 == CubeMain[left][1][1])
                     pos = true;
@@ -2139,7 +2139,7 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, string_
         // back side edges
         else if (CubeMain[top][0][1] == color_1 && CubeMain[back][0][1] == color_2)
         {
-            if (edgeSetter == "CALL_EDGE_SETTER")
+            if (edgeSetter)
             {
                 if (color_2 == CubeMain[back][1][1])
                     pos = true;
@@ -2155,7 +2155,7 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, string_
         {
             break;
         }
-        if (edgeSetter != "CALL_EDGE_SETTER")
+        if (!edgeSetter)
         { // exit loop if edgeSetter is DO_NOT_CALL to avoid infinite looping
             break;
         }
@@ -2189,9 +2189,9 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, string_
    AND IF THE EDGE IN ON THE CORRECT LOCATION THAN IT RETURNS "1"
    ELSE IF THE EDGE IN ON THE CORRECT LOCATION BUT IN REVER DIRECTION THAN IT RETURN "0"
    ELSE IF EDGE IS IN NEAR LOCATION THAN IT WILL RETURN "-1" AND WILL MOVE THE EDGE OUT OF THE MID LAYER.
-   AND IF EDGESETTER IS === "CALL_EDGE_SETTER" THAN IT WILL CALL THE EDGESETTER_ON_TOP FUNCTION.
+   AND IF EDGESETTER IS === true THAN IT WILL CALL THE EDGESETTER_ON_TOP FUNCTION.
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-int F2l::find_edge_in_mid_lyr(const char &color_1, const char &color_2, string_view edgeSetter)
+int F2l::find_edge_in_mid_lyr(const char &color_1, const char &color_2, bool edgeSetter)
 {
     if (CubeMain[face][1][2] == color_1 && CubeMain[right][1][0] == color_2)
     {
@@ -2222,7 +2222,7 @@ int F2l::find_edge_in_mid_lyr(const char &color_1, const char &color_2, string_v
             tempSolution.push_back("RP");
         }
         applySolution("f2l");
-        if (edgeSetter == "CALL_EDGE_SETTER")
+        if (edgeSetter)
             find_edge_in_top_lyr(color_1, color_2, edgeSetter);
         return -1;
     }
@@ -2255,7 +2255,7 @@ int F2l::find_edge_in_mid_lyr(const char &color_1, const char &color_2, string_v
             tempSolution.push_back("RP");
         }
         applySolution("f2l");
-        if (edgeSetter == "CALL_EDGE_SETTER")
+        if (edgeSetter)
             find_edge_in_top_lyr(color_1, color_2, edgeSetter);
         return -1;
     }
@@ -2288,7 +2288,7 @@ int F2l::find_edge_in_mid_lyr(const char &color_1, const char &color_2, string_v
             tempSolution.push_back("L");
         }
         applySolution("f2l");
-        if (edgeSetter == "CALL_EDGE_SETTER")
+        if (edgeSetter)
             find_edge_in_top_lyr(color_1, color_2, edgeSetter);
         return -1;
     }
@@ -2321,7 +2321,7 @@ int F2l::find_edge_in_mid_lyr(const char &color_1, const char &color_2, string_v
             tempSolution.push_back("L");
         }
         applySolution("f2l");
-        if (edgeSetter == "CALL_EDGE_SETTER")
+        if (edgeSetter)
             find_edge_in_top_lyr(color_1, color_2, edgeSetter);
         return -1;
     }
@@ -2355,7 +2355,7 @@ int F2l::find_edge_in_mid_lyr(const char &color_1, const char &color_2, string_v
             tempSolution.push_back("R");
         }
         applySolution("f2l");
-        if (edgeSetter == "CALL_EDGE_SETTER")
+        if (edgeSetter)
             find_edge_in_top_lyr(color_1, color_2, edgeSetter);
         return -1;
     }
@@ -2388,7 +2388,7 @@ int F2l::find_edge_in_mid_lyr(const char &color_1, const char &color_2, string_v
             tempSolution.push_back("R");
         }
         applySolution("f2l");
-        if (edgeSetter == "CALL_EDGE_SETTER")
+        if (edgeSetter)
             find_edge_in_top_lyr(color_1, color_2, edgeSetter);
         return -1;
     }
@@ -2421,7 +2421,7 @@ int F2l::find_edge_in_mid_lyr(const char &color_1, const char &color_2, string_v
             tempSolution.push_back("LP");
         }
         applySolution("f2l");
-        if (edgeSetter == "CALL_EDGE_SETTER")
+        if (edgeSetter)
             find_edge_in_top_lyr(color_1, color_2, edgeSetter);
         return -1;
     }
@@ -2454,7 +2454,7 @@ int F2l::find_edge_in_mid_lyr(const char &color_1, const char &color_2, string_v
             tempSolution.push_back("LP");
         }
         applySolution("f2l");
-        if (edgeSetter == "CALL_EDGE_SETTER")
+        if (edgeSetter)
             find_edge_in_top_lyr(color_1, color_2, edgeSetter);
         return -1;
     }
@@ -2463,9 +2463,9 @@ int F2l::find_edge_in_mid_lyr(const char &color_1, const char &color_2, string_v
 
 /* ----------------------------------------------------------------------------------------------------------------------------------------
 THIS FUNCTION SIMPLY MOVES THE CORNER ELEMENT TO THE CORRECT LOCATION, IF IT IS ON THE TOP SIDE OF THE Cube
-   AND IF F2LHELPER === "CALL_F2LHELPER" THAN IT WILL CALL THE REQUIRED SIDE OF F2LHELPER FUNCTION
+   AND IF F2LHELPER === true THAN IT WILL CALL THE REQUIRED SIDE OF F2LHELPER FUNCTION
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char &color_3, string_view F2LHelper)
+void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char &color_3, bool F2LHelper)
 {
     // temp_Cube = *this;
     vector<char> colors{color_2, color_3};
@@ -2485,7 +2485,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = top;
                     colorBlock = 4;
@@ -2506,7 +2506,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = face;
                     colorBlock = 2;
@@ -2527,7 +2527,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = right;
                     colorBlock = 1;
@@ -2548,7 +2548,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = right;
                     colorBlock = 1;
@@ -2569,7 +2569,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = top;
                     colorBlock = 4;
@@ -2590,7 +2590,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = face;
                     colorBlock = 2;
@@ -2612,7 +2612,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = top;
                     colorBlock = 2;
@@ -2633,7 +2633,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = back;
                     colorBlock = 1;
@@ -2654,7 +2654,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = right;
                     colorBlock = 2;
@@ -2675,7 +2675,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = right;
                     colorBlock = 2;
@@ -2696,7 +2696,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = top;
                     colorBlock = 2;
@@ -2717,7 +2717,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = back;
                     colorBlock = 1;
@@ -2739,7 +2739,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = top;
                     colorBlock = 1;
@@ -2760,7 +2760,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = back;
                     colorBlock = 2;
@@ -2781,7 +2781,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = left;
                     colorBlock = 1;
@@ -2802,7 +2802,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = left;
                     colorBlock = 1;
@@ -2823,7 +2823,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = top;
                     colorBlock = 1;
@@ -2844,7 +2844,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = back;
                     colorBlock = 2;
@@ -2866,7 +2866,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = top;
                     colorBlock = 3;
@@ -2887,7 +2887,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = face;
                     colorBlock = 1;
@@ -2908,7 +2908,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = left;
                     colorBlock = 2;
@@ -2929,7 +2929,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = left;
                     colorBlock = 2;
@@ -2950,7 +2950,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = top;
                     colorBlock = 3;
@@ -2971,7 +2971,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             if (colorCount == 2)
             {
                 pos = true;
-                if (F2LHelper == "CALL_F2LHELPER")
+                if (F2LHelper)
                 {
                     side = face;
                     colorBlock = 1;
@@ -3008,7 +3008,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
     //     break;
     // }
     // applySolution("f2l");
-    if (F2LHelper == "CALL_F2LHELPER")
+    if (F2LHelper)
         f2LHelper(side, colorBlock);
 }
 
@@ -3031,13 +3031,13 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
             if (CubeMain[side][0][0] == bottomColor)
             {
                 cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
-                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                 if (cornerLocMatch)
                 {
                     // for the condition when corner is on the correct location but side edge is not on the top......
                     if (!boolEdgeSetter)
                     {
-                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
                             setalgo(left, "U FP U F U FP U2 F");
@@ -3049,8 +3049,8 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         else if (sentinel == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         }
                     }
                     if (edgeSide == face)
@@ -3104,13 +3104,13 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
             if (CubeMain[side][0][2] == bottomColor)
             {
                 cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
-                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                 if (cornerLocMatch)
                 {
                     // for the condition when corner is on the correct location but side edge is not on the top......
                     if (!boolEdgeSetter)
                     {
-                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
                             setalgo(face, "UP R UP RP UP R U2 RP");
@@ -3122,8 +3122,8 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         else if (sentinel == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         }
                     }
                     if (edgeSide == face)
@@ -3186,13 +3186,13 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
             if (CubeMain[side][0][0] == bottomColor)
             {
                 cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
-                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                 if (cornerLocMatch)
                 {
                     // for the condition when corner is on the correct location but side edge is not on the top......
                     if (!boolEdgeSetter)
                     {
-                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
                             setalgo(face, "U FP U F U FP U2 F");
@@ -3204,8 +3204,8 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         else if (sentinel == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         }
                     }
                     if (edgeSide == right)
@@ -3259,13 +3259,13 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
             if (CubeMain[side][0][2] == bottomColor)
             {
                 cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
-                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                 if (cornerLocMatch)
                 {
                     // for the condition when corner is on the correct location but side edge is not on the top......
                     if (!boolEdgeSetter)
                     {
-                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
                             setalgo(right, "UP R UP RP UP R U2 RP");
@@ -3277,8 +3277,8 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         else if (sentinel == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         }
                     }
                     if (edgeSide == right)
@@ -3341,13 +3341,13 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
             if (CubeMain[side][0][0] == bottomColor)
             {
                 cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
-                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                 if (cornerLocMatch)
                 {
                     // for the condition when corner is on the correct location but side edge is not on the top......
                     if (!boolEdgeSetter)
                     {
-                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
                             setalgo(right, "U FP U F U FP U2 F");
@@ -3359,8 +3359,8 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         else if (sentinel == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         }
                     }
                     if (edgeSide == back)
@@ -3414,13 +3414,13 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
             if (CubeMain[side][0][2] == bottomColor)
             {
                 cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
-                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                 if (cornerLocMatch)
                 {
                     // for the condition when corner is on the correct location but side edge is not on the top......
                     if (!boolEdgeSetter)
                     {
-                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
                             setalgo(back, "UP R UP RP UP R U2 RP");
@@ -3432,8 +3432,8 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         else if (sentinel == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         }
                     }
                     if (edgeSide == back)
@@ -3496,13 +3496,13 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
             if (CubeMain[side][0][0] == bottomColor)
             {
                 cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
-                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                 if (cornerLocMatch)
                 {
                     // for the condition when corner is on the correct location but side edge is not on the top......
                     if (!boolEdgeSetter)
                     {
-                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
                             setalgo(back, "U FP U F U FP U2 F");
@@ -3514,8 +3514,8 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         else if (sentinel == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         }
                     }
                     if (edgeSide == left)
@@ -3569,13 +3569,13 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
             if (CubeMain[side][0][2] == bottomColor)
             {
                 cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
-                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                 if (cornerLocMatch)
                 {
                     // for the condition when corner is on the correct location but side edge is not on the top......
                     if (!boolEdgeSetter)
                     {
-                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
                             setalgo(left, "UP R UP RP UP R U2 RP");
@@ -3587,8 +3587,8 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         else if (sentinel == -1)
                         {
                             // the corner setter will set the corner and will pass the control back to this function.....
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         }
                     }
                     if (edgeSide == left)
@@ -3651,12 +3651,12 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
             if (CubeMain[side][0][0] == bottomColor)
             {
                 cornerLocMatch = find_corner_colors(bottomColor, side, 0, 0);
-                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                 if (cornerLocMatch)
                 {
                     if (!boolEdgeSetter)
                     {
-                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
                             setalgo(back, "R U RP UP R U RP UP R U RP");
@@ -3668,8 +3668,8 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         else if (sentinel == -1)
                         {
                             // this is for the condition when the side elements are not in the correct location....
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         }
                     }
                     if (edgeSide == face)
@@ -3723,12 +3723,12 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
             if (CubeMain[side][0][2] == bottomColor)
             {
                 cornerLocMatch = find_corner_colors(bottomColor, side, 0, 2);
-                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                 if (cornerLocMatch)
                 {
                     if (!boolEdgeSetter)
                     {
-                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
                             setalgo(right, "R U RP UP R U RP UP R U RP");
@@ -3740,8 +3740,8 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         else if (sentinel == -1)
                         {
                             // this is for the condition when the side elements are not in the correct location....
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         }
                     }
                     if (edgeSide == left)
@@ -3795,12 +3795,12 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
             if (CubeMain[side][2][0] == bottomColor)
             {
                 cornerLocMatch = find_corner_colors(bottomColor, side, 2, 0);
-                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                 if (cornerLocMatch)
                 {
                     if (!boolEdgeSetter)
                     {
-                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
                             setalgo(left, "R U RP UP R U RP UP R U RP");
@@ -3812,8 +3812,8 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         else if (sentinel == -1)
                         {
                             // this is for the condition when the side elements are not in the correct location....
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         }
                     }
                     if (edgeSide == right)
@@ -3867,12 +3867,12 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
             if (CubeMain[side][2][2] == bottomColor)
             {
                 cornerLocMatch = find_corner_colors(bottomColor, side, 2, 2);
-                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                boolEdgeSetter = find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                 if (cornerLocMatch)
                 {
                     if (!boolEdgeSetter)
                     {
-                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                        sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
                             setalgo(face, "R U RP UP R U RP UP R U RP");
@@ -3884,8 +3884,8 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         else if (sentinel == -1)
                         {
                             // this is for the condition when the side elements are not in the correct location....
-                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
-                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), "DO_NOT_CALL");
+                            set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), false);
+                            find_edge_in_top_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         }
                     }
                     if (edgeSide == back)
