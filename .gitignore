@@ -1,6 +1,8 @@
 makeCubie.o
 rubixmain.o
 rubixmain.exe
+rubix-cube-solver.o
+rubix-cube-solver.exe
 rubixmain
 .vscode/
 xcs
