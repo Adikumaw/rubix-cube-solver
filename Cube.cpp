@@ -6,7 +6,6 @@ vector<vector<char>> Cube::tempVec = {
     {'0', '0', '0'},
     {'0', '0', '0'},
     {'0', '0', '0'}};
-int Cube::trials = 0;
 
 Cube &Cube::operator=(const Cube &cube)
 {
@@ -283,7 +282,7 @@ void Cube::Cube_state() const
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    THIS FUNCITON CHANGES THE Cube_SOLVING_ALGORITHEMS TO THE REQUIRED IMPLEMENTAION SIDE ON THE BASIS OF SIDE PROVIDED.
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-void Cube::setalgo(const int &side, string str_algo, bool apply)
+void Cube::setalgo(const int &side, string str_algo, const bool &apply)
 {
     string move{};
     if (side == right)
@@ -420,7 +419,7 @@ void Cube::setalgo(const int &side, string str_algo, bool apply)
     tempSolution.push_back(move);
     applySolution(apply);
 }
-void Cube::setalgo(const int &side, vector<string> algo, bool apply)
+void Cube::setalgo(const int &side, vector<string> algo, const bool &apply)
 {
     if (side == right)
     {
