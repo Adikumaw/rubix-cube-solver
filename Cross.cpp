@@ -43,7 +43,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                 break;
             std::rotate(currentOrientation.begin(), currentOrientation.end() - 1, currentOrientation.end());
             // moving bottom to the correct location...
-            setalgo(face, "D");
+            setalgo(face, "D", _true);
         }
         if (count == 4) // if cross is compelete
         {
@@ -80,13 +80,13 @@ void Cross::solver(vector<vector<string>> &solutions)
                 switch (checkside)
                 {
                 case 0:
-                    setalgo(side, "FP DP F D FP");
+                    setalgo(side, "FP DP F D FP", _true);
                     break;
                 case 1:
-                    setalgo(side, "F D FP DP F");
+                    setalgo(side, "F D FP DP F", _true);
                     break;
                 case 2:
-                    setalgo(side, "F D2 FP D2 F");
+                    setalgo(side, "F D2 FP D2 F", _true);
                     break;
                 default:
                     break;
@@ -109,7 +109,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                 switch (checkside)
                 {
                 case 0:
-                    setalgo(side, "F DP FP D F", false);
+                    setalgo(side, "F DP FP D F", _false);
                     solution.pop_back();
                     solution.pop_back();
                     solution.pop_back();
@@ -117,7 +117,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                     solution.pop_back();
                     break;
                 case 1:
-                    setalgo(side, "FP D F DP FP", false);
+                    setalgo(side, "FP D F DP FP", _false);
                     solution.pop_back();
                     solution.pop_back();
                     solution.pop_back();
@@ -125,7 +125,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                     solution.pop_back();
                     break;
                 case 2:
-                    setalgo(side, "FP D2 F D2 FP", false);
+                    setalgo(side, "FP D2 F D2 FP", _false);
                     solution.pop_back();
                     solution.pop_back();
                     solution.pop_back();
@@ -202,10 +202,10 @@ void Cross::solver(vector<vector<string>> &solutions)
                                 switch (two_t)
                                 {
                                 case 0:
-                                    setalgo(side, "F RP");
+                                    setalgo(side, "F RP", _true);
                                     break;
                                 case 1:
-                                    setalgo(side, "FP L");
+                                    setalgo(side, "FP L", _true);
                                     break;
                                 default:
                                     break;
@@ -237,16 +237,16 @@ void Cross::solver(vector<vector<string>> &solutions)
                                 for (int checkside{0}; checkside < 4; checkside++)
                                 {
                                     if (twotimes == 0)
-                                        setalgo(side, "F RP");
+                                        setalgo(side, "F RP", _true);
                                     else
-                                        setalgo(side, "FP L");
+                                        setalgo(side, "FP L", _true);
                                     crossColorCount = count_bottom_lyr_edge();
                                     if (limit == 3 && crossColorCount == 2)
                                     {
                                         if (twotimes == 0)
-                                            setalgo(side, "FP");
+                                            setalgo(side, "FP", _true);
                                         else
-                                            setalgo(side, "F");
+                                            setalgo(side, "F", _true);
                                         // using twoCorrect as a singnal.....
                                         twocorrect = -1;
                                     }
@@ -274,18 +274,18 @@ void Cross::solver(vector<vector<string>> &solutions)
                                     if (twocorrect == -1)
                                     {
                                         if (twotimes == 0)
-                                            setalgo(side, "F", false);
+                                            setalgo(side, "F", _false);
                                         else
-                                            setalgo(side, "FP", false);
+                                            setalgo(side, "FP", _false);
                                         solution.pop_back();
                                     }
                                     if (twotimes == 0)
-                                        setalgo(side, "R FP", false);
+                                        setalgo(side, "R FP", _false);
                                     else
-                                        setalgo(side, "LP F", false);
+                                        setalgo(side, "LP F", _false);
                                     solution.pop_back();
                                     solution.pop_back();
-                                    setalgo(side, "D");
+                                    setalgo(side, "D", _true);
                                 }
                                 // this is for breaking the two times loop .....
                                 if (count >= limit)
@@ -315,21 +315,21 @@ void Cross::solver(vector<vector<string>> &solutions)
                                     for (int checkside{0}; checkside < 4; checkside++)
                                     {
                                         if (twotimes == 0)
-                                            setalgo(side, "F RP FP");
+                                            setalgo(side, "F RP FP", _true);
                                         else
-                                            setalgo(side, "FP L F");
+                                            setalgo(side, "FP L F", _true);
                                         crossColorCount = count_bottom_lyr_edge();
                                         if (crossColorCount == 4)
                                         {
                                             if (checkside == 2)
                                             {
                                                 // reverting to get even shorter solution....
-                                                setalgo(side, "F R FP", false);
+                                                setalgo(side, "F R FP", _false);
                                                 solution.pop_back();
                                                 solution.pop_back();
                                                 solution.pop_back();
                                                 // for removing last two D operatrions...
-                                                setalgo(side, "D2", false);
+                                                setalgo(side, "D2", _false);
                                                 solution.pop_back();
                                                 solution.pop_back();
                                                 break;
@@ -340,13 +340,13 @@ void Cross::solver(vector<vector<string>> &solutions)
                                         }
                                         // reverting the previour solution....
                                         if (twotimes == 0)
-                                            setalgo(side, "F R FP", false);
+                                            setalgo(side, "F R FP", _false);
                                         else
-                                            setalgo(side, "FP LP F", false);
+                                            setalgo(side, "FP LP F", _false);
                                         solution.pop_back();
                                         solution.pop_back();
                                         solution.pop_back();
-                                        setalgo(side, "D");
+                                        setalgo(side, "D", _true);
                                     }
                                     if (count == -1)
                                         break;
@@ -360,16 +360,16 @@ void Cross::solver(vector<vector<string>> &solutions)
                                     for (int checkside{0}; checkside < 4; checkside++)
                                     {
                                         if (twotimes == 0)
-                                            setalgo(side, "F RP");
+                                            setalgo(side, "F RP", _true);
                                         else
-                                            setalgo(side, "FP L");
+                                            setalgo(side, "FP L", _true);
                                         crossColorCount = count_bottom_lyr_edge();
                                         if (crossColorCount == 2)
                                         {
                                             if (twotimes == 0)
-                                                setalgo(side, "FP");
+                                                setalgo(side, "FP", _true);
                                             else
-                                                setalgo(side, "F");
+                                                setalgo(side, "F", _true);
                                             // using twoCorrect as a singnal.....
                                             twocorrect = -1;
                                         }
@@ -397,18 +397,18 @@ void Cross::solver(vector<vector<string>> &solutions)
                                         if (twocorrect == -1)
                                         {
                                             if (twotimes == 0)
-                                                setalgo(side, "F", false);
+                                                setalgo(side, "F", _false);
                                             else
-                                                setalgo(side, "FP", false);
+                                                setalgo(side, "FP", _false);
                                             solution.pop_back();
                                         }
                                         if (twotimes == 0)
-                                            setalgo(side, "R FP", false);
+                                            setalgo(side, "R FP", _false);
                                         else
-                                            setalgo(side, "LP F", false);
+                                            setalgo(side, "LP F", _false);
                                         solution.pop_back();
                                         solution.pop_back();
-                                        setalgo(side, "D");
+                                        setalgo(side, "D", _true);
                                     }
                                     // this is for breaking the two times loop .....
                                     if (count >= 3)
@@ -423,9 +423,9 @@ void Cross::solver(vector<vector<string>> &solutions)
                                     for (int checkside{0}; checkside < 4; checkside++)
                                     {
                                         if (twotimes == 0)
-                                            setalgo(side, "F RP");
+                                            setalgo(side, "F RP", _true);
                                         else
-                                            setalgo(side, "FP L");
+                                            setalgo(side, "FP L", _true);
                                         crossColorCount = count_bottom_lyr_edge();
                                         if (crossColorCount <= 3)
                                         {
@@ -446,12 +446,12 @@ void Cross::solver(vector<vector<string>> &solutions)
                                         }
                                         // reverting the previour solution....
                                         if (twotimes == 0)
-                                            setalgo(side, "R FP", false);
+                                            setalgo(side, "R FP", _false);
                                         else
-                                            setalgo(side, "LP F", false);
+                                            setalgo(side, "LP F", _false);
                                         solution.pop_back();
                                         solution.pop_back();
-                                        setalgo(side, "D");
+                                        setalgo(side, "D", _true);
                                     }
                                     // this is for breaking the two times loop .....
                                     if (count >= 2)
@@ -471,7 +471,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                         switch (crossColorCount)
                         {
                         case 0:
-                            setalgo(side, "RP");
+                            setalgo(side, "RP", _true);
                             break;
                         // one or two edges on the bottom
                         case 1:
@@ -492,7 +492,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                             limit = count + 1;
                             for (int checkside{0}; checkside < 4; checkside++)
                             {
-                                setalgo(side, "RP");
+                                setalgo(side, "RP", _true);
                                 crossColorCount = count_bottom_lyr_edge();
                                 if (crossColorCount >= limit)
                                 {
@@ -512,9 +512,9 @@ void Cross::solver(vector<vector<string>> &solutions)
                                         break;
                                 }
                                 // reverting the previour solution....
-                                setalgo(side, "R", false);
+                                setalgo(side, "R", _false);
                                 solution.pop_back();
-                                setalgo(side, "D");
+                                setalgo(side, "D", _true);
                             }
                             break;
                         case 3:
@@ -536,16 +536,16 @@ void Cross::solver(vector<vector<string>> &solutions)
                             {
                                 for (int checkside{0}; checkside < 4; checkside++)
                                 {
-                                    setalgo(side, "RP");
+                                    setalgo(side, "RP", _true);
                                     crossColorCount = count_bottom_lyr_edge();
                                     if (crossColorCount == 4)
                                     {
                                         break;
                                     }
                                     // reverting the previour solution....
-                                    setalgo(side, "R", false);
+                                    setalgo(side, "R", _false);
                                     solution.pop_back();
-                                    setalgo(side, "D");
+                                    setalgo(side, "D", _true);
                                 }
                             }
                             // When two edges are correct...
@@ -553,7 +553,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                             {
                                 for (int checkside{0}; checkside < 4; checkside++)
                                 {
-                                    setalgo(side, "RP");
+                                    setalgo(side, "RP", _true);
                                     crossColorCount = count_bottom_lyr_edge();
                                     if (crossColorCount == 3)
                                     {
@@ -573,9 +573,9 @@ void Cross::solver(vector<vector<string>> &solutions)
                                             break;
                                     }
                                     // reverting the previour solution....
-                                    setalgo(side, "R", false);
+                                    setalgo(side, "R", _false);
                                     solution.pop_back();
-                                    setalgo(side, "D");
+                                    setalgo(side, "D", _true);
                                 }
                             }
                             // When one edge is correct...
@@ -583,7 +583,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                             {
                                 for (int checkside{0}; checkside < 4; checkside++)
                                 {
-                                    setalgo(side, "RP");
+                                    setalgo(side, "RP", _true);
                                     crossColorCount = count_bottom_lyr_edge();
                                     if (crossColorCount <= 3)
                                     {
@@ -603,9 +603,9 @@ void Cross::solver(vector<vector<string>> &solutions)
                                             break;
                                     }
                                     // reverting the previour solution....
-                                    setalgo(side, "R", false);
+                                    setalgo(side, "R", _false);
                                     solution.pop_back();
-                                    setalgo(side, "D");
+                                    setalgo(side, "D", _true);
                                 }
                             }
                             break;
@@ -629,10 +629,10 @@ void Cross::solver(vector<vector<string>> &solutions)
                                 switch (two_t)
                                 {
                                 case 0:
-                                    setalgo(side, "FP RP");
+                                    setalgo(side, "FP RP", _true);
                                     break;
                                 case 1:
-                                    setalgo(side, "F L");
+                                    setalgo(side, "F L", _true);
                                     break;
                                 default:
                                     break;
@@ -665,16 +665,16 @@ void Cross::solver(vector<vector<string>> &solutions)
                                 switch (checkside)
                                 {
                                 case 0:
-                                    setalgo(side, "FP D RP");
+                                    setalgo(side, "FP D RP", _true);
                                     break;
                                 case 1:
-                                    setalgo(side, "FP RP");
+                                    setalgo(side, "FP RP", _true);
                                     break;
                                 case 2:
-                                    setalgo(side, "F D L");
+                                    setalgo(side, "F D L", _true);
                                     break;
                                 case 3:
-                                    setalgo(side, "F L");
+                                    setalgo(side, "F L", _true);
                                     break;
                                 default:
                                     break;
@@ -701,24 +701,24 @@ void Cross::solver(vector<vector<string>> &solutions)
                                 switch (checkside)
                                 {
                                 case 0:
-                                    setalgo(side, "R DP F", false);
+                                    setalgo(side, "R DP F", _false);
                                     solution.pop_back();
                                     solution.pop_back();
                                     solution.pop_back();
                                     break;
                                 case 1:
-                                    setalgo(side, "R F", false);
+                                    setalgo(side, "R F", _false);
                                     solution.pop_back();
                                     solution.pop_back();
                                     break;
                                 case 2:
-                                    setalgo(side, "LP DP FP", false);
+                                    setalgo(side, "LP DP FP", _false);
                                     solution.pop_back();
                                     solution.pop_back();
                                     solution.pop_back();
                                     break;
                                 case 3:
-                                    setalgo(side, "LP FP", false);
+                                    setalgo(side, "LP FP", _false);
                                     solution.pop_back();
                                     solution.pop_back();
                                     break;
@@ -753,10 +753,10 @@ void Cross::solver(vector<vector<string>> &solutions)
                                     switch (two_t)
                                     {
                                     case 0:
-                                        setalgo(side, "FP D RP");
+                                        setalgo(side, "FP D RP", _true);
                                         break;
                                     case 1:
-                                        setalgo(side, "F DP L");
+                                        setalgo(side, "F DP L", _true);
                                         break;
                                     default:
                                         break;
@@ -774,13 +774,13 @@ void Cross::solver(vector<vector<string>> &solutions)
                                     switch (checkside)
                                     {
                                     case 0:
-                                        setalgo(side, "FP RP");
+                                        setalgo(side, "FP RP", _true);
                                         break;
                                     case 1:
-                                        setalgo(side, "F D L");
+                                        setalgo(side, "F D L", _true);
                                         break;
                                     case 2:
-                                        setalgo(side, "F L");
+                                        setalgo(side, "F L", _true);
                                         break;
                                     default:
                                         break;
@@ -807,18 +807,18 @@ void Cross::solver(vector<vector<string>> &solutions)
                                     switch (checkside)
                                     {
                                     case 0:
-                                        setalgo(side, "R F", false);
+                                        setalgo(side, "R F", _false);
                                         solution.pop_back();
                                         solution.pop_back();
                                         break;
                                     case 1:
-                                        setalgo(side, "LP DP FP", false);
+                                        setalgo(side, "LP DP FP", _false);
                                         solution.pop_back();
                                         solution.pop_back();
                                         solution.pop_back();
                                         break;
                                     case 2:
-                                        setalgo(side, "LP FP", false);
+                                        setalgo(side, "LP FP", _false);
                                         solution.pop_back();
                                         solution.pop_back();
                                         break;
@@ -837,10 +837,10 @@ void Cross::solver(vector<vector<string>> &solutions)
                                     switch (two_t)
                                     {
                                     case 0:
-                                        setalgo(side, "F L");
+                                        setalgo(side, "F L", _true);
                                         break;
                                     case 1:
-                                        setalgo(side, "FP RP");
+                                        setalgo(side, "FP RP", _true);
                                         break;
                                     default:
                                         break;
@@ -865,7 +865,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                         {
                             // no edges on the bottom...
                         case 0:
-                            setalgo(side, "L");
+                            setalgo(side, "L", _true);
                             break;
                         // one or two edges on the bottom...
                         case 1:
@@ -886,7 +886,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                             limit = count + 1;
                             for (int checkside{0}; checkside < 4; checkside++)
                             {
-                                setalgo(side, "L");
+                                setalgo(side, "L", _true);
                                 crossColorCount = count_bottom_lyr_edge();
                                 if (crossColorCount >= limit)
                                 {
@@ -906,9 +906,9 @@ void Cross::solver(vector<vector<string>> &solutions)
                                         break;
                                 }
                                 // reverting the previour solution....
-                                setalgo(side, "LP", false);
+                                setalgo(side, "LP", _false);
                                 solution.pop_back();
-                                setalgo(side, "D");
+                                setalgo(side, "D", _true);
                             }
                             break;
                             // When three edges on the bottom...
@@ -932,16 +932,16 @@ void Cross::solver(vector<vector<string>> &solutions)
                             {
                                 for (int checkside{0}; checkside < 4; checkside++)
                                 {
-                                    setalgo(side, "L");
+                                    setalgo(side, "L", _true);
                                     crossColorCount = count_bottom_lyr_edge();
                                     if (crossColorCount == 4)
                                     {
                                         break;
                                     }
                                     // reverting the previour solution....
-                                    setalgo(side, "LP", false);
+                                    setalgo(side, "LP", _false);
                                     solution.pop_back();
-                                    setalgo(side, "D");
+                                    setalgo(side, "D", _true);
                                 }
                             }
                             // two correct edges...
@@ -949,7 +949,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                             {
                                 for (int checkside{0}; checkside < 4; checkside++)
                                 {
-                                    setalgo(side, "L");
+                                    setalgo(side, "L", _true);
                                     crossColorCount = count_bottom_lyr_edge();
                                     if (crossColorCount == 3)
                                     {
@@ -969,9 +969,9 @@ void Cross::solver(vector<vector<string>> &solutions)
                                             break;
                                     }
                                     // reverting the previour solution....
-                                    setalgo(side, "LP", false);
+                                    setalgo(side, "LP", _false);
                                     solution.pop_back();
-                                    setalgo(side, "D");
+                                    setalgo(side, "D", _true);
                                 }
                             }
                             // one edge correct...
@@ -979,7 +979,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                             {
                                 for (int checkside{0}; checkside < 4; checkside++)
                                 {
-                                    setalgo(side, "L");
+                                    setalgo(side, "L", _true);
                                     crossColorCount = count_bottom_lyr_edge();
                                     if (crossColorCount <= 3)
                                     {
@@ -999,9 +999,9 @@ void Cross::solver(vector<vector<string>> &solutions)
                                             break;
                                     }
                                     // reverting the previour solution....
-                                    setalgo(side, "LP", false);
+                                    setalgo(side, "LP", _false);
                                     solution.pop_back();
-                                    setalgo(side, "D");
+                                    setalgo(side, "D", _true);
                                 }
                             }
                             break;
@@ -1048,7 +1048,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                     {
                         // no edges on the bottom...
                     case 0:
-                        setalgo(side_2, "F2");
+                        setalgo(side_2, "F2", _true);
                         break;
                         // one or two edges on the bottom...
                     case 1:
@@ -1069,7 +1069,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                         limit = count + 1;
                         for (int checkside{0}; checkside < 4; checkside++)
                         {
-                            setalgo(side_2, "F2");
+                            setalgo(side_2, "F2", _true);
                             crossColorCount = count_bottom_lyr_edge();
                             if (crossColorCount >= limit)
                             {
@@ -1089,9 +1089,9 @@ void Cross::solver(vector<vector<string>> &solutions)
                                     break;
                             }
                             // reverting the previour solution....
-                            setalgo(side_2, "F2", false);
+                            setalgo(side_2, "F2", _false);
                             solution.pop_back();
-                            setalgo(side_2, "D");
+                            setalgo(side_2, "D", _true);
                         }
                         break;
                         // three edges on the bottom...
@@ -1116,16 +1116,16 @@ void Cross::solver(vector<vector<string>> &solutions)
                         {
                             for (int checkside{0}; checkside < 4; checkside++)
                             {
-                                setalgo(side_2, "F2");
+                                setalgo(side_2, "F2", _true);
                                 crossColorCount = count_bottom_lyr_edge();
                                 if (crossColorCount == 4)
                                 {
                                     break;
                                 }
                                 // reverting the previour solution....
-                                setalgo(side_2, "F2", false);
+                                setalgo(side_2, "F2", _false);
                                 solution.pop_back();
-                                setalgo(side_2, "D");
+                                setalgo(side_2, "D", _true);
                             }
                         }
                         // When two edges are correct...
@@ -1133,7 +1133,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                         {
                             for (int checkside{0}; checkside < 4; checkside++)
                             {
-                                setalgo(side_2, "F2");
+                                setalgo(side_2, "F2", _true);
                                 crossColorCount = count_bottom_lyr_edge();
                                 if (crossColorCount == 3)
                                 {
@@ -1153,9 +1153,9 @@ void Cross::solver(vector<vector<string>> &solutions)
                                         break;
                                 }
                                 // reverting the previour solution....
-                                setalgo(side_2, "F2", false);
+                                setalgo(side_2, "F2", _false);
                                 solution.pop_back();
-                                setalgo(side_2, "D");
+                                setalgo(side_2, "D", _true);
                             }
                         }
                         // one correct edge on the bottom...
@@ -1163,7 +1163,7 @@ void Cross::solver(vector<vector<string>> &solutions)
                         {
                             for (int checkside{0}; checkside < 4; checkside++)
                             {
-                                setalgo(side_2, "F2");
+                                setalgo(side_2, "F2", _true);
                                 crossColorCount = count_bottom_lyr_edge();
                                 if (crossColorCount <= 3)
                                 {
@@ -1183,9 +1183,9 @@ void Cross::solver(vector<vector<string>> &solutions)
                                         break;
                                 }
                                 // reverting the previour solution....
-                                setalgo(side_2, "F2", false);
+                                setalgo(side_2, "F2", _false);
                                 solution.pop_back();
-                                setalgo(side_2, "D");
+                                setalgo(side_2, "D", _true);
                             }
                         }
                         break;

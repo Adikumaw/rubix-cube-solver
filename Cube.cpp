@@ -7,6 +7,9 @@ vector<vector<char>> Cube::tempVec = {
     {'0', '0', '0'},
     {'0', '0', '0'}};
 
+bool Cube::_true = true;
+bool Cube::_false = false;
+
 Cube &Cube::operator=(const Cube &cube)
 {
     if (this != &cube)

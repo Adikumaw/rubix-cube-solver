@@ -14,7 +14,7 @@ public:
     Pll();
     Pll(const Cube &cube);
     void solver(vector<vector<string>> &solutions) override;
-    virtual void applySolution(const bool &apply = true) override;
+    virtual void applySolution(const bool &apply) override;
     vector<char> get_equator_colors_orientation();
     string pll_coder(const vector<char> &orientation);
     bool pll_logic(const int &side, string_view PLLcode);

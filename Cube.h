@@ -40,6 +40,7 @@ public:
 
 protected:
     // MEMBERS
+    static bool _true, _false;
     vector<vector<vector<char>>> CubeMain{};
     vector<string> tempSolution;
     enum side
@@ -59,14 +60,14 @@ protected:
     };
 
     // MEMBER FUNCTIONS....
-    virtual void applySolution(const bool &apply = true)
+    virtual void applySolution(const bool &apply)
     {
         applyTempSolution();
         tempSolution.clear();
     };
     // virtual vector<vector<string>> getSolutions();
-    void setalgo(const int &side, string str_algo, const bool &apply = true);
-    void setalgo(const int &side, vector<string> algo, const bool &apply = true);
+    void setalgo(const int &side, string str_algo, const bool &apply);
+    void setalgo(const int &side, vector<string> algo, const bool &apply);
     void applyTempSolution();
     /* ----------------------------------------------------------------------------------------------------------------------------------------
    checks color correctness

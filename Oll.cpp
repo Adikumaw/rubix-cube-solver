@@ -134,244 +134,244 @@ bool Oll::oll_logic(const int &side, const long &ollCode)
     // DOT CONDITIONS...
     else if (ollCode == 0b000010000010111010111L)
     {
-        setalgo(side, "R U BP R B R2 UP RP F R FP");
+        setalgo(side, "R U BP R B R2 UP RP F R FP", _true);
     }
     else if (ollCode == 0b000010000111011010110L)
     {
-        setalgo(side, "RP F R FP U2 RP F R F2 U2 F");
+        setalgo(side, "RP F R FP U2 RP F R F2 U2 F", _true);
     }
     else if (ollCode == 0b000010001010011011011L)
     {
-        setalgo(side, "B U L UP LP BP U B L U LP UP BP");
+        setalgo(side, "B U L UP LP BP U B L U LP UP BP", _true);
     }
     else if (ollCode == 0b001010000110110010110L)
     {
-        setalgo(side, "RP U2 RP F R FP UP FP UP F UP R");
+        setalgo(side, "RP U2 RP F R FP UP FP UP F UP R", _true);
     }
     else if (ollCode == 0b100010001010010110011L)
     {
-        setalgo(side, "R U RP U RP F R FP U2 RP F R FP");
+        setalgo(side, "R U RP U RP F R FP U2 RP F R FP", _true);
     }
     else if (ollCode == 0b101010101010010010010L)
     {
-        setalgo(side, "MP U2 M U2 MP U M U2 MP U2 M");
+        setalgo(side, "MP U2 M U2 MP U M U2 MP U2 M", _true);
     }
     else if (ollCode == 0b101010000010110010011L)
     {
-        setalgo(side, "RP U2 F R U RP UP F2 U2 F R");
+        setalgo(side, "RP U2 F R U RP UP F2 U2 F R", _true);
     }
     else if (ollCode == 0b000010101010010111010L)
     {
-        setalgo(side, "F R U RP U FP U2 FP L F LP");
+        setalgo(side, "F R U RP U FP U2 FP L F LP", _true);
     }
     // LINE CONDITIONS...
     else if (ollCode == 0b010010010100111001010L)
     {
-        setalgo(side, "RP UP FP U FP L F LP F R");
+        setalgo(side, "RP UP FP U FP L F LP F R", _true);
     }
     else if (ollCode == 0b010010010000111000111L)
     {
-        setalgo(side, "R UP B2 D BP U2 B DP B2 U RP");
+        setalgo(side, "R UP B2 D BP U2 B DP B2 U RP", _true);
     }
     else if (ollCode == 0b000111000110101011000L)
     {
-        setalgo(side, "F U R UP RP U R UP RP FP");
+        setalgo(side, "F U R UP RP U R UP RP FP", _true);
     }
     else if (ollCode == 0b000111000010101010101L)
     {
-        setalgo(side, "LP BP L UP RP U R UP RP U R LP B L");
+        setalgo(side, "LP BP L UP RP U R UP RP U R LP B L", _true);
     }
     // CROSS CONDITION....
     else if (ollCode == 0b010111010100101001000L)
     {
-        setalgo(side, "L UP RP U LP U R U RP U R");
+        setalgo(side, "L UP RP U LP U R U RP U R", _true);
     }
     else if (ollCode == 0b010111010000101000101L)
     {
-        setalgo(side, "R U RP U R UP RP U R U2 RP");
+        setalgo(side, "R U RP U R UP RP U R U2 RP", _true);
     }
     else if (ollCode == 0b010111011100000100100L)
     {
-        setalgo(side, "LP U R UP L U RP");
+        setalgo(side, "LP U R UP L U RP", _true);
     }
     else if (ollCode == 0b010111011000001001001L)
     {
-        setalgo(side, "RP U2 R U RP U R");
+        setalgo(side, "RP U2 R U RP U R", _true);
     }
     else if (ollCode == 0b110111110001000100000L)
     {
-        setalgo(side, "RP FP L F R FP LP F");
+        setalgo(side, "RP FP L F R FP LP F", _true);
     }
     else if (ollCode == 0b111111010101000000000L)
     {
-        setalgo(side, "R2 D RP U2 R DP RP U2 RP");
+        setalgo(side, "R2 D RP U2 R DP RP U2 RP", _true);
     }
     else if (ollCode == 0b110111011000000100001L)
     {
-        setalgo(side, "RP FP LP F R FP L F");
+        setalgo(side, "RP FP LP F R FP L F", _true);
     }
     // 4 CORNERS....
     else if (ollCode == 0b101110111000010010000L)
     {
-        setalgo(side, "MP UP M U2 MP UP M");
+        setalgo(side, "MP UP M U2 MP UP M", _true);
     }
     else if (ollCode == 0b101111101010000010000L)
     {
-        setalgo(side, "LP R U RP UP L RP F R FP");
+        setalgo(side, "LP R U RP UP L RP F R FP", _true);
     }
     // SHAPE _| .......
     else if (ollCode == 0b010110100011011001000L)
     {
-        setalgo(side, "L F RP F R F2 LP");
+        setalgo(side, "L F RP F R F2 LP", _true);
     }
     else if (ollCode == 0b110110001110011000000L)
     {
-        setalgo(side, "F RP FP R U R UP RP");
+        setalgo(side, "F RP FP R U R UP RP", _true);
     }
     else if (ollCode == 0b010110001110010100100L)
     {
-        setalgo(side, "RP UP R F RP FP U F R FP");
+        setalgo(side, "RP UP R F RP FP U F R FP", _true);
     }
     else if (ollCode == 0b010110101010010101000L)
     {
-        setalgo(side, "UP R U2 RP UP R UP R2 FP UP F U R");
+        setalgo(side, "UP R U2 RP UP R UP R2 FP UP F U R", _true);
     }
     else if (ollCode == 0b010110000011010100101L)
     {
-        setalgo(side, "F R U RP UP R U RP UP FP");
+        setalgo(side, "F R U RP UP R U RP UP FP", _true);
     }
     else if (ollCode == 0b010110000111010101000L)
     {
-        setalgo(side, "L FP LP F U2 L2 B L BP L");
+        setalgo(side, "L FP LP F U2 L2 B L BP L", _true);
     }
     // SHAPE \_ .....
     else if (ollCode == 0b010011101010000101010L)
     {
-        setalgo(side, "UP RP U2 R U RP U R2 B U BP UP RP");
+        setalgo(side, "UP RP U2 R U RP U R2 B U BP UP RP", _true);
     }
     else if (ollCode == 0b011011000110100000110L)
     {
-        setalgo(side, "L F2 RP FP R FP LP");
+        setalgo(side, "L F2 RP FP R FP LP", _true);
     }
     else if (ollCode == 0b010011000110101001010L)
     {
-        setalgo(side, "FP LP UP L U LP UP L U F");
+        setalgo(side, "FP LP UP L U LP UP L U F", _true);
     }
     else if (ollCode == 0b011011100010100001010L)
     {
-        setalgo(side, "RP U2 R2 BP RP B RP U2 R");
+        setalgo(side, "RP U2 R2 BP RP B RP U2 R", _true);
     }
     else if (ollCode == 0b010011000111000101010L)
     {
-        setalgo(side, "RP F R FP U2 R2 BP RP B RP");
+        setalgo(side, "RP F R FP U2 R2 BP RP B RP", _true);
     }
     else if (ollCode == 0b010011000011000100111L)
     {
-        setalgo(side, "RP F RP FP R2 U2 BP R B RP");
+        setalgo(side, "RP F RP FP R2 U2 BP R B RP", _true);
     }
     // SHAPE -\ .....
     else if (ollCode == 0b001110010001010011001L)
     {
-        setalgo(side, "R U RP BP R B UP BP RP B");
+        setalgo(side, "R U RP BP R B UP BP RP B", _true);
     }
     else if (ollCode == 0b100110010100110110000L)
     {
-        setalgo(side, "LP BP L UP RP U R LP B L");
+        setalgo(side, "LP BP L UP RP U R LP B L", _true);
     }
     else if (ollCode == 0b000110011100010110100L)
     {
-        setalgo(side, "M LP UP L UP LP U2 L UP MP");
+        setalgo(side, "M LP UP L UP LP U2 L UP MP", _true);
     }
     else if (ollCode == 0b101110010000110010001L)
     {
-        setalgo(side, "BP R BP R2 U R U RP UP R B2");
+        setalgo(side, "BP R BP R2 U R U RP UP R B2", _true);
     }
     // SHAPE \- ....
     else if (ollCode == 0b000011010001000110111L)
     {
-        setalgo(side, "LP B L2 FP L2 BP L2 F LP");
+        setalgo(side, "LP B L2 FP L2 BP L2 F LP", _true);
     }
     else if (ollCode == 0b000011110001001011010L)
     {
-        setalgo(side, "M R U RP U R U2 RP U MP");
+        setalgo(side, "M R U RP U R U2 RP U MP", _true);
     }
     else if (ollCode == 0b000011011000001011011L)
     {
-        setalgo(side, "LP B2 R B RP B L");
+        setalgo(side, "LP B2 R B RP B L", _true);
     }
     else if (ollCode == 0b101011010000100010011L)
     {
-        setalgo(side, "R2 U RP BP R UP R2 U R B RP");
+        setalgo(side, "R2 U RP BP R UP R2 U R B RP", _true);
     }
     // SHAPE C ....
     else if (ollCode == 0b110010110000111000010L)
     {
-        setalgo(side, "R U R BP RP B UP RP");
+        setalgo(side, "R U R BP RP B UP RP", _true);
     }
     else if (ollCode == 0b000111101010001010100L)
     {
-        setalgo(side, "R U RP UP BP RP F R FP B");
+        setalgo(side, "R U RP UP BP RP F R FP B", _true);
     }
     // SHAPE L ....
     else if (ollCode == 0b000111001110000110100L)
     {
-        setalgo(side, "RP F R U RP FP R F UP FP");
+        setalgo(side, "RP F R U RP FP R F UP FP", _true);
     }
     else if (ollCode == 0b000111100011001011000L)
     {
-        setalgo(side, "L FP LP UP L F LP FP U F");
+        setalgo(side, "L FP LP UP L F LP FP U F", _true);
     }
     else if (ollCode == 0b000111001010001011001L)
     {
-        setalgo(side, "LP BP L RP UP R U LP B L");
+        setalgo(side, "LP BP L RP UP R U LP B L", _true);
     }
     else if (ollCode == 0b000111100010100110100L)
     {
-        setalgo(side, "R B RP L U LP UP R BP RP");
+        setalgo(side, "R B RP L U LP UP R BP RP", _true);
     }
     // SHAPE P .....
     else if (ollCode == 0b110110100010111000000L)
     {
-        setalgo(side, "F U R UP RP FP");
+        setalgo(side, "F U R UP RP FP", _true);
     }
     else if (ollCode == 0b011011001110000001010L)
     {
-        setalgo(side, "RP UP F U R UP RP FP R");
+        setalgo(side, "RP UP F U R UP RP FP R", _true);
     }
     else if (ollCode == 0b110110100011010100000L)
     {
-        setalgo(side, "L U FP UP LP U L F LP");
+        setalgo(side, "L U FP UP LP U L F LP", _true);
     }
     else if (ollCode == 0b011011001010000000111L)
     {
-        setalgo(side, "FP UP LP U L F");
+        setalgo(side, "FP UP LP U L F", _true);
     }
     // SHAPE T .....
     else if (ollCode == 0b001111001010000010101L)
     {
-        setalgo(side, "F R U RP UP FP");
+        setalgo(side, "F R U RP UP FP", _true);
     }
     else if (ollCode == 0b001111001110000011000L)
     {
-        setalgo(side, "R U RP UP RP F R FP");
+        setalgo(side, "R U RP UP RP F R FP", _true);
     }
     // SHAPE W ....
     else if (ollCode == 0b001011110001000010110L)
     {
-        setalgo(side, "L U LP U L UP LP UP LP B L BP");
+        setalgo(side, "L U LP U L UP LP UP LP B L BP", _true);
     }
     else if (ollCode == 0b100110011100011010000L)
     {
-        setalgo(side, "RP UP R UP RP U R U R BP RP B");
+        setalgo(side, "RP UP R UP RP U R U R BP RP B", _true);
     }
     // SHAPE Z ....
     else if (ollCode == 0b100111001010000110001L)
     {
-        setalgo(side, "RP F R U RP UP FP U R");
+        setalgo(side, "RP F R U RP UP FP U R", _true);
     }
     else if (ollCode == 0b001111100010100011000L)
     {
-        setalgo(side, "L FP LP UP L U F UP LP");
+        setalgo(side, "L FP LP UP L U F UP LP", _true);
     }
     else
         return false;

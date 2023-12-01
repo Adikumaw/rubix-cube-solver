@@ -128,59 +128,59 @@ bool Pll::pll_logic(const int &side, string_view PLLcode)
         return true;
     // A-PERMS..
     else if (PLLcode == "001212320133")
-        setalgo(side, "R2 B2 R F RP B2 R FP R");
+        setalgo(side, "R2 B2 R F RP B2 R FP R", _true);
     else if (PLLcode == "300113021232")
-        setalgo(side, "L2 B2 LP FP L B2 LP F LP");
+        setalgo(side, "L2 B2 LP FP L B2 LP F LP", _true);
     // U-PERMS.
     else if (PLLcode == "030101222313")
-        setalgo(side, "R2 U R U RP UP RP UP RP U RP");
+        setalgo(side, "R2 U R U RP UP RP UP RP U RP", _true);
     else if (PLLcode == "010131222303")
-        setalgo(side, "R UP R U R U R UP RP UP R2");
+        setalgo(side, "R UP R U R U R UP RP UP R2", _true);
     // H-PERM..
     else if (PLLcode == "020131202313")
-        setalgo(side, "M2 U M2 U2 M2 U M2");
+        setalgo(side, "M2 U M2 U2 M2 U M2", _true);
     // T-PERM..
     else if (PLLcode == "001230122313")
-        setalgo(side, "R U RP UP RP F R2 UP RP UP R U RP FP");
+        setalgo(side, "R U RP UP RP F R2 UP RP UP R U RP FP", _true);
     // J-PERMS..
     else if (PLLcode == "000112331223")
-        setalgo(side, "RP U LP U2 R UP RP U2 R L UP");
+        setalgo(side, "RP U LP U2 R UP RP U2 R L UP", _true);
     else if (PLLcode == "011200122333")
-        setalgo(side, "R U RP FP R U RP UP RP F R2 UP RP UP");
+        setalgo(side, "R U RP FP R U RP UP RP F R2 UP RP UP", _true);
     // R-PERMS...
     else if (PLLcode == "030112321203")
-        setalgo(side, "L U2 LP U2 L FP LP UP L U L F L2 U");
+        setalgo(side, "L U2 LP U2 L FP LP UP L U L F L2 U", _true);
     else if (PLLcode == "010102321233")
-        setalgo(side, "RP U2 R U2 RP F R U RP UP RP FP R2 UP");
+        setalgo(side, "RP U2 R U2 RP F R U RP UP RP FP R2 UP", _true);
     // V-PERM...
     else if (PLLcode == "002321210133")
-        setalgo(side, "RP U RP UP BP RP B2 UP BP U BP R B R");
+        setalgo(side, "RP U RP UP BP RP B2 UP BP U BP R B R", _true);
     // G-PERMS...
     else if (PLLcode == "300123031212")
-        setalgo(side, "R2 D BP U BP UP B DP R2 FP U F");
+        setalgo(side, "R2 D BP U BP UP B DP R2 FP U F", _true);
     else if (PLLcode == "132311203020")
-        setalgo(side, "RP UP R B2 D LP U L UP L DP B2");
+        setalgo(side, "RP UP R B2 D LP U L UP L DP B2", _true);
     else if (PLLcode == "132301223010")
-        setalgo(side, "R2 DP F UP F U FP D R2 B UP BP");
+        setalgo(side, "R2 DP F UP F U FP D R2 B UP BP", _true);
     else if (PLLcode == "320113031202")
-        setalgo(side, "R U RP F2 DP L UP LP U LP D F2");
+        setalgo(side, "R U RP F2 DP L UP LP U LP D F2", _true);
     // F-PERM...
     else if (PLLcode == "103031222310")
-        setalgo(side, "RP U2 RP UP BP RP B2 UP BP U BP R B UP R");
+        setalgo(side, "RP U2 RP UP BP RP B2 UP BP U BP R B UP R", _true);
     // Z-PERM...
     else if (PLLcode == "010101232323")
-        setalgo(side, "M2 U M2 U MP U2 M2 U2 MP U2");
+        setalgo(side, "M2 U M2 U MP U2 M2 U2 MP U2", _true);
     // Y-PERM...
     else if (PLLcode == "002311230123")
-        setalgo(side, "F R UP RP UP R U RP FP R U RP UP RP F R FP");
+        setalgo(side, "F R UP RP UP R U RP FP R U RP UP RP F R FP", _true);
     // N-PERMS...
     else if (PLLcode == "022311200133")
-        setalgo(side, "L UP R U2 LP U RP L UP R U2 LP U RP U");
+        setalgo(side, "L UP R U2 LP U RP L UP R U2 LP U RP U", _true);
     else if (PLLcode == "220113002331")
-        setalgo(side, "RP U LP U2 R UP L RP U LP U2 R UP L UP");
+        setalgo(side, "RP U LP U2 R UP L RP U LP U2 R UP L UP", _true);
     // E-PERM...
     else if (PLLcode == "301210123032")
-        setalgo(side, "R BP RP F R B RP F2 LP B L F LP BP L");
+        setalgo(side, "R BP RP F R B RP F2 LP B L F LP BP L", _true);
     else
         return false;
     return true;
@@ -205,7 +205,7 @@ void Pll::correct_last_layer()
 {
     for (int move{0}; move < 4; move++)
         if (CubeMain[face][0][1] != CubeMain[face][1][1])
-            setalgo(face, "U");
+            setalgo(face, "U", _true);
         else
             break;
 }

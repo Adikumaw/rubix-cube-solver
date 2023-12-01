@@ -45,7 +45,7 @@ void CubeSolver::print(const int &duration)
     {
         currentStep = i;
         // Applying current step to the Cube...
-        cube.setalgo(0, totalSteps.at(i), false);
+        cube.setalgo(0, totalSteps.at(i), Cube::_false);
         clearLines(28 + linesNeed);
         cube.Cube_state();
 
@@ -147,7 +147,7 @@ void CubeSolver::solve()
         {
             // applying cross solution...
             *cross = cube;
-            cross->setalgo(0, crossSolutions.at(crscount), false);
+            cross->setalgo(0, crossSolutions.at(crscount), Cube::_false);
             // getting f2l solutions...
             *f2l = *cross;
             f2l->solver(f2lSolutions);
@@ -160,7 +160,7 @@ void CubeSolver::solve()
                 std::cout << "\r" << RED << trials << DEFAULT << " TIMES Cube SOLVED...";
                 // applying f2l soliution...
                 *f2l = *cross;
-                f2l->setalgo(0, f2lSolutions.at(f2lcount), false);
+                f2l->setalgo(0, f2lSolutions.at(f2lcount), Cube::_false);
                 // getting oll solution...
                 *oll = *f2l;
                 oll->solver(ollSolutions);

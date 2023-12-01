@@ -103,16 +103,16 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                                 if (edgeSide == left)
                                 {
-                                    setalgo(left, "U R UP RP UP FP U F");
+                                    setalgo(left, "U R UP RP UP FP U F", _true);
                                 }
                                 else if (edgeSide == face)
                                 {
-                                    setalgo(left, "UP FP U F U R UP RP");
+                                    setalgo(left, "UP FP U F U R UP RP", _true);
                                 }
                             }
                             else if (sentinel == 0)
                             {
-                                setalgo(left, "R UP R2 U2 R UP FP U F");
+                                setalgo(left, "R UP R2 U2 R UP FP U F", _true);
                             };
                         }
                         else
@@ -120,11 +120,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             switch (rang0to1(rng))
                             {
                             case 0:
-                                setalgo(left, "R U RP");
+                                setalgo(left, "R U RP", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
-                                setalgo(left, "FP UP F");
+                                setalgo(left, "FP UP F", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
@@ -147,16 +147,16 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                                 if (edgeSide == face)
                                 {
-                                    setalgo(face, "U R UP RP UP FP U F");
+                                    setalgo(face, "U R UP RP UP FP U F", _true);
                                 }
                                 else if (edgeSide == right)
                                 {
-                                    setalgo(face, "UP FP U F U R UP RP");
+                                    setalgo(face, "UP FP U F U R UP RP", _true);
                                 }
                             }
                             else if (sentinel == 0)
                             {
-                                setalgo(face, "R UP R2 U2 R UP FP U F");
+                                setalgo(face, "R UP R2 U2 R UP FP U F", _true);
                             };
                         }
                         else
@@ -164,11 +164,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             switch (rang0to1(rng))
                             {
                             case 0:
-                                setalgo(face, "R U RP");
+                                setalgo(face, "R U RP", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
-                                setalgo(face, "FP UP F");
+                                setalgo(face, "FP UP F", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
@@ -191,16 +191,16 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                                 if (edgeSide == back)
                                 {
-                                    setalgo(back, "U R UP RP UP FP U F");
+                                    setalgo(back, "U R UP RP UP FP U F", _true);
                                 }
                                 else if (edgeSide == left)
                                 {
-                                    setalgo(back, "UP FP U F U R UP RP");
+                                    setalgo(back, "UP FP U F U R UP RP", _true);
                                 }
                             }
                             else if (sentinel == 0)
                             {
-                                setalgo(back, "R UP R2 U2 R UP FP U F");
+                                setalgo(back, "R UP R2 U2 R UP FP U F", _true);
                             };
                         }
                         else
@@ -208,11 +208,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             switch (rang0to1(rng))
                             {
                             case 0:
-                                setalgo(back, "R U RP");
+                                setalgo(back, "R U RP", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
-                                setalgo(back, "FP UP F");
+                                setalgo(back, "FP UP F", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
@@ -235,16 +235,16 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                                 if (edgeSide == right)
                                 {
-                                    setalgo(right, "U R UP RP UP FP U F");
+                                    setalgo(right, "U R UP RP UP FP U F", _true);
                                 }
                                 else if (edgeSide == back)
                                 {
-                                    setalgo(right, "UP FP U F U R UP RP");
+                                    setalgo(right, "UP FP U F U R UP RP", _true);
                                 }
                             }
                             else if (sentinel == 0)
                             {
-                                setalgo(right, "R UP R2 U2 R UP FP U F");
+                                setalgo(right, "R UP R2 U2 R UP FP U F", _true);
                             };
                         }
                         else
@@ -252,11 +252,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             switch (rang0to1(rng))
                             {
                             case 0:
-                                setalgo(right, "R U RP");
+                                setalgo(right, "R U RP", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
-                                setalgo(right, "FP UP F");
+                                setalgo(right, "FP UP F", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
@@ -287,11 +287,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
-                                    setalgo(left, "U FP U F U FP U2 F");
+                                    setalgo(left, "U FP U F U FP U2 F", _true);
                                 }
                                 else if (sentinel == 0)
                                 {
-                                    setalgo(left, "U FP UP F UP R U RP");
+                                    setalgo(left, "U FP UP F UP R U RP", _true);
                                 }
                                 else if (sentinel == -1)
                                 {
@@ -304,44 +304,44 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(left, "R UP RP U2 FP UP F");
+                                    setalgo(left, "R UP RP U2 FP UP F", _true);
                                 }
                                 else
                                 {
-                                    setalgo(left, "UP R UP RP U R U RP");
+                                    setalgo(left, "UP R UP RP U R U RP", _true);
                                 }
                             }
                             else if (edgeSide == right)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(left, "U FP U2 F U FP U2 F");
+                                    setalgo(left, "U FP U2 F U FP U2 F", _true);
                                 }
                                 else
                                 {
-                                    setalgo(left, "R U RP");
+                                    setalgo(left, "R U RP", _true);
                                 }
                             }
                             else if (edgeSide == back)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(left, "U FP UP F U FP U2 F");
+                                    setalgo(left, "U FP UP F U FP U2 F", _true);
                                 }
                                 else
                                 {
-                                    setalgo(left, "UP R U RP U R U RP");
+                                    setalgo(left, "UP R U RP U R U RP", _true);
                                 }
                             }
                             else if (edgeSide == left)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(left, "F RP FP R");
+                                    setalgo(left, "F RP FP R", _true);
                                 }
                                 else
                                 {
-                                    setalgo(left, "U FP U2 F UP R U RP");
+                                    setalgo(left, "U FP U2 F UP R U RP", _true);
                                 }
                             }
                         } // this else is for the condition when the corner or edge is not on the right location....
@@ -364,11 +364,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
-                                    setalgo(face, "UP R UP RP UP R U2 RP");
+                                    setalgo(face, "UP R UP RP UP R U2 RP", _true);
                                 }
                                 else if (sentinel == 0)
                                 {
-                                    setalgo(face, "UP R U RP U FP UP F");
+                                    setalgo(face, "UP R U RP U FP UP F", _true);
                                 }
                                 else if (sentinel == -1)
                                 {
@@ -381,44 +381,44 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(face, "FP U F U2 R U RP");
+                                    setalgo(face, "FP U F U2 R U RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(face, "U FP U F UP FP UP F");
+                                    setalgo(face, "U FP U F UP FP UP F", _true);
                                 }
                             }
                             else if (edgeSide == right)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(face, "U R UP RP");
+                                    setalgo(face, "U R UP RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(face, "UP R U2 RP U FP UP F");
+                                    setalgo(face, "UP R U2 RP U FP UP F", _true);
                                 }
                             }
                             else if (edgeSide == back)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(face, "UP R U RP UP R U2 RP");
+                                    setalgo(face, "UP R U RP UP R U2 RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(face, "U FP UP F UP FP UP F");
+                                    setalgo(face, "U FP UP F UP FP UP F", _true);
                                 }
                             }
                             else if (edgeSide == left)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(face, "UP R U2 RP UP R U2 RP");
+                                    setalgo(face, "UP R U2 RP UP R U2 RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(face, "FP UP F");
+                                    setalgo(face, "FP UP F", _true);
                                 }
                             }
                         }
@@ -441,21 +441,21 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), true);
                                 if (sentinel == 1)
                                 {
-                                    setalgo(left, "R UP RP U R U2 RP U R UP RP");
+                                    setalgo(left, "R UP RP U R U2 RP U R UP RP", _true);
                                 }
                                 else if (sentinel == 0)
                                 {
-                                    setalgo(left, "R U RP UP R UP RP U2 FP UP F");
+                                    setalgo(left, "R U RP UP R UP RP U2 FP UP F", _true);
                                 }
                                 // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
                             }
                             if (edgeSide == face)
                             {
-                                setalgo(left, "R U RP UP R U RP");
+                                setalgo(left, "R U RP UP R U RP", _true);
                             }
                             else if (edgeSide == left)
                             {
-                                setalgo(left, "FP U F UP FP U F");
+                                setalgo(left, "FP U F UP FP U F", _true);
                             }
                         }
                         else
@@ -463,11 +463,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             switch (rang0to1(rng))
                             {
                             case 0:
-                                setalgo(left, "R U RP");
+                                setalgo(left, "R U RP", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
-                                setalgo(left, "FP UP F");
+                                setalgo(left, "FP UP F", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
@@ -489,21 +489,21 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), true);
                                 if (sentinel == 1)
                                 {
-                                    setalgo(face, "R UP RP UP R U RP UP R U2 RP");
+                                    setalgo(face, "R UP RP UP R U RP UP R U2 RP", _true);
                                 }
                                 else if (sentinel == 0)
                                 {
-                                    setalgo(face, "R UP RP U FP UP F UP FP UP F");
+                                    setalgo(face, "R UP RP U FP UP F UP FP UP F", _true);
                                 }
                                 // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
                             }
                             if (edgeSide == face)
                             {
-                                setalgo(face, "FP UP F U FP UP F");
+                                setalgo(face, "FP UP F U FP UP F", _true);
                             }
                             else if (edgeSide == right)
                             {
-                                setalgo(face, "R UP RP U R UP RP");
+                                setalgo(face, "R UP RP U R UP RP", _true);
                             }
                         }
                         else
@@ -511,11 +511,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             switch (rang0to1(rng))
                             {
                             case 0:
-                                setalgo(face, "R U RP");
+                                setalgo(face, "R U RP", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
-                                setalgo(face, "FP UP F");
+                                setalgo(face, "FP UP F", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
@@ -546,11 +546,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
-                                    setalgo(face, "U FP U F U FP U2 F");
+                                    setalgo(face, "U FP U F U FP U2 F", _true);
                                 }
                                 else if (sentinel == 0)
                                 {
-                                    setalgo(face, "U FP UP F UP R U RP");
+                                    setalgo(face, "U FP UP F UP R U RP", _true);
                                 }
                                 else if (sentinel == -1)
                                 {
@@ -563,44 +563,44 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(face, "R UP RP U2 FP UP F");
+                                    setalgo(face, "R UP RP U2 FP UP F", _true);
                                 }
                                 else
                                 {
-                                    setalgo(face, "UP R UP RP U R U RP");
+                                    setalgo(face, "UP R UP RP U R U RP", _true);
                                 }
                             }
                             else if (edgeSide == back)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(face, "U FP U2 F U FP U2 F");
+                                    setalgo(face, "U FP U2 F U FP U2 F", _true);
                                 }
                                 else
                                 {
-                                    setalgo(face, "R U RP");
+                                    setalgo(face, "R U RP", _true);
                                 }
                             }
                             else if (edgeSide == left)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(face, "U FP UP F U FP U2 F");
+                                    setalgo(face, "U FP UP F U FP U2 F", _true);
                                 }
                                 else
                                 {
-                                    setalgo(face, "UP R U RP U R U RP");
+                                    setalgo(face, "UP R U RP U R U RP", _true);
                                 }
                             }
                             else if (edgeSide == face)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(face, "F RP FP R");
+                                    setalgo(face, "F RP FP R", _true);
                                 }
                                 else
                                 {
-                                    setalgo(face, "U FP U2 F UP R U RP");
+                                    setalgo(face, "U FP U2 F UP R U RP", _true);
                                 }
                             }
                         } // this else is for the condition when the corner or edge is not on the right location....
@@ -623,11 +623,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
-                                    setalgo(right, "UP R UP RP UP R U2 RP");
+                                    setalgo(right, "UP R UP RP UP R U2 RP", _true);
                                 }
                                 else if (sentinel == 0)
                                 {
-                                    setalgo(right, "UP R U RP U FP UP F");
+                                    setalgo(right, "UP R U RP U FP UP F", _true);
                                 }
                                 else if (sentinel == -1)
                                 {
@@ -640,44 +640,44 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(right, "FP U F U2 R U RP");
+                                    setalgo(right, "FP U F U2 R U RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(right, "U FP U F UP FP UP F");
+                                    setalgo(right, "U FP U F UP FP UP F", _true);
                                 }
                             }
                             else if (edgeSide == back)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(right, "U R UP RP");
+                                    setalgo(right, "U R UP RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(right, "UP R U2 RP U FP UP F");
+                                    setalgo(right, "UP R U2 RP U FP UP F", _true);
                                 }
                             }
                             else if (edgeSide == left)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(right, "UP R U RP UP R U2 RP");
+                                    setalgo(right, "UP R U RP UP R U2 RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(right, "U FP UP F UP FP UP F");
+                                    setalgo(right, "U FP UP F UP FP UP F", _true);
                                 }
                             }
                             else if (edgeSide == face)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(right, "UP R U2 RP UP R U2 RP");
+                                    setalgo(right, "UP R U2 RP UP R U2 RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(right, "FP UP F");
+                                    setalgo(right, "FP UP F", _true);
                                 }
                             }
                         }
@@ -700,21 +700,21 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), true);
                                 if (sentinel == 1)
                                 {
-                                    setalgo(face, "R UP RP U R U2 RP U R UP RP");
+                                    setalgo(face, "R UP RP U R U2 RP U R UP RP", _true);
                                 }
                                 else if (sentinel == 0)
                                 {
-                                    setalgo(face, "R U RP UP R UP RP U2 FP UP F");
+                                    setalgo(face, "R U RP UP R UP RP U2 FP UP F", _true);
                                 }
                                 // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
                             }
                             if (edgeSide == right)
                             {
-                                setalgo(face, "R U RP UP R U RP");
+                                setalgo(face, "R U RP UP R U RP", _true);
                             }
                             else if (edgeSide == face)
                             {
-                                setalgo(face, "FP U F UP FP U F");
+                                setalgo(face, "FP U F UP FP U F", _true);
                             }
                         }
                         else
@@ -722,11 +722,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             switch (rang0to1(rng))
                             {
                             case 0:
-                                setalgo(face, "R U RP");
+                                setalgo(face, "R U RP", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
-                                setalgo(face, "FP UP F");
+                                setalgo(face, "FP UP F", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
@@ -748,21 +748,21 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), true);
                                 if (sentinel == 1)
                                 {
-                                    setalgo(right, "R UP RP UP R U RP UP R U2 RP");
+                                    setalgo(right, "R UP RP UP R U RP UP R U2 RP", _true);
                                 }
                                 else if (sentinel == 0)
                                 {
-                                    setalgo(right, "R UP RP U FP UP F UP FP UP F");
+                                    setalgo(right, "R UP RP U FP UP F UP FP UP F", _true);
                                 }
                                 // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
                             }
                             if (edgeSide == right)
                             {
-                                setalgo(right, "FP UP F U FP UP F");
+                                setalgo(right, "FP UP F U FP UP F", _true);
                             }
                             else if (edgeSide == back)
                             {
-                                setalgo(right, "R UP RP U R UP RP");
+                                setalgo(right, "R UP RP U R UP RP", _true);
                             }
                         }
                         else
@@ -770,11 +770,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             switch (rang0to1(rng))
                             {
                             case 0:
-                                setalgo(right, "R U RP");
+                                setalgo(right, "R U RP", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
-                                setalgo(right, "FP UP F");
+                                setalgo(right, "FP UP F", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
@@ -805,11 +805,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
-                                    setalgo(right, "U FP U F U FP U2 F");
+                                    setalgo(right, "U FP U F U FP U2 F", _true);
                                 }
                                 else if (sentinel == 0)
                                 {
-                                    setalgo(right, "U FP UP F UP R U RP");
+                                    setalgo(right, "U FP UP F UP R U RP", _true);
                                 }
                                 else if (sentinel == -1)
                                 {
@@ -822,44 +822,44 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(right, "R UP RP U2 FP UP F");
+                                    setalgo(right, "R UP RP U2 FP UP F", _true);
                                 }
                                 else
                                 {
-                                    setalgo(right, "UP R UP RP U R U RP");
+                                    setalgo(right, "UP R UP RP U R U RP", _true);
                                 }
                             }
                             else if (edgeSide == left)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(right, "U FP U2 F U FP U2 F");
+                                    setalgo(right, "U FP U2 F U FP U2 F", _true);
                                 }
                                 else
                                 {
-                                    setalgo(right, "R U RP");
+                                    setalgo(right, "R U RP", _true);
                                 }
                             }
                             else if (edgeSide == face)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(right, "U FP UP F U FP U2 F");
+                                    setalgo(right, "U FP UP F U FP U2 F", _true);
                                 }
                                 else
                                 {
-                                    setalgo(right, "UP R U RP U R U RP");
+                                    setalgo(right, "UP R U RP U R U RP", _true);
                                 }
                             }
                             else if (edgeSide == right)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(right, "F RP FP R");
+                                    setalgo(right, "F RP FP R", _true);
                                 }
                                 else
                                 {
-                                    setalgo(right, "U FP U2 F UP R U RP");
+                                    setalgo(right, "U FP U2 F UP R U RP", _true);
                                 }
                             }
                         } // this else is for the condition when the corner or edge is not on the right location....
@@ -882,11 +882,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
-                                    setalgo(back, "UP R UP RP UP R U2 RP");
+                                    setalgo(back, "UP R UP RP UP R U2 RP", _true);
                                 }
                                 else if (sentinel == 0)
                                 {
-                                    setalgo(back, "UP R U RP U FP UP F");
+                                    setalgo(back, "UP R U RP U FP UP F", _true);
                                 }
                                 else if (sentinel == -1)
                                 {
@@ -899,44 +899,44 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(back, "FP U F U2 R U RP");
+                                    setalgo(back, "FP U F U2 R U RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(back, "U FP U F UP FP UP F");
+                                    setalgo(back, "U FP U F UP FP UP F", _true);
                                 }
                             }
                             else if (edgeSide == left)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(back, "U R UP RP");
+                                    setalgo(back, "U R UP RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(back, "UP R U2 RP U FP UP F");
+                                    setalgo(back, "UP R U2 RP U FP UP F", _true);
                                 }
                             }
                             else if (edgeSide == face)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(back, "UP R U RP UP R U2 RP");
+                                    setalgo(back, "UP R U RP UP R U2 RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(back, "U FP UP F UP FP UP F");
+                                    setalgo(back, "U FP UP F UP FP UP F", _true);
                                 }
                             }
                             else if (edgeSide == right)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(back, "UP R U2 RP UP R U2 RP");
+                                    setalgo(back, "UP R U2 RP UP R U2 RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(back, "FP UP F");
+                                    setalgo(back, "FP UP F", _true);
                                 }
                             }
                         }
@@ -959,21 +959,21 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), true);
                                 if (sentinel == 1)
                                 {
-                                    setalgo(right, "R UP RP U R U2 RP U R UP RP");
+                                    setalgo(right, "R UP RP U R U2 RP U R UP RP", _true);
                                 }
                                 else if (sentinel == 0)
                                 {
-                                    setalgo(right, "R U RP UP R UP RP U2 FP UP F");
+                                    setalgo(right, "R U RP UP R UP RP U2 FP UP F", _true);
                                 }
                                 // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
                             }
                             if (edgeSide == back)
                             {
-                                setalgo(right, "R U RP UP R U RP");
+                                setalgo(right, "R U RP UP R U RP", _true);
                             }
                             else if (edgeSide == right)
                             {
-                                setalgo(right, "FP U F UP FP U F");
+                                setalgo(right, "FP U F UP FP U F", _true);
                             }
                         }
                         else
@@ -981,11 +981,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             switch (rang0to1(rng))
                             {
                             case 0:
-                                setalgo(right, "R U RP");
+                                setalgo(right, "R U RP", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
-                                setalgo(right, "FP UP F");
+                                setalgo(right, "FP UP F", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
@@ -1007,21 +1007,21 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), true);
                                 if (sentinel == 1)
                                 {
-                                    setalgo(back, "R UP RP UP R U RP UP R U2 RP");
+                                    setalgo(back, "R UP RP UP R U RP UP R U2 RP", _true);
                                 }
                                 else if (sentinel == 0)
                                 {
-                                    setalgo(back, "R UP RP U FP UP F UP FP UP F");
+                                    setalgo(back, "R UP RP U FP UP F UP FP UP F", _true);
                                 }
                                 // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
                             }
                             if (edgeSide == back)
                             {
-                                setalgo(back, "FP UP F U FP UP F");
+                                setalgo(back, "FP UP F U FP UP F", _true);
                             }
                             else if (edgeSide == left)
                             {
-                                setalgo(back, "R UP RP U R UP RP");
+                                setalgo(back, "R UP RP U R UP RP", _true);
                             }
                         }
                         else
@@ -1029,11 +1029,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             switch (rang0to1(rng))
                             {
                             case 0:
-                                setalgo(back, "R U RP");
+                                setalgo(back, "R U RP", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
-                                setalgo(back, "FP UP F");
+                                setalgo(back, "FP UP F", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
@@ -1064,11 +1064,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
-                                    setalgo(back, "U FP U F U FP U2 F");
+                                    setalgo(back, "U FP U F U FP U2 F", _true);
                                 }
                                 else if (sentinel == 0)
                                 {
-                                    setalgo(back, "U FP UP F UP R U RP");
+                                    setalgo(back, "U FP UP F UP R U RP", _true);
                                 }
                                 else if (sentinel == -1)
                                 {
@@ -1081,44 +1081,44 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(back, "R UP RP U2 FP UP F");
+                                    setalgo(back, "R UP RP U2 FP UP F", _true);
                                 }
                                 else
                                 {
-                                    setalgo(back, "UP R UP RP U R U RP");
+                                    setalgo(back, "UP R UP RP U R U RP", _true);
                                 }
                             }
                             else if (edgeSide == face)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(back, "U FP U2 F U FP U2 F");
+                                    setalgo(back, "U FP U2 F U FP U2 F", _true);
                                 }
                                 else
                                 {
-                                    setalgo(back, "R U RP");
+                                    setalgo(back, "R U RP", _true);
                                 }
                             }
                             else if (edgeSide == right)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(back, "U FP UP F U FP U2 F");
+                                    setalgo(back, "U FP UP F U FP U2 F", _true);
                                 }
                                 else
                                 {
-                                    setalgo(back, "UP R U RP U R U RP");
+                                    setalgo(back, "UP R U RP U R U RP", _true);
                                 }
                             }
                             else if (edgeSide == back)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(back, "F RP FP R");
+                                    setalgo(back, "F RP FP R", _true);
                                 }
                                 else
                                 {
-                                    setalgo(back, "U FP U2 F UP R U RP");
+                                    setalgo(back, "U FP U2 F UP R U RP", _true);
                                 }
                             }
                         } // this else is for the condition when the corner or edge is not on the right location....
@@ -1141,11 +1141,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
-                                    setalgo(left, "UP R UP RP UP R U2 RP");
+                                    setalgo(left, "UP R UP RP UP R U2 RP", _true);
                                 }
                                 else if (sentinel == 0)
                                 {
-                                    setalgo(left, "UP R U RP U FP UP F");
+                                    setalgo(left, "UP R U RP U FP UP F", _true);
                                 }
                                 else if (sentinel == -1)
                                 {
@@ -1158,44 +1158,44 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(left, "FP U F U2 R U RP");
+                                    setalgo(left, "FP U F U2 R U RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(left, "U FP U F UP FP UP F");
+                                    setalgo(left, "U FP U F UP FP UP F", _true);
                                 }
                             }
                             else if (edgeSide == face)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(left, "U R UP RP");
+                                    setalgo(left, "U R UP RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(left, "UP R U2 RP U FP UP F");
+                                    setalgo(left, "UP R U2 RP U FP UP F", _true);
                                 }
                             }
                             else if (edgeSide == right)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(left, "UP R U RP UP R U2 RP");
+                                    setalgo(left, "UP R U RP UP R U2 RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(left, "U FP UP F UP FP UP F");
+                                    setalgo(left, "U FP UP F UP FP UP F", _true);
                                 }
                             }
                             else if (edgeSide == back)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(left, "UP R U2 RP UP R U2 RP");
+                                    setalgo(left, "UP R U2 RP UP R U2 RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(left, "FP UP F");
+                                    setalgo(left, "FP UP F", _true);
                                 }
                             }
                         }
@@ -1218,21 +1218,21 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), true);
                                 if (sentinel == 1)
                                 {
-                                    setalgo(back, "R UP RP U R U2 RP U R UP RP");
+                                    setalgo(back, "R UP RP U R U2 RP U R UP RP", _true);
                                 }
                                 else if (sentinel == 0)
                                 {
-                                    setalgo(back, "R U RP UP R UP RP U2 FP UP F");
+                                    setalgo(back, "R U RP UP R UP RP U2 FP UP F", _true);
                                 }
                                 // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
                             }
                             if (edgeSide == left)
                             {
-                                setalgo(back, "R U RP UP R U RP");
+                                setalgo(back, "R U RP UP R U RP", _true);
                             }
                             else if (edgeSide == back)
                             {
-                                setalgo(back, "FP U F UP FP U F");
+                                setalgo(back, "FP U F UP FP U F", _true);
                             }
                         }
                         else
@@ -1240,11 +1240,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             switch (rang0to1(rng))
                             {
                             case 0:
-                                setalgo(back, "R U RP");
+                                setalgo(back, "R U RP", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
-                                setalgo(back, "FP UP F");
+                                setalgo(back, "FP UP F", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
@@ -1266,21 +1266,21 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), true);
                                 if (sentinel == 1)
                                 {
-                                    setalgo(left, "R UP RP UP R U RP UP R U2 RP");
+                                    setalgo(left, "R UP RP UP R U RP UP R U2 RP", _true);
                                 }
                                 else if (sentinel == 0)
                                 {
-                                    setalgo(left, "R UP RP U FP UP F UP FP UP F");
+                                    setalgo(left, "R UP RP U FP UP F UP FP UP F", _true);
                                 }
                                 // IN THIS CASE WE DO NOT NEED TO WORK ON -1 CONDITION CAUSE IN THAT CASE THE BELLOW CODE WILL WORK FINE.....
                             }
                             if (edgeSide == left)
                             {
-                                setalgo(left, "FP UP F U FP UP F");
+                                setalgo(left, "FP UP F U FP UP F", _true);
                             }
                             else if (edgeSide == face)
                             {
-                                setalgo(left, "R UP RP U R UP RP");
+                                setalgo(left, "R UP RP U R UP RP", _true);
                             }
                         }
                         else
@@ -1288,11 +1288,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                             switch (rang0to1(rng))
                             {
                             case 0:
-                                setalgo(left, "R U RP");
+                                setalgo(left, "R U RP", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             case 1:
-                                setalgo(left, "FP UP F");
+                                setalgo(left, "FP UP F", _true);
                                 set_corner_on_top(bottomColor, cornerColors.at(0), cornerColors.at(1), true);
                                 break;
                             default:
@@ -1322,11 +1322,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
-                                    setalgo(back, "R U RP UP R U RP UP R U RP");
+                                    setalgo(back, "R U RP UP R U RP UP R U RP", _true);
                                 }
                                 else if (sentinel == 0)
                                 {
-                                    setalgo(back, "R UP RP U FP U F");
+                                    setalgo(back, "R UP RP U FP U F", _true);
                                 }
                                 else if (sentinel == -1)
                                 {
@@ -1339,44 +1339,44 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(back, "U2 FP UP F UP FP U F");
+                                    setalgo(back, "U2 FP UP F UP FP U F", _true);
                                 }
                                 else
                                 {
-                                    setalgo(back, "U R U2 RP U R UP RP");
+                                    setalgo(back, "U R U2 RP U R UP RP", _true);
                                 }
                             }
                             else if (edgeSide == right)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(back, "UP FP U2 F UP FP U F");
+                                    setalgo(back, "UP FP U2 F UP FP U F", _true);
                                 }
                                 else
                                 {
-                                    setalgo(back, "U2 R U RP U R UP RP");
+                                    setalgo(back, "U2 R U RP U R UP RP", _true);
                                 }
                             }
                             else if (edgeSide == back)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(back, "FP U2 F U FP UP F");
+                                    setalgo(back, "FP U2 F U FP UP F", _true);
                                 }
                                 else
                                 {
-                                    setalgo(back, "R U RP U2 R U RP UP R U RP");
+                                    setalgo(back, "R U RP U2 R U RP UP R U RP", _true);
                                 }
                             }
                             else if (edgeSide == left)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(back, "FP UP F U2 FP UP F U FP UP F");
+                                    setalgo(back, "FP UP F U2 FP UP F U FP UP F", _true);
                                 }
                                 else
                                 {
-                                    setalgo(back, "R U2 RP UP R U RP");
+                                    setalgo(back, "R U2 RP UP R U RP", _true);
                                 }
                             }
                         }
@@ -1398,11 +1398,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
-                                    setalgo(right, "R U RP UP R U RP UP R U RP");
+                                    setalgo(right, "R U RP UP R U RP UP R U RP", _true);
                                 }
                                 else if (sentinel == 0)
                                 {
-                                    setalgo(right, "R UP RP U FP U F");
+                                    setalgo(right, "R UP RP U FP U F", _true);
                                 }
                                 else if (sentinel == -1)
                                 {
@@ -1415,44 +1415,44 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(right, "U R U2 RP U R UP RP");
+                                    setalgo(right, "U R U2 RP U R UP RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(right, "U2 FP UP F UP FP U F");
+                                    setalgo(right, "U2 FP UP F UP FP U F", _true);
                                 }
                             }
                             else if (edgeSide == face)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(right, "U2 R U RP U R UP RP");
+                                    setalgo(right, "U2 R U RP U R UP RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(right, "UP FP U2 F UP FP U F");
+                                    setalgo(right, "UP FP U2 F UP FP U F", _true);
                                 }
                             }
                             else if (edgeSide == right)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(right, "R U RP U2 R U RP UP R U RP");
+                                    setalgo(right, "R U RP U2 R U RP UP R U RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(right, "FP U2 F U FP UP F");
+                                    setalgo(right, "FP U2 F U FP UP F", _true);
                                 }
                             }
                             else if (edgeSide == back)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(right, "R U2 RP UP R U RP");
+                                    setalgo(right, "R U2 RP UP R U RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(right, "FP UP F U2 FP UP F U FP UP F");
+                                    setalgo(right, "FP UP F U2 FP UP F U FP UP F", _true);
                                 }
                             }
                         }
@@ -1474,11 +1474,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
-                                    setalgo(left, "R U RP UP R U RP UP R U RP");
+                                    setalgo(left, "R U RP UP R U RP UP R U RP", _true);
                                 }
                                 else if (sentinel == 0)
                                 {
-                                    setalgo(left, "R UP RP U FP U F");
+                                    setalgo(left, "R UP RP U FP U F", _true);
                                 }
                                 else if (sentinel == -1)
                                 {
@@ -1491,44 +1491,44 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(left, "U R U2 RP U R UP RP");
+                                    setalgo(left, "U R U2 RP U R UP RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(left, "U2 FP UP F UP FP U F");
+                                    setalgo(left, "U2 FP UP F UP FP U F", _true);
                                 }
                             }
                             else if (edgeSide == back)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(left, "U2 R U RP U R UP RP");
+                                    setalgo(left, "U2 R U RP U R UP RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(left, "UP FP U2 F UP FP U F");
+                                    setalgo(left, "UP FP U2 F UP FP U F", _true);
                                 }
                             }
                             else if (edgeSide == left)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(left, "R U RP U2 R U RP UP R U RP");
+                                    setalgo(left, "R U RP U2 R U RP UP R U RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(left, "FP U2 F U FP UP F");
+                                    setalgo(left, "FP U2 F U FP UP F", _true);
                                 }
                             }
                             else if (edgeSide == face)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(left, "R U2 RP UP R U RP");
+                                    setalgo(left, "R U2 RP UP R U RP", _true);
                                 }
                                 else
                                 {
-                                    setalgo(left, "FP UP F U2 FP UP F U FP UP F");
+                                    setalgo(left, "FP UP F U2 FP UP F U FP UP F", _true);
                                 }
                             }
                         }
@@ -1550,11 +1550,11 @@ void F2l::solver(vector<vector<string>> &solutions)
                                 sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                                 if (sentinel == 1)
                                 {
-                                    setalgo(face, "R U RP UP R U RP UP R U RP");
+                                    setalgo(face, "R U RP UP R U RP UP R U RP", _true);
                                 }
                                 else if (sentinel == 0)
                                 {
-                                    setalgo(face, "R UP RP U FP U F");
+                                    setalgo(face, "R UP RP U FP U F", _true);
                                 }
                                 else if (sentinel == -1)
                                 {
@@ -1567,44 +1567,44 @@ void F2l::solver(vector<vector<string>> &solutions)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(face, "U2 FP UP F UP FP U F");
+                                    setalgo(face, "U2 FP UP F UP FP U F", _true);
                                 }
                                 else
                                 {
-                                    setalgo(face, "U R U2 RP U R UP RP");
+                                    setalgo(face, "U R U2 RP U R UP RP", _true);
                                 }
                             }
                             else if (edgeSide == left)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(face, "UP FP U2 F UP FP U F");
+                                    setalgo(face, "UP FP U2 F UP FP U F", _true);
                                 }
                                 else
                                 {
-                                    setalgo(face, "U2 R U RP U R UP RP");
+                                    setalgo(face, "U2 R U RP U R UP RP", _true);
                                 }
                             }
                             else if (edgeSide == face)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(face, "FP U2 F U FP UP F");
+                                    setalgo(face, "FP U2 F U FP UP F", _true);
                                 }
                                 else
                                 {
-                                    setalgo(face, "R U RP U2 R U RP UP R U RP");
+                                    setalgo(face, "R U RP U2 R U RP UP R U RP", _true);
                                 }
                             }
                             else if (edgeSide == right)
                             {
                                 if (topSideColor == cornerColors.at(0))
                                 {
-                                    setalgo(face, "FP UP F U2 FP UP F U FP UP F");
+                                    setalgo(face, "FP UP F U2 FP UP F U FP UP F", _true);
                                 }
                                 else
                                 {
-                                    setalgo(face, "R U2 RP UP R U RP");
+                                    setalgo(face, "R U2 RP UP R U RP", _true);
                                 }
                             }
                         }
@@ -2045,7 +2045,7 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, const b
                     pos = true;
                 else
                 {
-                    setalgo(face, "U");
+                    setalgo(face, "U", _true);
                 }
             }
             edgeSide = face;
@@ -2059,7 +2059,7 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, const b
                     pos = true;
                 else
                 {
-                    setalgo(face, "U");
+                    setalgo(face, "U", _true);
                 }
             }
             edgeSide = right;
@@ -2073,7 +2073,7 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, const b
                     pos = true;
                 else
                 {
-                    setalgo(face, "U");
+                    setalgo(face, "U", _true);
                 }
             }
             edgeSide = left;
@@ -2087,7 +2087,7 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, const b
                     pos = true;
                 else
                 {
-                    setalgo(face, "U");
+                    setalgo(face, "U", _true);
                 }
             }
             edgeSide = back;
@@ -2102,7 +2102,7 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, const b
                     pos = true;
                 else
                 {
-                    setalgo(face, "U");
+                    setalgo(face, "U", _true);
                 }
             }
             edgeSide = face;
@@ -2116,7 +2116,7 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, const b
                     pos = true;
                 else
                 {
-                    setalgo(face, "U");
+                    setalgo(face, "U", _true);
                 }
             }
             edgeSide = right;
@@ -2130,7 +2130,7 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, const b
                     pos = true;
                 else
                 {
-                    setalgo(face, "U");
+                    setalgo(face, "U", _true);
                 }
             }
             edgeSide = left;
@@ -2145,7 +2145,7 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, const b
                     pos = true;
                 else
                 {
-                    setalgo(face, "U");
+                    setalgo(face, "U", _true);
                 }
             }
             edgeSide = back;
@@ -2164,14 +2164,14 @@ bool F2l::find_edge_in_top_lyr(const char &color_1, const char &color_2, const b
     // switch (moveCount)
     // {
     // case 3:
-    //     this->tempSolution.push_back("UP");
+    //     this->tempSolution.push_back("UP", _true);
     //     break;
     // case 2:
-    //     this->tempSolution.push_back("U");
-    //     this->tempSolution.push_back("U");
+    //     this->tempSolution.push_back("U", _true);
+    //     this->tempSolution.push_back("U", _true);
     //     break;
     // case 1:
-    //     this->tempSolution.push_back("U");
+    //     this->tempSolution.push_back("U", _true);
     //     break;
     // default:
     //     break;
@@ -2493,7 +2493,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else if (CubeMain[top][2][2] == color_3 && CubeMain[face][0][2] == color_1 && CubeMain[right][0][0] == color_2)
@@ -2514,7 +2514,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else if (CubeMain[top][2][2] == color_2 && CubeMain[face][0][2] == color_3 && CubeMain[right][0][0] == color_1)
@@ -2535,7 +2535,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else if (CubeMain[top][2][2] == color_3 && CubeMain[face][0][2] == color_2 && CubeMain[right][0][0] == color_1)
@@ -2556,7 +2556,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else if (CubeMain[top][2][2] == color_1 && CubeMain[face][0][2] == color_3 && CubeMain[right][0][0] == color_2)
@@ -2577,7 +2577,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else if (CubeMain[top][2][2] == color_2 && CubeMain[face][0][2] == color_1 && CubeMain[right][0][0] == color_3)
@@ -2598,7 +2598,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         //--------------------- ifs for TOP , BACK AND RIGHT ANGLED CORNER ----------------------
@@ -2620,7 +2620,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else if (CubeMain[top][0][2] == color_3 && CubeMain[back][0][0] == color_1 && CubeMain[right][0][2] == color_2)
@@ -2641,7 +2641,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else if (CubeMain[top][0][2] == color_2 && CubeMain[back][0][0] == color_3 && CubeMain[right][0][2] == color_1)
@@ -2662,7 +2662,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else if (CubeMain[top][0][2] == color_3 && CubeMain[back][0][0] == color_2 && CubeMain[right][0][2] == color_1)
@@ -2683,7 +2683,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else if (CubeMain[top][0][2] == color_1 && CubeMain[back][0][0] == color_3 && CubeMain[right][0][2] == color_2)
@@ -2704,7 +2704,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else if (CubeMain[top][0][2] == color_2 && CubeMain[back][0][0] == color_1 && CubeMain[right][0][2] == color_3)
@@ -2725,7 +2725,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         //--------------------- ifs for TOP , BACK AND LEFT ANGLED CORNER ----------------------
@@ -2747,7 +2747,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else if (CubeMain[top][0][0] == color_3 && CubeMain[back][0][2] == color_1 && CubeMain[left][0][0] == color_2)
@@ -2768,7 +2768,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else if (CubeMain[top][0][0] == color_2 && CubeMain[back][0][2] == color_3 && CubeMain[left][0][0] == color_1)
@@ -2789,7 +2789,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else if (CubeMain[top][0][0] == color_3 && CubeMain[back][0][2] == color_2 && CubeMain[left][0][0] == color_1)
@@ -2810,7 +2810,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else if (CubeMain[top][0][0] == color_1 && CubeMain[back][0][2] == color_3 && CubeMain[left][0][0] == color_2)
@@ -2831,7 +2831,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else if (CubeMain[top][0][0] == color_2 && CubeMain[back][0][2] == color_1 && CubeMain[left][0][0] == color_3)
@@ -2852,7 +2852,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         //--------------------- ifs for TOP , FACE AND LEFT ANGLED CORNER ----------------------
@@ -2874,7 +2874,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else if (CubeMain[top][2][0] == color_3 && CubeMain[face][0][0] == color_1 && CubeMain[left][0][2] == color_2)
@@ -2895,7 +2895,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else if (CubeMain[top][2][0] == color_2 && CubeMain[face][0][0] == color_3 && CubeMain[left][0][2] == color_1)
@@ -2916,7 +2916,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else if (CubeMain[top][2][0] == color_3 && CubeMain[face][0][0] == color_2 && CubeMain[left][0][2] == color_1)
@@ -2937,7 +2937,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else if (CubeMain[top][2][0] == color_1 && CubeMain[face][0][0] == color_3 && CubeMain[left][0][2] == color_2)
@@ -2958,7 +2958,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else if (CubeMain[top][2][0] == color_2 && CubeMain[face][0][0] == color_1 && CubeMain[left][0][2] == color_3)
@@ -2979,7 +2979,7 @@ void F2l::set_corner_on_top(const char &color_1, const char &color_2, const char
             }
             else
             {
-                setalgo(face, "U");
+                setalgo(face, "U", _true);
             }
         }
         else
@@ -3040,11 +3040,11 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
-                            setalgo(left, "U FP U F U FP U2 F");
+                            setalgo(left, "U FP U F U FP U2 F", _true);
                         }
                         else if (sentinel == 0)
                         {
-                            setalgo(left, "U FP UP F UP R U RP");
+                            setalgo(left, "U FP UP F UP R U RP", _true);
                         }
                         else if (sentinel == -1)
                         {
@@ -3057,44 +3057,44 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "R UP RP U2 FP UP F");
+                            setalgo(left, "R UP RP U2 FP UP F", _true);
                         }
                         else
                         {
-                            setalgo(left, "UP R UP RP U R U RP");
+                            setalgo(left, "UP R UP RP U R U RP", _true);
                         }
                     }
                     else if (edgeSide == right)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "U FP U2 F U FP U2 F");
+                            setalgo(left, "U FP U2 F U FP U2 F", _true);
                         }
                         else
                         {
-                            setalgo(left, "R U RP");
+                            setalgo(left, "R U RP", _true);
                         }
                     }
                     else if (edgeSide == back)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "U FP UP F U FP U2 F");
+                            setalgo(left, "U FP UP F U FP U2 F", _true);
                         }
                         else
                         {
-                            setalgo(left, "UP R U RP U R U RP");
+                            setalgo(left, "UP R U RP U R U RP", _true);
                         }
                     }
                     else if (edgeSide == left)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "F RP FP R");
+                            setalgo(left, "F RP FP R", _true);
                         }
                         else
                         {
-                            setalgo(left, "U FP U2 F UP R U RP");
+                            setalgo(left, "U FP U2 F UP R U RP", _true);
                         }
                     }
                 }
@@ -3113,11 +3113,11 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
-                            setalgo(face, "UP R UP RP UP R U2 RP");
+                            setalgo(face, "UP R UP RP UP R U2 RP", _true);
                         }
                         else if (sentinel == 0)
                         {
-                            setalgo(face, "UP R U RP U FP UP F");
+                            setalgo(face, "UP R U RP U FP UP F", _true);
                         }
                         else if (sentinel == -1)
                         {
@@ -3130,44 +3130,44 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "FP U F U2 R U RP");
+                            setalgo(face, "FP U F U2 R U RP", _true);
                         }
                         else
                         {
-                            setalgo(face, "U FP U F UP FP UP F");
+                            setalgo(face, "U FP U F UP FP UP F", _true);
                         }
                     }
                     else if (edgeSide == right)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "U R UP RP");
+                            setalgo(face, "U R UP RP", _true);
                         }
                         else
                         {
-                            setalgo(face, "UP R U2 RP U FP UP F");
+                            setalgo(face, "UP R U2 RP U FP UP F", _true);
                         }
                     }
                     else if (edgeSide == back)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "UP R U RP UP R U2 RP");
+                            setalgo(face, "UP R U RP UP R U2 RP", _true);
                         }
                         else
                         {
-                            setalgo(face, "U FP UP F UP FP UP F");
+                            setalgo(face, "U FP UP F UP FP UP F", _true);
                         }
                     }
                     else if (edgeSide == left)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "UP R U2 RP UP R U2 RP");
+                            setalgo(face, "UP R U2 RP UP R U2 RP", _true);
                         }
                         else
                         {
-                            setalgo(face, "FP UP F");
+                            setalgo(face, "FP UP F", _true);
                         }
                     }
                 }
@@ -3195,11 +3195,11 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
-                            setalgo(face, "U FP U F U FP U2 F");
+                            setalgo(face, "U FP U F U FP U2 F", _true);
                         }
                         else if (sentinel == 0)
                         {
-                            setalgo(face, "U FP UP F UP R U RP");
+                            setalgo(face, "U FP UP F UP R U RP", _true);
                         }
                         else if (sentinel == -1)
                         {
@@ -3212,44 +3212,44 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "R UP RP U2 FP UP F");
+                            setalgo(face, "R UP RP U2 FP UP F", _true);
                         }
                         else
                         {
-                            setalgo(face, "UP R UP RP U R U RP");
+                            setalgo(face, "UP R UP RP U R U RP", _true);
                         }
                     }
                     else if (edgeSide == back)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "U FP U2 F U FP U2 F");
+                            setalgo(face, "U FP U2 F U FP U2 F", _true);
                         }
                         else
                         {
-                            setalgo(face, "R U RP");
+                            setalgo(face, "R U RP", _true);
                         }
                     }
                     else if (edgeSide == left)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "U FP UP F U FP U2 F");
+                            setalgo(face, "U FP UP F U FP U2 F", _true);
                         }
                         else
                         {
-                            setalgo(face, "UP R U RP U R U RP");
+                            setalgo(face, "UP R U RP U R U RP", _true);
                         }
                     }
                     else if (edgeSide == face)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "F RP FP R");
+                            setalgo(face, "F RP FP R", _true);
                         }
                         else
                         {
-                            setalgo(face, "U FP U2 F UP R U RP");
+                            setalgo(face, "U FP U2 F UP R U RP", _true);
                         }
                     }
                 }
@@ -3268,11 +3268,11 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
-                            setalgo(right, "UP R UP RP UP R U2 RP");
+                            setalgo(right, "UP R UP RP UP R U2 RP", _true);
                         }
                         else if (sentinel == 0)
                         {
-                            setalgo(right, "UP R U RP U FP UP F");
+                            setalgo(right, "UP R U RP U FP UP F", _true);
                         }
                         else if (sentinel == -1)
                         {
@@ -3285,44 +3285,44 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "FP U F U2 R U RP");
+                            setalgo(right, "FP U F U2 R U RP", _true);
                         }
                         else
                         {
-                            setalgo(right, "U FP U F UP FP UP F");
+                            setalgo(right, "U FP U F UP FP UP F", _true);
                         }
                     }
                     else if (edgeSide == back)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "U R UP RP");
+                            setalgo(right, "U R UP RP", _true);
                         }
                         else
                         {
-                            setalgo(right, "UP R U2 RP U FP UP F");
+                            setalgo(right, "UP R U2 RP U FP UP F", _true);
                         }
                     }
                     else if (edgeSide == left)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "UP R U RP UP R U2 RP");
+                            setalgo(right, "UP R U RP UP R U2 RP", _true);
                         }
                         else
                         {
-                            setalgo(right, "U FP UP F UP FP UP F");
+                            setalgo(right, "U FP UP F UP FP UP F", _true);
                         }
                     }
                     else if (edgeSide == face)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "UP R U2 RP UP R U2 RP");
+                            setalgo(right, "UP R U2 RP UP R U2 RP", _true);
                         }
                         else
                         {
-                            setalgo(right, "FP UP F");
+                            setalgo(right, "FP UP F", _true);
                         }
                     }
                 }
@@ -3350,11 +3350,11 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
-                            setalgo(right, "U FP U F U FP U2 F");
+                            setalgo(right, "U FP U F U FP U2 F", _true);
                         }
                         else if (sentinel == 0)
                         {
-                            setalgo(right, "U FP UP F UP R U RP");
+                            setalgo(right, "U FP UP F UP R U RP", _true);
                         }
                         else if (sentinel == -1)
                         {
@@ -3367,44 +3367,44 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "R UP RP U2 FP UP F");
+                            setalgo(right, "R UP RP U2 FP UP F", _true);
                         }
                         else
                         {
-                            setalgo(right, "UP R UP RP U R U RP");
+                            setalgo(right, "UP R UP RP U R U RP", _true);
                         }
                     }
                     else if (edgeSide == left)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "U FP U2 F U FP U2 F");
+                            setalgo(right, "U FP U2 F U FP U2 F", _true);
                         }
                         else
                         {
-                            setalgo(right, "R U RP");
+                            setalgo(right, "R U RP", _true);
                         }
                     }
                     else if (edgeSide == face)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "U FP UP F U FP U2 F");
+                            setalgo(right, "U FP UP F U FP U2 F", _true);
                         }
                         else
                         {
-                            setalgo(right, "UP R U RP U R U RP");
+                            setalgo(right, "UP R U RP U R U RP", _true);
                         }
                     }
                     else if (edgeSide == right)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "F RP FP R");
+                            setalgo(right, "F RP FP R", _true);
                         }
                         else
                         {
-                            setalgo(right, "U FP U2 F UP R U RP");
+                            setalgo(right, "U FP U2 F UP R U RP", _true);
                         }
                     }
                 }
@@ -3423,11 +3423,11 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
-                            setalgo(back, "UP R UP RP UP R U2 RP");
+                            setalgo(back, "UP R UP RP UP R U2 RP", _true);
                         }
                         else if (sentinel == 0)
                         {
-                            setalgo(back, "UP R U RP U FP UP F");
+                            setalgo(back, "UP R U RP U FP UP F", _true);
                         }
                         else if (sentinel == -1)
                         {
@@ -3440,44 +3440,44 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "FP U F U2 R U RP");
+                            setalgo(back, "FP U F U2 R U RP", _true);
                         }
                         else
                         {
-                            setalgo(back, "U FP U F UP FP UP F");
+                            setalgo(back, "U FP U F UP FP UP F", _true);
                         }
                     }
                     else if (edgeSide == left)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "U R UP RP");
+                            setalgo(back, "U R UP RP", _true);
                         }
                         else
                         {
-                            setalgo(back, "UP R U2 RP U FP UP F");
+                            setalgo(back, "UP R U2 RP U FP UP F", _true);
                         }
                     }
                     else if (edgeSide == face)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "UP R U RP UP R U2 RP");
+                            setalgo(back, "UP R U RP UP R U2 RP", _true);
                         }
                         else
                         {
-                            setalgo(back, "U FP UP F UP FP UP F");
+                            setalgo(back, "U FP UP F UP FP UP F", _true);
                         }
                     }
                     else if (edgeSide == right)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "UP R U2 RP UP R U2 RP");
+                            setalgo(back, "UP R U2 RP UP R U2 RP", _true);
                         }
                         else
                         {
-                            setalgo(back, "FP UP F");
+                            setalgo(back, "FP UP F", _true);
                         }
                     }
                 }
@@ -3505,11 +3505,11 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
-                            setalgo(back, "U FP U F U FP U2 F");
+                            setalgo(back, "U FP U F U FP U2 F", _true);
                         }
                         else if (sentinel == 0)
                         {
-                            setalgo(back, "U FP UP F UP R U RP");
+                            setalgo(back, "U FP UP F UP R U RP", _true);
                         }
                         else if (sentinel == -1)
                         {
@@ -3522,44 +3522,44 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "R UP RP U2 FP UP F");
+                            setalgo(back, "R UP RP U2 FP UP F", _true);
                         }
                         else
                         {
-                            setalgo(back, "UP R UP RP U R U RP");
+                            setalgo(back, "UP R UP RP U R U RP", _true);
                         }
                     }
                     else if (edgeSide == face)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "U FP U2 F U FP U2 F");
+                            setalgo(back, "U FP U2 F U FP U2 F", _true);
                         }
                         else
                         {
-                            setalgo(back, "R U RP");
+                            setalgo(back, "R U RP", _true);
                         }
                     }
                     else if (edgeSide == right)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "U FP UP F U FP U2 F");
+                            setalgo(back, "U FP UP F U FP U2 F", _true);
                         }
                         else
                         {
-                            setalgo(back, "UP R U RP U R U RP");
+                            setalgo(back, "UP R U RP U R U RP", _true);
                         }
                     }
                     else if (edgeSide == back)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "F RP FP R");
+                            setalgo(back, "F RP FP R", _true);
                         }
                         else
                         {
-                            setalgo(back, "U FP U2 F UP R U RP");
+                            setalgo(back, "U FP U2 F UP R U RP", _true);
                         }
                     }
                 }
@@ -3578,11 +3578,11 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
-                            setalgo(left, "UP R UP RP UP R U2 RP");
+                            setalgo(left, "UP R UP RP UP R U2 RP", _true);
                         }
                         else if (sentinel == 0)
                         {
-                            setalgo(left, "UP R U RP U FP UP F");
+                            setalgo(left, "UP R U RP U FP UP F", _true);
                         }
                         else if (sentinel == -1)
                         {
@@ -3595,44 +3595,44 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "FP U F U2 R U RP");
+                            setalgo(left, "FP U F U2 R U RP", _true);
                         }
                         else
                         {
-                            setalgo(left, "U FP U F UP FP UP F");
+                            setalgo(left, "U FP U F UP FP UP F", _true);
                         }
                     }
                     else if (edgeSide == face)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "U R UP RP");
+                            setalgo(left, "U R UP RP", _true);
                         }
                         else
                         {
-                            setalgo(left, "UP R U2 RP U FP UP F");
+                            setalgo(left, "UP R U2 RP U FP UP F", _true);
                         }
                     }
                     else if (edgeSide == right)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "UP R U RP UP R U2 RP");
+                            setalgo(left, "UP R U RP UP R U2 RP", _true);
                         }
                         else
                         {
-                            setalgo(left, "U FP UP F UP FP UP F");
+                            setalgo(left, "U FP UP F UP FP UP F", _true);
                         }
                     }
                     else if (edgeSide == back)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "UP R U2 RP UP R U2 RP");
+                            setalgo(left, "UP R U2 RP UP R U2 RP", _true);
                         }
                         else
                         {
-                            setalgo(left, "FP UP F");
+                            setalgo(left, "FP UP F", _true);
                         }
                     }
                 }
@@ -3659,11 +3659,11 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
-                            setalgo(back, "R U RP UP R U RP UP R U RP");
+                            setalgo(back, "R U RP UP R U RP UP R U RP", _true);
                         }
                         else if (sentinel == 0)
                         {
-                            setalgo(back, "R UP RP U FP U F");
+                            setalgo(back, "R UP RP U FP U F", _true);
                         }
                         else if (sentinel == -1)
                         {
@@ -3676,44 +3676,44 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "U2 FP UP F UP FP U F");
+                            setalgo(back, "U2 FP UP F UP FP U F", _true);
                         }
                         else
                         {
-                            setalgo(back, "U R U2 RP U R UP RP");
+                            setalgo(back, "U R U2 RP U R UP RP", _true);
                         }
                     }
                     else if (edgeSide == right)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "UP FP U2 F UP FP U F");
+                            setalgo(back, "UP FP U2 F UP FP U F", _true);
                         }
                         else
                         {
-                            setalgo(back, "U2 R U RP U R UP RP");
+                            setalgo(back, "U2 R U RP U R UP RP", _true);
                         }
                     }
                     else if (edgeSide == back)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "FP U2 F U FP UP F");
+                            setalgo(back, "FP U2 F U FP UP F", _true);
                         }
                         else
                         {
-                            setalgo(back, "R U RP U2 R U RP UP R U RP");
+                            setalgo(back, "R U RP U2 R U RP UP R U RP", _true);
                         }
                     }
                     else if (edgeSide == left)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(back, "FP UP F U2 FP UP F U FP UP F");
+                            setalgo(back, "FP UP F U2 FP UP F U FP UP F", _true);
                         }
                         else
                         {
-                            setalgo(back, "R U2 RP UP R U RP");
+                            setalgo(back, "R U2 RP UP R U RP", _true);
                         }
                     }
                 }
@@ -3731,11 +3731,11 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
-                            setalgo(right, "R U RP UP R U RP UP R U RP");
+                            setalgo(right, "R U RP UP R U RP UP R U RP", _true);
                         }
                         else if (sentinel == 0)
                         {
-                            setalgo(right, "R UP RP U FP U F");
+                            setalgo(right, "R UP RP U FP U F", _true);
                         }
                         else if (sentinel == -1)
                         {
@@ -3748,44 +3748,44 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "U R U2 RP U R UP RP");
+                            setalgo(right, "U R U2 RP U R UP RP", _true);
                         }
                         else
                         {
-                            setalgo(right, "U2 FP UP F UP FP U F");
+                            setalgo(right, "U2 FP UP F UP FP U F", _true);
                         }
                     }
                     else if (edgeSide == face)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "U2 R U RP U R UP RP");
+                            setalgo(right, "U2 R U RP U R UP RP", _true);
                         }
                         else
                         {
-                            setalgo(right, "UP FP U2 F UP FP U F");
+                            setalgo(right, "UP FP U2 F UP FP U F", _true);
                         }
                     }
                     else if (edgeSide == right)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "R U RP U2 R U RP UP R U RP");
+                            setalgo(right, "R U RP U2 R U RP UP R U RP", _true);
                         }
                         else
                         {
-                            setalgo(right, "FP U2 F U FP UP F");
+                            setalgo(right, "FP U2 F U FP UP F", _true);
                         }
                     }
                     else if (edgeSide == back)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(right, "R U2 RP UP R U RP");
+                            setalgo(right, "R U2 RP UP R U RP", _true);
                         }
                         else
                         {
-                            setalgo(right, "FP UP F U2 FP UP F U FP UP F");
+                            setalgo(right, "FP UP F U2 FP UP F U FP UP F", _true);
                         }
                     }
                 }
@@ -3803,11 +3803,11 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
-                            setalgo(left, "R U RP UP R U RP UP R U RP");
+                            setalgo(left, "R U RP UP R U RP UP R U RP", _true);
                         }
                         else if (sentinel == 0)
                         {
-                            setalgo(left, "R UP RP U FP U F");
+                            setalgo(left, "R UP RP U FP U F", _true);
                         }
                         else if (sentinel == -1)
                         {
@@ -3820,44 +3820,44 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "U R U2 RP U R UP RP");
+                            setalgo(left, "U R U2 RP U R UP RP", _true);
                         }
                         else
                         {
-                            setalgo(left, "U2 FP UP F UP FP U F");
+                            setalgo(left, "U2 FP UP F UP FP U F", _true);
                         }
                     }
                     else if (edgeSide == back)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "U2 R U RP U R UP RP");
+                            setalgo(left, "U2 R U RP U R UP RP", _true);
                         }
                         else
                         {
-                            setalgo(left, "UP FP U2 F UP FP U F");
+                            setalgo(left, "UP FP U2 F UP FP U F", _true);
                         }
                     }
                     else if (edgeSide == left)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "R U RP U2 R U RP UP R U RP");
+                            setalgo(left, "R U RP U2 R U RP UP R U RP", _true);
                         }
                         else
                         {
-                            setalgo(left, "FP U2 F U FP UP F");
+                            setalgo(left, "FP U2 F U FP UP F", _true);
                         }
                     }
                     else if (edgeSide == face)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(left, "R U2 RP UP R U RP");
+                            setalgo(left, "R U2 RP UP R U RP", _true);
                         }
                         else
                         {
-                            setalgo(left, "FP UP F U2 FP UP F U FP UP F");
+                            setalgo(left, "FP UP F U2 FP UP F U FP UP F", _true);
                         }
                     }
                 }
@@ -3875,11 +3875,11 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                         sentinel = find_edge_in_mid_lyr(cornerColors.at(0), cornerColors.at(1), false);
                         if (sentinel == 1)
                         {
-                            setalgo(face, "R U RP UP R U RP UP R U RP");
+                            setalgo(face, "R U RP UP R U RP UP R U RP", _true);
                         }
                         else if (sentinel == 0)
                         {
-                            setalgo(face, "R UP RP U FP U F");
+                            setalgo(face, "R UP RP U FP U F", _true);
                         }
                         else if (sentinel == -1)
                         {
@@ -3892,44 +3892,44 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "U2 FP UP F UP FP U F");
+                            setalgo(face, "U2 FP UP F UP FP U F", _true);
                         }
                         else
                         {
-                            setalgo(face, "U R U2 RP U R UP RP");
+                            setalgo(face, "U R U2 RP U R UP RP", _true);
                         }
                     }
                     else if (edgeSide == left)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "UP FP U2 F UP FP U F");
+                            setalgo(face, "UP FP U2 F UP FP U F", _true);
                         }
                         else
                         {
-                            setalgo(face, "U2 R U RP U R UP RP");
+                            setalgo(face, "U2 R U RP U R UP RP", _true);
                         }
                     }
                     else if (edgeSide == face)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "FP U2 F U FP UP F");
+                            setalgo(face, "FP U2 F U FP UP F", _true);
                         }
                         else
                         {
-                            setalgo(face, "R U RP U2 R U RP UP R U RP");
+                            setalgo(face, "R U RP U2 R U RP UP R U RP", _true);
                         }
                     }
                     else if (edgeSide == right)
                     {
                         if (topSideColor == cornerColors.at(0))
                         {
-                            setalgo(face, "FP UP F U2 FP UP F U FP UP F");
+                            setalgo(face, "FP UP F U2 FP UP F U FP UP F", _true);
                         }
                         else
                         {
-                            setalgo(face, "R U2 RP UP R U RP");
+                            setalgo(face, "R U2 RP UP R U RP", _true);
                         }
                     }
                 }

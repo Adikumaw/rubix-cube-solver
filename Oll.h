@@ -16,7 +16,7 @@ public:
     Oll();
     Oll(const Cube &cube);
     void solver(vector<vector<string>> &solutions) override;
-    virtual void applySolution(const bool &apply = true) override;
+    virtual void applySolution(const bool &apply) override;
     long int oll_coder();
     bool oll_logic(const int &side, const long &ollCode);
 };
