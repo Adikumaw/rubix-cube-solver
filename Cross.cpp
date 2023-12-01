@@ -1499,7 +1499,7 @@ bool Cross::get_edge_location(const char &color_1, int &side, int &block)
    THIS FUNCTION APPLIES TEMPSOLUTION TO THE Cube AND SAVES THE ALGORITHM TO THE f2lSolution
    AND THEN CLEARS THE TEMPSOLUTION.
    ---------------------------------------------------------------------------------------------------------------------------------------- */
-void Cross::applySolution(bool apply) // overriden function...
+void Cross::applySolution(const bool &apply) // overriden function...
 {
     Cube::applyTempSolution();
     if (apply)

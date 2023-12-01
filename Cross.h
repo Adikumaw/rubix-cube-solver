@@ -21,7 +21,7 @@ public:
     Cross(const Cube &cube);
     Cross();
     void solver(vector<vector<string>> &solutions) override;
-    virtual void applySolution(bool apply = true) override;
+    virtual void applySolution(const bool &apply = true) override;
 };
 
 #endif //_CROSS_H_
