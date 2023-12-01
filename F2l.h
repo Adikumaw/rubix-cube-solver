@@ -19,7 +19,7 @@ public:
     F2l(const Cube &cube);
     F2l();
     void solver(vector<vector<string>> &solutions) override;
-    virtual void applySolution(bool apply = true) override;
+    virtual void applySolution(const bool &apply = true) override;
     bool get_corner_location(const char &color_1, const char &color_2, int &side, int &block);
     bool find_corner_colors(const char &bottomColor, const int &side, const int &row, const int &col);
     bool find_edge_in_top_lyr(const char &color_1, const char &color_2, const bool &edgeSetter);

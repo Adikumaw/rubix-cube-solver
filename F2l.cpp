@@ -3945,7 +3945,7 @@ void F2l::f2LHelper(const int &side, const int &colorBlock)
    THIS FUNCTION APPLIES TEMPSOLUTION TO THE Cube AND SAVES THE ALGORITHM TO THE f2lSolution
    AND THEN CLEARS THE TEMPSOLUTION.
    ---------------------------------------------------------------------------------------------------------------------------------------- */
-void F2l::applySolution(bool apply) // overriden function...
+void F2l::applySolution(const bool &apply) // overriden function...
 {
     Cube::applyTempSolution();
     if (apply)
