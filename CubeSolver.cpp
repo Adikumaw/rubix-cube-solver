@@ -15,7 +15,7 @@ int CubeSolver::getTotalSolutionSize()
 /* ----------------------------------------------------------------------------------------------------------------------------------------
    SETTER AND GETTER FOR THE RUBIX Cube
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-void CubeSolver::print(int duration)
+void CubeSolver::print(const int &duration)
 {
     string bestSolutionBanner;
     unsigned int currentStep{0};
@@ -95,7 +95,7 @@ int CubeSolver::printSolutionSteps(int currentStep)
     return linesNeed;
 }
 
-int CubeSolver::printDirectSteps(const vector<string> &solution, int currentStep)
+int CubeSolver::printDirectSteps(const vector<string> &solution, const int &currentStep)
 {
     int linesNeed{0};
     if (!getSize(solution))
@@ -123,15 +123,12 @@ int CubeSolver::printDirectSteps(const vector<string> &solution, int currentStep
 
 void CubeSolver::solve()
 {
-    // solver solveF2L(*this), passF2L(*this), passCrs{*this}, temp_Cube(*this);
-    // Cube crsCube, f2lCube; // initializing crsCube
     // initialising solver classes..
     Cube *cross = new Cross(cube);
     Cube *f2l = new F2l(cube);
     Cube *oll = new Oll(cube);
     Cube *pll = new Pll(cube);
 
-    // vector<int> solutionSides{};
     int side{0};
     vector<vector<string>> crossSolutions, f2lSolutions, ollSolutions, pllSolutions;
     vector<vector<string>> bestInSideCross, bestInSideF2l, bestInSideOll, bestInSidePll;
@@ -226,11 +223,6 @@ void CubeSolver::solve()
     algorithmCorrector(bestSide, bestInCubeF2l);
     algorithmCorrector(bestSide, bestInCubeOll);
     algorithmCorrector(bestSide, bestInCubePll);
-
-    // cube.setalgo(0, bestInCubeCross);
-    // cube.setalgo(0, bestInCubeF2l);
-    // cube.setalgo(0, bestInCubeOll);
-    // cube.setalgo(0, bestInCubePll);
 }
 
 int CubeSolver::getSize(const vector<string> &solution)

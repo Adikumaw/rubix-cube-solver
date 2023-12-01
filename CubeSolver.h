@@ -11,7 +11,7 @@ using namespace std;
 
 class CubeSolver
 {
-   int bestSide{0}, trials{0}; // TODO initialise in constructor...
+   int bestSide{0}, trials{0};
 
 private:
    Cube cube;
@@ -38,9 +38,9 @@ OPERATOR OVERLOADING
    /* ----------------------------------------------------------------------------------------------------------------------------------------
       SETTERS AND GETTERS METHODS
       ----------------------------------------------------------------------------------------------------------------------------------------*/
-   void print(int duration);
+   void print(const int &duration);
    int printSolutionSteps(int currentStep);
-   int printDirectSteps(const vector<string> &solution, int currentStep);
+   int printDirectSteps(const vector<string> &solution, const int &currentStep);
    vector<string> allInOneSolution();
    // void applySolution();
    void solve();
