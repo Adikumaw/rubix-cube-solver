@@ -125,7 +125,7 @@ long int Oll::oll_coder()
    LAYER AND IT DIRECTLY CALLS THE SETALGO TO APPLY THE CONDITION.
    IT RETURNS TRUE IF THE CONDITION MATCHES THE CODE AND FALSE WHEN OLLCODE DOSEN'T MATCHES ANY CONDITION
    ----------------------------------------------------------------------------------------------------------------------------------------*/
-bool Oll::oll_logic(const int &side, long int ollCode)
+bool Oll::oll_logic(const int &side, const long &ollCode)
 {
     if (ollCode == 0b111111111000000000000L)
     {
@@ -382,7 +382,7 @@ bool Oll::oll_logic(const int &side, long int ollCode)
    THIS FUNCTION APPLIES TEMPSOLUTION TO THE Cube AND SAVES THE ALGORITHM TO THE f2lSolution
    AND THEN CLEARS THE TEMPSOLUTION.
    ---------------------------------------------------------------------------------------------------------------------------------------- */
-void Oll::applySolution(bool apply) // overriden function...
+void Oll::applySolution(const bool &apply) // overriden function...
 {
     Cube::applyTempSolution();
     if (apply)
