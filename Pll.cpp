@@ -190,7 +190,7 @@ bool Pll::pll_logic(const int &side, string_view PLLcode)
    THIS FUNCTION APPLIES TEMPSOLUTION TO THE Cube AND SAVES THE ALGORITHM TO THE f2lSolution
    AND THEN CLEARS THE TEMPSOLUTION.
    ---------------------------------------------------------------------------------------------------------------------------------------- */
-void Pll::applySolution(bool apply) // overriden function...
+void Pll::applySolution(const bool &apply) // overriden function...
 {
     Cube::applyTempSolution();
     if (apply)
