@@ -12,7 +12,10 @@ Welcome to my Rubik's Cube Solver program! This C.F.O.P (Cross, F2L, OLL, PLL) b
 - A Rubik's Cube in a solvable state to test the solver.
 
 ## Installation
-1. Clone the repository to your local machine or download the source code as a ZIP file.
+A. Download direct executable from the link:
+[DOWNLOAD](https://github.com/Adikumaw/rubix-cube-solver/releases/tag/v2.0.0)
+   
+B. OR Clone the repository to your local machine or download the source code as a ZIP file.
   ```
    git clone https://github.com/Adikumaw/rubix-cube-solver.git
   ```
