@@ -170,16 +170,16 @@ std::string ch_to_clr(const char &ch)
         return "green";
         break;
     case 'y':
-        return "yellow";
+        return "b_yellow";
         break;
     case 'p':
-        return "magenta";
+        return "b_magenta";
         break;
     case 'w':
         return "white";
         break;
     case 'o':
-        return "black";
+        return "b_magenta";
         break;
 
     default:
