@@ -588,7 +588,7 @@ bool Cube::check_colors()
 {
     vector<int> intColorsCount(6, 0);
     vector<char> charColors{'b', 'w', 'o', 'g', 'r', 'y'};
-    vector<string> colorAsciis{BLUE, WHITE, BLACK, GREEN, RED, YELLOW};
+    vector<string> colorAsciis{BLUE, WHITE, B_MAGENTA, GREEN, RED, B_YELLOW};
     for (short l{0}; l < 6; l++)
     {
         for (short m{0}; m < 3; m++)
